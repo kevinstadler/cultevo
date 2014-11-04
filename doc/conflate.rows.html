@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>conflate.rows. mantel 0.1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">mantel 0.1</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>Aggregate rows and columns of a symmetric (distance) matrix.</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>conflate.rows(m, groups, discard&nbsp;=&nbsp;FALSE)</div></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>m</dt>
+      <dd>a symmetric matrix, can be a matrix or <code>dist</code> object</dd>
+      <dt>groups</dt>
+      <dd>a list of group indices/ids of the same length as the
+dimension of the matrix, indicating which rows/columns should be
+aggregated over</dd>
+    </dl>
+    
+    <div class="Aggregate rows and columns of a symmetric (distance) matrix.">
+      <h2>Aggregate rows and columns of a symmetric (distance) matrix.</h2>
+      
+    </div>
+
+    <div class="Value">
+      <h2>Value</h2>
+      
+      <p>a matrix with as many rows and columns as there are unique ids in
+  the <code>groups</code> parameter</p>
+  
+    </div>
+
+    <div class="Description">
+      <h2>Description</h2>
+      
+      <p>Conflates the given matrix by either averaging across or discarding
+rows which are marked by the same group index/id.</p>
+  
+    </div>
+      </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>conflate.rows</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+        
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

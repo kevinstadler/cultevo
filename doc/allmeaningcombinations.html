@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>allmeaningcombinations. mantel 0.1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">mantel 0.1</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>Enumerate meaning combinations.</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>allmeaningcombinations(dimensionality, uniquelabels&nbsp;=&nbsp;TRUE, offset&nbsp;=&nbsp;0)</div></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>dimensionality</dt>
+      <dd>either a) a vector of integers specifying the number
+of different possible values for every meaning dimension, or b) a list or
+other (potentially ragged) 2-dimensional data structure listing the
+possible meaning values for every dimension</dd>
+      <dt>uniquelabels</dt>
+      <dd>Specifying . Ignored when <code>dimensionality</code> contains</dd>
+      <dt>offset</dt>
+      <dd>a constant that is</dd>
+    </dl>
+    
+    <div class="Enumerate meaning combinations.">
+      <h2>Enumerate meaning combinations.</h2>
+      
+    </div>
+
+    <div class="Value">
+      <h2>Value</h2>
+      
+      <p>a matrix that has as many columns as there are dimensions with every
+  row specifying one of the possible meaning combinations and the first
+  dimension cycling slowest.</p>
+  
+    </div>
+
+    <div class="Description">
+      <h2>Description</h2>
+      
+      <p>Enumerates all possible combinations of meanings for a meaning space of the given dimensionality.</p>
+  
+    </div>
+
+    <div class="Details">
+      <h2>Details</h2>
+      
+      <p>The resulting matrix can be passed straight on to <code><a href='hammingdists.html'>hammingdists</a></code>.</p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>allmeaningcombinations(c(2,2))
+</div>
+<div class='output'>     Var2 Var1
+[1,]    1    3
+[2,]    1    4
+[3,]    2    3
+[4,]    2    4
+</div>
+<div class='input'>allmeaningcombinations(c(3,4))
+</div>
+<div class='output'>      Var2 Var1
+ [1,]    1    4
+ [2,]    1    5
+ [3,]    1    6
+ [4,]    1    7
+ [5,]    2    4
+ [6,]    2    5
+ [7,]    2    6
+ [8,]    2    7
+ [9,]    3    4
+[10,]    3    5
+[11,]    3    6
+[12,]    3    7
+</div>
+<div class='input'>allmeaningcombinations(c(2,2,2,2))
+</div>
+<div class='output'>      Var4 Var3 Var2 Var1
+ [1,]    1    3    5    7
+ [2,]    1    3    5    8
+ [3,]    1    3    6    7
+ [4,]    1    3    6    8
+ [5,]    1    4    5    7
+ [6,]    1    4    5    8
+ [7,]    1    4    6    7
+ [8,]    1    4    6    8
+ [9,]    2    3    5    7
+[10,]    2    3    5    8
+[11,]    2    3    6    7
+[12,]    2    3    6    8
+[13,]    2    4    5    7
+[14,]    2    4    5    8
+[15,]    2    4    6    7
+[16,]    2    4    6    8
+</div>
+<div class='input'>allmeaningcombinations(8) # trivial
+</div>
+<div class='output'>     [,1]
+[1,]    1
+[2,]    2
+[3,]    3
+[4,]    4
+[5,]    5
+[6,]    6
+[7,]    7
+[8,]    8
+</div>
+<div class='input'>allmeaningcombinations(list(shape=c(&quot;square&quot;, &quot;circle&quot;), color=c(&quot;red&quot;, &quot;blue&quot;)))
+</div>
+<div class='output'>     shape    color 
+[1,] &quot;square&quot; &quot;red&quot; 
+[2,] &quot;square&quot; &quot;blue&quot;
+[3,] &quot;circle&quot; &quot;red&quot; 
+[4,] &quot;circle&quot; &quot;blue&quot;
+</div></pre>
+  </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>allmeaningcombinations</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+    <h2>See also</h2>
+    
+<code><a href='hammingdists.html'>hammingdists</a></code>
+
+        
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -18,6 +18,6 @@ Compute the normalised Levenshtein distances between strings.
 normalisedlevenshteindists(c("abd", "absolute", "asdasd", "casd"))
 }
 \seealso{
-\code{\link{stats::dist}}
+\code{\link{dist}}
 }
 

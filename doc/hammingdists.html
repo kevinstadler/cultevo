@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>hammingdists. mantel 0.1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">mantel 0.1</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>Compute all pairwise hamming distances between matrix rows.</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>hammingdists(meanings)</div></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>meanings</dt>
+      <dd>a matrix with the different dimensions encoded along columns,
+and all combinations of meanings specified along rows. The data type of the
+cells does not matter since distance is simply based on equality - in fact
+specifying a meaning component as NA allows you to ignore that dimension
+for the given row/meaning combinations (see examples).</dd>
+    </dl>
+    
+    <div class="Compute all pairwise hamming distances between matrix rows.">
+      <h2>Compute all pairwise hamming distances between matrix rows.</h2>
+      
+    </div>
+
+    <div class="Value">
+      <h2>Value</h2>
+      
+      <p>a distance matrix of type <code><a href='http://www.inside-r.org/packages/cran/stats/docs/dist'>dist</a></code> with <code>n*(n-1)/2</code>
+  rows/columns, where n is the number of rows in <code>meanings</code>.</p>
+  
+    </div>
+
+    <div class="Description">
+      <h2>Description</h2>
+      
+      <p>Returns a distance matrix of all meanings. The meanings argument should be</p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'># example #1: a 2x2 design using strings (the character redundantly
+# specifies the dimension for clarity)
+hammingdists(matrix(c(&quot;a1&quot;, &quot;b1&quot;, &quot;a1&quot;, &quot;b2&quot;, &quot;a2&quot;, &quot;b1&quot;, &quot;a2&quot;, &quot;b2&quot;), ncol=2, byrow=TRUE))
+</div>
+<div class='output'>  1 2 3
+2 1    
+3 1 2  
+4 2 1 1
+</div>
+<div class='input'># example #2: a 2x3 design using integers for encoding
+hammingdists(matrix(c(0,0,0,1,0,2,1,0,1,1,1,2), ncol=2, byrow=TRUE))
+</div>
+<div class='output'>  1 2 3 4 5
+2 1        
+3 1 1      
+4 1 2 2    
+5 2 1 2 1  
+6 2 2 1 1 1
+</div>
+<div class='input'># example #3: a 2x2x2 design using factors (ncol is always the number of dimensions)
+hammingdists(matrix(c(0,0,0,0,0,1,0,1,0,0,1,1,1,0,0,1,0,1,1,1,0,1,1,1), ncol=3, byrow=TRUE))
+</div>
+<div class='output'>  1 2 3 4 5 6 7
+2 1            
+3 1 2          
+4 2 1 1        
+5 1 2 2 3      
+6 2 1 3 2 1    
+7 2 3 1 2 1 2  
+8 3 2 2 1 2 1 1
+</div>
+<div class='input'># example #4: if some meaning dimension is not relevant for some
+# combinations of meanings (e.g. optional arguments), specifying them as NA
+# in the matrix will make them not be counted towards the hamming distance!
+# in this example the value of the second dimension does not matter (and
+# does not count towards the distance) when the the first dimension has
+# value &#39;1&#39;
+hammingdists(matrix(c(0,0,0,1,1,NA), ncol=2, byrow=TRUE))
+</div>
+<div class='output'>  1 2
+2 1  
+3 1 1
+</div></pre>
+  </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>hammingdists</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+    <h2>See also</h2>
+    
+<code><a href='http://www.inside-r.org/packages/cran/stats/docs/dist'>dist</a></code>
+
+        
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

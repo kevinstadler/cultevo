@@ -39,6 +39,14 @@ mantel.test <- function(m1, m2, maxtrials=1000, conflate=FALSE, shuffle=shuffle.
     m1 <- conflate.rows(m1, uniqueids, TRUE)
     m2 <- conflate.rows(m2, uniqueids, FALSE)
   }
+#  size <- d/attr(d1, "Size")
+#  if (size != 1) {
+#    if (size %% 1 == 0) {
+#      message("Dimensionality of second matrix is a multiple of the first")
+#    } else {
+#      stop("The two distance matrices have incompatible dimensions")
+#    }
+#  }
   indices <- which(lower.tri(m1))
   # extract values relevent for correlation computation
   m1 <- m1[indices]
@@ -58,4 +66,66 @@ mantel.test <- function(m1, m2, maxtrials=1000, conflate=FALSE, shuffle=shuffle.
   s <- sd(msample)
   z <- (veridical-mn)/s
   return(list(mean=mn, sd=s, veridical=veridical, p=c/maxtrials, z=z, msample=msample))
+}
+
+#' Run Mantel tests on a set of consecutive data.
+#' 
+#' Performs multiple Mantel tests and returns their results in a matrix,
+#' optionally visualising part of the data in a plot. This function can be
+#' called with experimental data, distance matrix calculation is taken care
+#' of internally.
+#' 
+#' @param meanings a matrix specifying all meaning combinations, as described in \link{\code{hammingdists}}
+#' @param strings either a vector of strings, or a matrix of strings per generation
+#' @param plot specifies which mantel test outcome should be plotted (if any):
+#'   currently supported are \code{"r"} and \code{"z"}.
+#' @param ... extra arguments passed on to the plotting function - here you
+#'   might want to specify parameters like \code{ylim}..
+#' @return a matrix of test results
+#' @examples
+#' mantel.development(allmeaningcombinations(c(2,2)), c("asd", "asdf", "", "f"), plot="r")
+#' m <- matrix(c("sadasd", "iuerwh", "sdfgkj", "uofidsgf", "asd", "asdf", "", "f"), nrow=2, byrow=T)
+#' mantel.development(allmeaningcombinations(c(2,2)), m, plot="r")
+#' mantel.development(allmeaningcombinations(c(2,2)), m, plot="z")
+#' @seealso \link{\code{hammingdists}}
+#' @export
+mantel.development <- function(meanings, strings, ..., plot=NULL) {
+  if (is.vector(strings)) {
+    strings <- t(strings)
+  }
+  d1 <- hammingdists(meanings)
+  mantels <- do.call(rbind, apply(strings, 1, function(row)mantel.test(d1, normalisedlevenshteindists(row))))
+  rownames(mantels) <- 0:(nrow(mantels)-1)
+  if (!is.null(plot)) {
+    plot.mantels(mantels, plot, ...)
+  }
+  return(mantels)
+}
+
+#' Read data from a tab or comma-separated file and run Mantel tests on the data.
+#' 
+#' Reads the given .csv file and runs Mantel tests on it, optionally plotting
+#' the results. Plotting is controlled solely through the \code{...} arguments
+#' which are passed on to \link{\code{mantel.development}} and
+#' \link{\code{plot.mantels}} respectively.
+#' If none of the column-arguments are specified it is assumed that the first
+#' column gives the strings and all remaining columns encode the different
+#' meanings. See \link{mantelexample.csv} for a minimal example.
+#' 
+#' @param filename csv file to be read - not specifying a file will result in
+#'   a file selection dialog being opened
+#' @param header whether the csv file contains a header line or not
+#' @param ... extra arguments are passed on to \link{\code{mantel.development}}
+#'   (and potentially further to \link{\code{plot.mantels}})
+#' @examples
+#' mantel.file("minimalexample.csv", plot="r")
+#' @seealso \link{\code{mantel.development}}
+#' @seealso \link{\code{plot.mantels}}
+#' @export
+mantel.file <- function(filename=NULL, sep="\t", header=FALSE, stringcolumns=1, meaningcolumns=-stringcolumns, ...) {
+  if (is.null(filename)) {
+    filename <- file.choose()
+  }
+  data <- read.table(filename, stringsAsFactors=FALSE, sep=sep, header=header)
+  mantel.development(data[,meaningcolumns], data[,stringcolumns], ...)
 }

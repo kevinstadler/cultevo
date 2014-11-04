@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>mantel.development. mantel 0.1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">mantel 0.1</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>Run Mantel tests on a set of consecutive data.</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>mantel.development(meanings, strings, ..., plot&nbsp;=&nbsp;NULL)</div></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>meanings</dt>
+      <dd>a matrix specifying all meaning combinations, as described in <a href='hammingdists.html'>hammingdists</a></dd>
+      <dt>strings</dt>
+      <dd>either a vector of strings, or a matrix of strings per generation</dd>
+      <dt>...</dt>
+      <dd>extra arguments passed on to the plotting function - here you
+might want to specify parameters like <code>ylim</code>..</dd>
+      <dt>plot</dt>
+      <dd>specifies which mantel test outcome should be plotted (if any):
+currently supported are <code>"r"</code> and <code>"z"</code>.</dd>
+    </dl>
+    
+    <div class="Run Mantel tests on a set of consecutive data.">
+      <h2>Run Mantel tests on a set of consecutive data.</h2>
+      
+    </div>
+
+    <div class="Value">
+      <h2>Value</h2>
+      
+      <p>a matrix of test results</p>
+  
+    </div>
+
+    <div class="Description">
+      <h2>Description</h2>
+      
+      <p>Performs multiple Mantel tests and returns their results in a matrix,
+optionally visualising part of the data in a plot. This function can be
+called with experimental data, distance matrix calculation is taken care
+of internally.</p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>mantel.development(allmeaningcombinations(c(2,2)), c(&quot;asd&quot;, &quot;asdf&quot;, &quot;&quot;, &quot;f&quot;), plot=&quot;r&quot;)
+</div>
+<strong class='message'>Permutation space is small, enumerating all possible permutations.</strong>
+<p><img src='mantel.development-3.png' alt='' width='400' height='400' /></p>
+<div class='output'>  mean sd        veridical p     z        msample   
+0 0    0.4074407 0.4264014 0.008 1.046536 Numeric,24
+</div>
+<div class='input'>m &lt;- matrix(c(&quot;sadasd&quot;, &quot;iuerwh&quot;, &quot;sdfgkj&quot;, &quot;uofidsgf&quot;, &quot;asd&quot;, &quot;asdf&quot;, &quot;&quot;, &quot;f&quot;), nrow=2, byrow=T)
+mantel.development(allmeaningcombinations(c(2,2)), m, plot=&quot;r&quot;)
+</div>
+<strong class='message'>Permutation space is small, enumerating all possible permutations.</strong>
+<strong class='message'>Permutation space is small, enumerating all possible permutations.</strong>
+<p><img src='mantel.development-8.png' alt='' width='400' height='400' /></p>
+<div class='output'>  mean sd        veridical  p     z         msample   
+0 0    0.1001671 0.06933752 0.016 0.6922187 Numeric,24
+1 0    0.4074407 0.4264014  0.008 1.046536  Numeric,24
+</div>
+<div class='input'>mantel.development(allmeaningcombinations(c(2,2)), m, plot=&quot;z&quot;)
+</div>
+<strong class='message'>Permutation space is small, enumerating all possible permutations.</strong>
+<strong class='message'>Permutation space is small, enumerating all possible permutations.</strong>
+<p><img src='mantel.development-13.png' alt='' width='400' height='400' /></p>
+<div class='output'>  mean sd        veridical  p     z         msample   
+0 0    0.1001671 0.06933752 0.016 0.6922187 Numeric,24
+1 0    0.4074407 0.4264014  0.008 1.046536  Numeric,24
+</div></pre>
+  </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>mantel.development</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+    <h2>See also</h2>
+    
+<a href='hammingdists.html'>hammingdists</a>
+
+        
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

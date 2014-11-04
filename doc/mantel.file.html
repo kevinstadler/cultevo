@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>mantel.file. mantel 0.1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">mantel 0.1</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>Read data from a tab or comma-separated file and run Mantel tests on the data.</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>mantel.file(filename&nbsp;=&nbsp;NULL, sep&nbsp;=&nbsp;"\t", header&nbsp;=&nbsp;FALSE, stringcolumns&nbsp;=&nbsp;1, meaningcolumns&nbsp;=&nbsp;-stringcolumns, ...)</div></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>filename</dt>
+      <dd>csv file to be read - not specifying a file will result in
+a file selection dialog being opened</dd>
+      <dt>header</dt>
+      <dd>whether the csv file contains a header line or not</dd>
+      <dt>...</dt>
+      <dd>extra arguments are passed on to <a href='mantel.development.html'>mantel.development</a>
+(and potentially further to <a href='plot.mantels.html'>plot.mantels</a>)</dd>
+    </dl>
+    
+    <div class="Read data from a tab or comma-separated file and run Mantel tests on the data.">
+      <h2>Read data from a tab or comma-separated file and run Mantel tests on the data.</h2>
+      
+    </div>
+
+    <div class="Description">
+      <h2>Description</h2>
+      
+      <p>Reads the given .csv file and runs Mantel tests on it, optionally plotting
+the results. Plotting is controlled solely through the <code>...</code> arguments
+which are passed on to <a href='mantel.development.html'>mantel.development</a> and
+<a href='plot.mantels.html'>plot.mantels</a> respectively.
+If none of the column-arguments are specified it is assumed that the first
+column gives the strings and all remaining columns encode the different
+meanings. See mantelexample.csv for a minimal example.</p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>mantel.file(&quot;minimalexample.csv&quot;, plot=&quot;r&quot;)
+</div>
+<strong class='warning'>Warning message:
+cannot open file &#39;minimalexample.csv&#39;: No such file or directory</strong>
+<strong class='error'>Error in file(file, &quot;rt&quot;): cannot open the connection</strong></pre>
+  </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>mantel.file</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+    <h2>See also</h2>
+    
+<a href='mantel.development.html'>mantel.development</a>
+
+<a href='plot.mantels.html'>plot.mantels</a>
+
+        
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -5,13 +5,19 @@
 \usage{
 hammingdists(meanings)
 }
+\arguments{
+\item{meanings}{a matrix with the different dimensions encoded along columns,
+and all combinations of meanings specified along rows. The data type of the
+cells does not matter since distance is simply based on equality - in fact
+specifying a meaning component as NA allows you to ignore that dimension
+for the given row/meaning combinations (see examples).}
+}
+\value{
+a distance matrix of type \code{\link{dist}} with \code{n*(n-1)/2}
+  rows/columns, where n is the number of rows in \code{meanings}.
+}
 \description{
 Returns a distance matrix of all meanings. The meanings argument should be
-a matrix with the different dimensions encoded along columns, and all
-combinations of meanings specified along rows. The data type of the cells
-does not matter since distance is simply based on equality - in fact
-specifying a meaning component as NA allows you to ignore that dimension for
-the given row/meaning combinations (see examples).
 }
 \examples{
 # example #1: a 2x2 design using strings (the character redundantly
@@ -30,6 +36,6 @@ hammingdists(matrix(c(0,0,0,0,0,1,0,1,0,0,1,1,1,0,0,1,0,1,1,1,0,1,1,1), ncol=3, 
 hammingdists(matrix(c(0,0,0,1,1,NA), ncol=2, byrow=TRUE))
 }
 \seealso{
-\code{\link{stats::dist}}
+\code{\link{dist}}
 }
 

@@ -3,11 +3,14 @@
 #' Compute all pairwise hamming distances between matrix rows.
 #'
 #' Returns a distance matrix of all meanings. The meanings argument should be
-#' a matrix with the different dimensions encoded along columns, and all
-#' combinations of meanings specified along rows. The data type of the cells
-#' does not matter since distance is simply based on equality - in fact
-#' specifying a meaning component as NA allows you to ignore that dimension for
-#' the given row/meaning combinations (see examples).
+#'
+#' @param meanings a matrix with the different dimensions encoded along columns,
+#'   and all combinations of meanings specified along rows. The data type of the
+#'   cells does not matter since distance is simply based on equality - in fact
+#'   specifying a meaning component as NA allows you to ignore that dimension
+#'   for the given row/meaning combinations (see examples).
+#' @return a distance matrix of type \code{\link{dist}} with \code{n*(n-1)/2}
+#'   rows/columns, where n is the number of rows in \code{meanings}.
 #'
 #' @examples
 #' # example #1: a 2x2 design using strings (the character redundantly
@@ -24,7 +27,7 @@
 #' # does not count towards the distance) when the the first dimension has
 #' # value '1'
 #' hammingdists(matrix(c(0,0,0,1,1,NA), ncol=2, byrow=TRUE))
-#' @seealso \code{\link{stats::dist}}
+#' @seealso \code{\link{dist}}
 #' @export
 hammingdists <- function(meanings) {
   nmeanings <- dim(meanings)[1]
@@ -42,7 +45,7 @@ hammingdists <- function(meanings) {
 #' @param strings a vector or list of strings
 #' @return a distance matrix of normalised Levenshtein distances between the strings
 #' @examples normalisedlevenshteindists(c("abd", "absolute", "asdasd", "casd"))
-#' @seealso \code{\link{stats::dist}}
+#' @seealso \code{\link{dist}}
 #' @export
 normalisedlevenshteindists <- function(strings) {
   # if you want more than just simple Levenshtein distance, have a look at the
@@ -52,15 +55,16 @@ normalisedlevenshteindists <- function(strings) {
   as.dist(levs / outer(lens, lens, pmax))
 }
 
-#' Create a symmetric distance matrix.
+#' Check or fix a symmetric distance matrix.
 #' 
 #' If \code{m} is a matrix, check whether it is a valid specification of a
 #' distance matrix and return it, making it symmetric if it isn't already.
 #' For all other obect types, try to coerce \code{m} to a \code{dist} object
 #' and return the corresponding distance matrix.
 #' 
-#' @return a symmetric matrix with 0s in the diagonal
-#' @seealso \code{\link{stats::dist}}
+#' @param m a distance matrix
+#' @return a symmetric matrix of the same size as \code{m}, with 0s in the diagonal
+#' @seealso \code{\link{dist}}
 check.dist <- function(m) {
   if (is.matrix(m)) {
     if (any(diag(m) != 0)) {
@@ -103,13 +107,13 @@ conflate.rows <- function(m, groups, discard=FALSE) {
 
   if (discard) {
     # drop identical (zero-distance) entries - add a safety check!
-    as.matrix(d)[newsamples,newsamples]
+    as.matrix(m)[newsamples,newsamples]
   } else { # average
     # discard rows which will be conflated
-    d <- as.matrix(d)[newsamples,]
+    m <- as.matrix(m)[newsamples,]
     # calculate average distance to other datapoints
-    d <- tapply(d, rep(groups, each=nrow(d)), function(collated)rowMeans(matrix(collated,nrow=nrow(d))))
+    m <- tapply(m, rep(groups, each=nrow(m)), function(collated)rowMeans(matrix(collated,nrow=nrow(m))))
     # turn back into a matrix
-    t(sapply(d,I))
+    t(sapply(m,I))
   }
 }
