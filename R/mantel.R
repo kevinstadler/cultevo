@@ -110,7 +110,7 @@ mantel.development <- function(meanings, strings, ..., plot=NULL) {
 #' \link{\code{plot.mantels}} respectively.
 #' If none of the column-arguments are specified it is assumed that the first
 #' column gives the strings and all remaining columns encode the different
-#' meanings. See \link{mantelexample.csv} for a minimal example.
+#' meanings. See \code{mantelexample.csv} for a minimal example.
 #' 
 #' @param filename csv file to be read - not specifying a file will result in
 #'   a file selection dialog being opened
@@ -118,7 +118,7 @@ mantel.development <- function(meanings, strings, ..., plot=NULL) {
 #' @param ... extra arguments are passed on to \link{\code{mantel.development}}
 #'   (and potentially further to \link{\code{plot.mantels}})
 #' @examples
-#' mantel.file("minimalexample.csv", plot="r")
+#' mantel.file(system.file("minimalexample.csv", package="mantel"), plot="r")
 #' @seealso \link{\code{mantel.development}}
 #' @seealso \link{\code{plot.mantels}}
 #' @export

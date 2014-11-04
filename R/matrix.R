@@ -40,10 +40,15 @@ rep.matrix <- function(m, times=1, each=1, times.row=times, times.col=times, eac
 #'   of different possible values for every meaning dimension, or b) a list or
 #'   other (potentially ragged) 2-dimensional data structure listing the
 #'   possible meaning values for every dimension
-#' @param uniquelabels Specifying . Ignored when \code{dimensionality} contains 
-#' @param offset a constant that is 
-#' @return a matrix that has as many columns as there are dimensions with every
-#'   row specifying one of the possible meaning combinations and the first
+#' @param uniquelabels logical, determines whether the same integers can be
+#'   reused across meaning dimensions or not. When \code{uniquelabels==FALSE},
+#'   the resulting matrix will be very reminiscent of tables listing all binary
+#'   combinations of factors. Ignored when \code{dimensionality} specifies the
+#'   meaning values
+#' @param offset a constant that is added to all meaning specifiers. Ignored
+#'   when \code{dimensionality} specifies the meaning values
+#' @return a matrix that has as many columns as there are dimensions, with every
+#'   row specifying one of the possible meaning combinations, and the first
 #'   dimension cycling slowest.
 #' @examples
 #' allmeaningcombinations(c(2,2))

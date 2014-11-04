@@ -22,10 +22,10 @@ which are passed on to \link{\code{mantel.development}} and
 \link{\code{plot.mantels}} respectively.
 If none of the column-arguments are specified it is assumed that the first
 column gives the strings and all remaining columns encode the different
-meanings. See \link{mantelexample.csv} for a minimal example.
+meanings. See \code{mantelexample.csv} for a minimal example.
 }
 \examples{
-mantel.file("minimalexample.csv", plot="r")
+mantel.file(system.file("minimalexample.csv", package="mantel"), plot="r")
 }
 \seealso{
 \link{\code{mantel.development}}
