@@ -1,0 +1,11 @@
+Package: mantel
+Title: An R package for computing distance matrices and performing Mantel tests
+Version: 0.1
+Authors@R: "Kevin Stadler <kevin.stadler@ed.ac.uk> [aut, cre]"
+Description: What the package does (one paragraph)
+URL: https://github.com/kevinstadler/mantel
+Depends:
+    R (>= 3.0.0)
+License: MIT
+Suggests:
+    combinat gputools
