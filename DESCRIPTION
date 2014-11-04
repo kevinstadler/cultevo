@@ -8,4 +8,5 @@ Depends:
     R (>= 3.0.0)
 License: MIT
 Suggests:
-    combinat gputools
+    combinat,
+    gputools
