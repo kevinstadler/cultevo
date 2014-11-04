@@ -14,10 +14,13 @@ If this doesn't work you probably need to install the `devtools` package first:
 
 A nice HTML documentation is available at https://rawgit.com/kevinstadler/mantel/master/doc/index.html
 
-See [mantel.file()](https://rawgit.com/kevinstadler/mantel/master/doc/mantel.file.html) for straightforward computation of Mantel tests from an input file. While the command is customisable, it generally helps if the column order of your `.csv` files list the meaning specifications *before* the corresponding strings.
+See [mantel.file()](https://rawgit.com/kevinstadler/mantel/master/doc/mantel.file.html) for straightforward computation of Mantel tests from an input file. While the command is highly customisable, if you don't want to mess about with all its parameters it is simplest if you have tab-separated `.csv` files with the strings in the first column, followed by meaning specifications in the remaining columns.
 
 ## Links
 
 * [A guide to the Mantel test for linguists](http://www.jonwcarr.net/blog/2014/9/19/a-guide-to-the-mantel-test-for-linguists)
 * [Mantel (1967) The Detection of Disease Clustering and a Generalized Regression Approach](http://cancerres.aacrjournals.org/content/27/2_Part_1/209.short)
 
+## License
+
+This project is licensed under the terms of the [MIT license](http://opensource.org/licenses/MIT), Copyright (c) 2014 Kevin Stadler.
