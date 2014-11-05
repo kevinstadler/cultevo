@@ -4,13 +4,23 @@
 \title{Read data from a tab or comma-separated file and run Mantel tests on the data.}
 \usage{
 mantel.file(filename = NULL, sep = "\\t", header = FALSE,
-  stringcolumns = 1, meaningcolumns = -stringcolumns, ...)
+  stringcolumns = 1, meaningcolumns = -c(stringcolumns, generationcolumn),
+  generationcolumn = NULL, ...)
 }
 \arguments{
 \item{filename}{csv file to be read - not specifying a file will result in
 a file selection dialog being opened}
 
 \item{header}{whether the csv file contains a header line or not}
+
+\item{stringcolumns}{name(s) or index(es) of the columns containing the strings}
+
+\item{meaningcolumns}{names or indices of the columns specifying the meanings}
+
+\item{generationcolumn}{if the strings from consecutive generations are
+entered along rows rather than columns, this parameter indicates the column
+which specifies the generation to which a row belongs. When this parameter
+is specified, \code{stringcolumns} should be a single index/name.}
 
 \item{...}{extra arguments are passed on to \link{\code{mantel.development}}
 (and potentially further to \link{\code{plot.mantels}})}
@@ -26,6 +36,7 @@ meanings. See \code{mantelexample.csv} for a minimal example.
 }
 \examples{
 mantel.file(system.file("minimalexample.csv", package="mantel"), plot="r")
+mantel.file(system.file("generationsalongrows.csv", package="mantel"), plot="r", generationcolumn=4)
 }
 \seealso{
 \link{\code{mantel.development}}

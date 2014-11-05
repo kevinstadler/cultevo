@@ -32,6 +32,15 @@ mantel.test <- function(m1, m2, maxtrials=1000, conflate=FALSE, shuffle=shuffle.
   m1 <- check.dist(m1)
   m2 <- check.dist(m2)
   d <- dim(m2)[1]
+  size <- d/dim(m1)[1]
+  if (size != 1) {
+    if (size %% 1 == 0) {
+      message("Dimensionality of second matrix is a multiple of the first, replicating the first")
+      rep.matrix(m1, times=size)
+    } else {
+      stop("The two distance matrices have incompatible dimensions")
+    }
+  }
   if (conflate) {
     # a row's unique referent is the number of the first column where
     # the matrix contains a zero in that row
@@ -39,14 +48,6 @@ mantel.test <- function(m1, m2, maxtrials=1000, conflate=FALSE, shuffle=shuffle.
     m1 <- conflate.rows(m1, uniqueids, TRUE)
     m2 <- conflate.rows(m2, uniqueids, FALSE)
   }
-#  size <- d/attr(d1, "Size")
-#  if (size != 1) {
-#    if (size %% 1 == 0) {
-#      message("Dimensionality of second matrix is a multiple of the first")
-#    } else {
-#      stop("The two distance matrices have incompatible dimensions")
-#    }
-#  }
   indices <- which(lower.tri(m1))
   # extract values relevent for correlation computation
   m1 <- m1[indices]
@@ -56,7 +57,7 @@ mantel.test <- function(m1, m2, maxtrials=1000, conflate=FALSE, shuffle=shuffle.
   # values haven't been selected yet compared to the maximum number of trials?
   enumerate <- tryCatch(maxtrials/((factorial(d)*pgeom(maxtrials, 1/factorial(d), lower.tail=FALSE))) >= 1, warning=function(x)FALSE)
   if (enumerate && length(find.package("combinat", quiet=TRUE))) {
-    message("Permutation space is small, enumerating all possible permutations.")
+    message("Permutation space is small, enumerating all ", factorial(d), " possible permutations.")
     msample <- sapply(combinat::permn(d), function(perm)cor(m1, shuffle(m2, perm)[indices]))
   } else {
     msample <- replicate(maxtrials, cor(m1, shuffle(m2)[indices]))
@@ -115,17 +116,29 @@ mantel.development <- function(meanings, strings, ..., plot=NULL) {
 #' @param filename csv file to be read - not specifying a file will result in
 #'   a file selection dialog being opened
 #' @param header whether the csv file contains a header line or not
+#' @param stringcolumns name(s) or index(es) of the columns containing the strings
+#' @param meaningcolumns names or indices of the columns specifying the meanings
+#' @param generationcolumn if the strings from consecutive generations are
+#'   entered along rows rather than columns, this parameter indicates the column
+#'   which specifies the generation to which a row belongs. When this parameter
+#'   is specified, \code{stringcolumns} should be a single index/name.
 #' @param ... extra arguments are passed on to \link{\code{mantel.development}}
 #'   (and potentially further to \link{\code{plot.mantels}})
 #' @examples
 #' mantel.file(system.file("minimalexample.csv", package="mantel"), plot="r")
+#' mantel.file(system.file("generationsalongrows.csv", package="mantel"), plot="r", generationcolumn=4)
 #' @seealso \link{\code{mantel.development}}
 #' @seealso \link{\code{plot.mantels}}
 #' @export
-mantel.file <- function(filename=NULL, sep="\t", header=FALSE, stringcolumns=1, meaningcolumns=-stringcolumns, ...) {
+mantel.file <- function(filename=NULL, sep="\t", header=FALSE, stringcolumns=1, meaningcolumns=-c(stringcolumns,generationcolumn), generationcolumn=NULL, ...) {
   if (is.null(filename)) {
     filename <- file.choose()
   }
   data <- read.table(filename, stringsAsFactors=FALSE, sep=sep, header=header)
-  mantel.development(data[,meaningcolumns], data[,stringcolumns], ...)
+  if (!is.null(generationcolumn)) {
+    data <- aggregate(subset(data, select=stringcolumns), by=do.call(list, data[,meaningcolumns]), FUN=c)
+    meaningcolumns <- 1:length(meaningcolumns)
+    stringcolumns <- length(meaningcolumns)+1
+  }
+  mantel.development(data[,meaningcolumns], t(data[,stringcolumns]), ...)
 }
