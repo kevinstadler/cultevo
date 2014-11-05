@@ -136,7 +136,7 @@ mantel.file <- function(filename=NULL, sep="\t", header=FALSE, stringcolumns=1, 
   }
   data <- read.table(filename, stringsAsFactors=FALSE, sep=sep, header=header)
   if (!is.null(generationcolumn)) {
-    data <- aggregate(subset(data, select=stringcolumns), by=do.call(list, data[,meaningcolumns]), FUN=c)
+    data <- aggregate(subset(data[order(data[,generationcolumn]),], select=stringcolumns), by=do.call(list, data[,meaningcolumns]), FUN=c)
     meaningcolumns <- 1:length(meaningcolumns)
     stringcolumns <- length(meaningcolumns)+1
   }
