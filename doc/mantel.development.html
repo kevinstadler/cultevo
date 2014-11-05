@@ -40,7 +40,7 @@
 <div class="row">
   <div class="span8">
     <h2>Usage</h2>
-    <pre><div>mantel.development(meanings, strings, ..., plot&nbsp;=&nbsp;NULL)</div></pre>
+    <pre><div>mantel.development(meanings, strings, test.args&nbsp;=&nbsp;NULL, ..., plot&nbsp;=&nbsp;NULL)</div></pre>
     
     <h2>Arguments</h2>
     <dl>
@@ -48,6 +48,8 @@
       <dd>a matrix specifying all meaning combinations, as described in <a href='hammingdists.html'>hammingdists</a></dd>
       <dt>strings</dt>
       <dd>either a vector of strings, or a matrix of strings per generation</dd>
+      <dt>test.args</dt>
+      <dd>a list of named arguments passed on to <code>mantel.test</code></dd>
       <dt>...</dt>
       <dd>extra arguments passed on to the plotting function - here you
 might want to specify parameters like <code>ylim</code>..</dd>
@@ -117,6 +119,8 @@ mantel.development(allmeaningcombinations(c(2,2)), m, plot=&quot;r&quot;)
     <h2>See also</h2>
     
 <a href='hammingdists.html'>hammingdists</a>
+
+<a href='mantel.test.html'>mantel.test</a>
 
         
   </div>

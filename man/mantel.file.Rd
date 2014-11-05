@@ -5,7 +5,7 @@
 \usage{
 mantel.file(filename = NULL, sep = "\\t", header = FALSE,
   stringcolumns = 1, meaningcolumns = -c(stringcolumns, generationcolumn),
-  generationcolumn = NULL, ...)
+  generationcolumn = NULL, test.args = NULL, ...)
 }
 \arguments{
 \item{filename}{csv file to be read - not specifying a file will result in
@@ -23,7 +23,7 @@ which specifies the generation to which a row belongs. When this parameter
 is specified, \code{stringcolumns} should be a single index/name.}
 
 \item{...}{extra arguments are passed on to \link{\code{mantel.development}}
-(and potentially further to \link{\code{plot.mantels}})}
+(and potentially further to \link{\code{mantel.test}} and \link{\code{plot.mantels}})}
 }
 \description{
 Reads the given .csv file and runs Mantel tests on it, optionally plotting
@@ -36,10 +36,13 @@ meanings. See \code{mantelexample.csv} for a minimal example.
 }
 \examples{
 mantel.file(system.file("minimalexample.csv", package="mantel"), plot="r")
+mantel.file(system.file("minimalexample.csv", package="mantel"), plot="r", test.args=list(maxtrials=10, conflate=TRUE))
 mantel.file(system.file("generationsalongrows.csv", package="mantel"), plot="r", generationcolumn=4)
 }
 \seealso{
 \link{\code{mantel.development}}
+
+\link{\code{mantel.test}}
 
 \link{\code{plot.mantels}}
 }

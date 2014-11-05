@@ -36,7 +36,7 @@ mantel.test <- function(m1, m2, maxtrials=1000, conflate=FALSE, shuffle=shuffle.
   if (size != 1) {
     if (size %% 1 == 0) {
       message("Dimensionality of second matrix is a multiple of the first, replicating the first")
-      rep.matrix(m1, times=size)
+      m1 <- rep.matrix(m1, times=size)
     } else {
       stop("The two distance matrices have incompatible dimensions")
     }
@@ -78,6 +78,7 @@ mantel.test <- function(m1, m2, maxtrials=1000, conflate=FALSE, shuffle=shuffle.
 #' 
 #' @param meanings a matrix specifying all meaning combinations, as described in \link{\code{hammingdists}}
 #' @param strings either a vector of strings, or a matrix of strings per generation
+#' @param test.args a list of named arguments passed on to \code{mantel.test}
 #' @param plot specifies which mantel test outcome should be plotted (if any):
 #'   currently supported are \code{"r"} and \code{"z"}.
 #' @param ... extra arguments passed on to the plotting function - here you
@@ -89,13 +90,14 @@ mantel.test <- function(m1, m2, maxtrials=1000, conflate=FALSE, shuffle=shuffle.
 #' mantel.development(allmeaningcombinations(c(2,2)), m, plot="r")
 #' mantel.development(allmeaningcombinations(c(2,2)), m, plot="z")
 #' @seealso \link{\code{hammingdists}}
+#' @seealso \link{\code{mantel.test}}
 #' @export
-mantel.development <- function(meanings, strings, ..., plot=NULL) {
+mantel.development <- function(meanings, strings, test.args=NULL, ..., plot=NULL) {
   if (is.vector(strings)) {
     strings <- t(strings)
   }
   d1 <- hammingdists(meanings)
-  mantels <- do.call(rbind, apply(strings, 1, function(row)mantel.test(d1, normalisedlevenshteindists(row))))
+  mantels <- do.call(rbind, apply(strings, 1, function(row)do.call(mantel.test, c(list(m1=d1, m2=normalisedlevenshteindists(row)), test.args))))
   rownames(mantels) <- 0:(nrow(mantels)-1)
   if (!is.null(plot)) {
     plot.mantels(mantels, plot, ...)
@@ -123,14 +125,16 @@ mantel.development <- function(meanings, strings, ..., plot=NULL) {
 #'   which specifies the generation to which a row belongs. When this parameter
 #'   is specified, \code{stringcolumns} should be a single index/name.
 #' @param ... extra arguments are passed on to \link{\code{mantel.development}}
-#'   (and potentially further to \link{\code{plot.mantels}})
+#'   (and potentially further to \link{\code{mantel.test}} and \link{\code{plot.mantels}})
 #' @examples
 #' mantel.file(system.file("minimalexample.csv", package="mantel"), plot="r")
+#' mantel.file(system.file("minimalexample.csv", package="mantel"), plot="r", test.args=list(maxtrials=10, conflate=TRUE))
 #' mantel.file(system.file("generationsalongrows.csv", package="mantel"), plot="r", generationcolumn=4)
 #' @seealso \link{\code{mantel.development}}
+#' @seealso \link{\code{mantel.test}}
 #' @seealso \link{\code{plot.mantels}}
 #' @export
-mantel.file <- function(filename=NULL, sep="\t", header=FALSE, stringcolumns=1, meaningcolumns=-c(stringcolumns,generationcolumn), generationcolumn=NULL, ...) {
+mantel.file <- function(filename=NULL, sep="\t", header=FALSE, stringcolumns=1, meaningcolumns=-c(stringcolumns,generationcolumn), generationcolumn=NULL, test.args=NULL, ...) {
   if (is.null(filename)) {
     filename <- file.choose()
   }
@@ -140,5 +144,5 @@ mantel.file <- function(filename=NULL, sep="\t", header=FALSE, stringcolumns=1, 
     meaningcolumns <- 1:length(meaningcolumns)
     stringcolumns <- length(meaningcolumns)+1
   }
-  mantel.development(data[,meaningcolumns], t(data[,stringcolumns]), ...)
+  mantel.development(data[,meaningcolumns], t(data[,stringcolumns]), test.args=test.args, ...)
 }

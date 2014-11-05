@@ -40,7 +40,7 @@
 <div class="row">
   <div class="span8">
     <h2>Usage</h2>
-    <pre><div>mantel.file(filename&nbsp;=&nbsp;NULL, sep&nbsp;=&nbsp;"\t", header&nbsp;=&nbsp;FALSE, stringcolumns&nbsp;=&nbsp;1, meaningcolumns&nbsp;=&nbsp;-c(stringcolumns, generationcolumn), generationcolumn&nbsp;=&nbsp;NULL, ...)</div></pre>
+    <pre><div>mantel.file(filename&nbsp;=&nbsp;NULL, sep&nbsp;=&nbsp;"\t", header&nbsp;=&nbsp;FALSE, stringcolumns&nbsp;=&nbsp;1, meaningcolumns&nbsp;=&nbsp;-c(stringcolumns, generationcolumn), generationcolumn&nbsp;=&nbsp;NULL, test.args&nbsp;=&nbsp;NULL, ...)</div></pre>
     
     <h2>Arguments</h2>
     <dl>
@@ -60,7 +60,7 @@ which specifies the generation to which a row belongs. When this parameter
 is specified, <code>stringcolumns</code> should be a single index/name.</dd>
       <dt>...</dt>
       <dd>extra arguments are passed on to <a href='mantel.development.html'>mantel.development</a>
-(and potentially further to <a href='plot.mantels.html'>plot.mantels</a>)</dd>
+(and potentially further to <a href='mantel.test.html'>mantel.test</a> and <a href='plot.mantels.html'>plot.mantels</a>)</dd>
     </dl>
     
     <div class="Read data from a tab or comma-separated file and run Mantel tests on the data.">
@@ -89,11 +89,17 @@ meanings. See <code>mantelexample.csv</code> for a minimal example.</p>
 <div class='output'>  mean sd        veridical p     z        msample   
 0 0    0.7223151 1         0.008 1.384437 Numeric,24
 </div>
+<div class='input'>mantel.file(system.file(&quot;minimalexample.csv&quot;, package=&quot;mantel&quot;), plot=&quot;r&quot;, test.args=list(maxtrials=10, conflate=TRUE))
+</div>
+<p><img src='mantel.file-6.png' alt='' width='400' height='400' /></p>
+<div class='output'>  mean  sd        veridical p   z        msample   
+0 -0.05 0.7245688 1         0.3 1.449138 Numeric,10
+</div>
 <div class='input'>mantel.file(system.file(&quot;generationsalongrows.csv&quot;, package=&quot;mantel&quot;), plot=&quot;r&quot;, generationcolumn=4)
 </div>
 <strong class='message'>Permutation space is small, enumerating all 24 possible permutations.</strong>
 <strong class='message'>Permutation space is small, enumerating all 24 possible permutations.</strong>
-<p><img src='mantel.file-8.png' alt='' width='400' height='400' /></p>
+<p><img src='mantel.file-11.png' alt='' width='400' height='400' /></p>
 <div class='output'>  mean         sd        veridical p     z        msample   
 0 3.699219e-17 0.6371101 0.6591831 0.008 1.034645 Numeric,24
 1 0            0.7223151 1         0.008 1.384437 Numeric,24
@@ -110,6 +116,8 @@ meanings. See <code>mantelexample.csv</code> for a minimal example.</p>
     <h2>See also</h2>
     
 <a href='mantel.development.html'>mantel.development</a>
+
+<a href='mantel.test.html'>mantel.test</a>
 
 <a href='plot.mantels.html'>plot.mantels</a>
 
