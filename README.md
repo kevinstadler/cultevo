@@ -12,9 +12,15 @@ If this doesn't work you probably need to install the `devtools` package first:
 
 ## Usage
 
-A nice HTML documentation is available at https://rawgit.com/kevinstadler/mantel/master/doc/index.html
+Call
+
+    library(mantel)
+
+and then fire away some Mantel tests! A nice HTML documentation is available at https://rawgit.com/kevinstadler/mantel/master/doc/index.html
 
 See [mantel.file()](https://rawgit.com/kevinstadler/mantel/master/doc/mantel.file.html) for straightforward computation of Mantel tests from an input file. While the command is highly customisable, if you don't want to mess about with all its parameters it is simplest if you have tab-separated `.csv` files with the strings in the first column, followed by meaning specifications in the remaining columns.
+
+If you already have the distance matrices computed and you just want to run the actual tests, have a look at [mantel.test()](https://rawgit.com/kevinstadler/mantel/master/doc/mantel.test.html).
 
 ## Links
 

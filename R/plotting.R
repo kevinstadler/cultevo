@@ -13,14 +13,15 @@ if (!suppressWarnings(require(Hmisc, quietly=TRUE))) {
 # lookup table for plotting functions for different mantel test measures
 mantel.plotfuns <- list()
 
-mantel.plotfuns[["z"]] <- function(mantels, ylim=range(c(0,mantels[,"z"])), ...) {
+mantel.plotfuns[["z"]] <- function(mantels, ylim=range(1, mantels[,"z"])+c(-1,1), ...) {
   plot(1:nrow(mantels), mantels[,"z"], ylab="z score", ylim=ylim, ...)
   abline(h=0, lty=2, col="grey")
 }
 
-mantel.plotfuns[["r"]] <- function(mantels, ylim=range(c(0, mantels[,"veridical"], unlist(mantels[,"mean"])+unlist(mantels[,"sd"]), unlist(mantels[,"mean"])-unlist(mantels[,"sd"]))), ...) {
+mantel.plotfuns[["r"]] <- function(mantels, ylim=range(0.1, mantels[,"veridical"], unlist(mantels[,"mean"])+unlist(mantels[,"sd"]), unlist(mantels[,"mean"])-unlist(mantels[,"sd"]))+c(-0.1,0.1), ...) {
   errbar(1:nrow(mantels), mantels[,"mean"], unlist(mantels[,"mean"])+unlist(mantels[,"sd"]), unlist(mantels[,"mean"])-unlist(mantels[,"sd"]), ylab="r", ylim=ylim, ...)
-  abline(h=0, lty=2, col="grey")
+  # plot correlation coefficient reference points
+  abline(h=-1:1, lty=c(3,2,3), col="grey")
   points(1:nrow(mantels), mantels[,"veridical"], col="red")
   # label the veridical rs with their z scores
   text(1:nrow(mantels), mantels[,"veridical"], labels=paste("z", round(unlist(mantels[,"z"]), digits=2), sep="="), pos=2+sign(unlist(mantels[,"z"])))
