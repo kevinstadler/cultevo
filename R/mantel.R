@@ -20,7 +20,7 @@ if (suppressWarnings(require(gputools, quietly=TRUE))) {
 #' @param shuffle a function applied to \code{m2} to shuffle entries, taking a
 #'   matrix and an optional permutation specification as its arguments - you
 #'   shouldn't normally have to change this
-#' @return a list specifying the results of the Mantel test
+#' @return a dataframe specifying the results of the Mantel test(s)
 #' @examples
 #' # small distance matrix, Mantel test run deterministically
 #' mantel.test(dist(1:4), dist(1:4))
@@ -45,8 +45,12 @@ mantel.test <- function(m1, m2, maxtrials=1000, conflate=FALSE, shuffle=shuffle.
     # a row's unique referent is the number of the first column where
     # the matrix contains a zero in that row
     uniqueids <- apply(m1, 1, function(row)match(0,row))
-    m1 <- conflate.rows(m1, uniqueids, TRUE)
-    m2 <- conflate.rows(m2, uniqueids, FALSE)
+    if (length(unique(uniqueids)) == d) {
+      warning("Specified conflate=TRUE, but there was nothing to conflate.")
+    } else {
+      m1 <- conflate.rows(m1, uniqueids, TRUE)
+      m2 <- conflate.rows(m2, uniqueids, FALSE)
+    }
   }
   indices <- which(lower.tri(m1))
   # extract values relevent for correlation computation
@@ -66,7 +70,7 @@ mantel.test <- function(m1, m2, maxtrials=1000, conflate=FALSE, shuffle=shuffle.
   mn <- mean(msample)
   s <- sd(msample)
   z <- (veridical-mn)/s
-  return(list(mean=mn, sd=s, veridical=veridical, p=c/maxtrials, z=z, msample=msample))
+  return(data.frame(mean=mn, sd=s, veridical=veridical, p=c/maxtrials, z=z, msample=I(list(msample))))
 }
 
 #' Run Mantel tests on a set of consecutive data.
@@ -78,7 +82,7 @@ mantel.test <- function(m1, m2, maxtrials=1000, conflate=FALSE, shuffle=shuffle.
 #' 
 #' @param meanings a matrix specifying all meaning combinations, as described in \link{\code{hammingdists}}
 #' @param strings either a vector of strings, or a matrix of strings per generation
-#' @param test.args a list of named arguments passed on to \code{mantel.test}
+#' @param test.args a list of named arguments passed on to \link{\code{mantel.test}}
 #' @param plot specifies which mantel test outcome should be plotted (if any):
 #'   currently supported are \code{"r"} and \code{"z"}.
 #' @param ... extra arguments passed on to the plotting function - here you
@@ -124,6 +128,7 @@ mantel.development <- function(meanings, strings, test.args=NULL, ..., plot=NULL
 #'   entered along rows rather than columns, this parameter indicates the column
 #'   which specifies the generation to which a row belongs. When this parameter
 #'   is specified, \code{stringcolumns} should be a single index/name.
+#' @param test.args a list of named arguments passed on to \link{\code{mantel.test}}
 #' @param ... extra arguments are passed on to \link{\code{mantel.development}}
 #'   (and potentially further to \link{\code{mantel.test}} and \link{\code{plot.mantels}})
 #' @examples

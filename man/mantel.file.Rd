@@ -22,6 +22,8 @@ entered along rows rather than columns, this parameter indicates the column
 which specifies the generation to which a row belongs. When this parameter
 is specified, \code{stringcolumns} should be a single index/name.}
 
+\item{test.args}{a list of named arguments passed on to \link{\code{mantel.test}}}
+
 \item{...}{extra arguments are passed on to \link{\code{mantel.development}}
 (and potentially further to \link{\code{mantel.test}} and \link{\code{plot.mantels}})}
 }

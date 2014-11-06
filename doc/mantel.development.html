@@ -49,7 +49,7 @@
       <dt>strings</dt>
       <dd>either a vector of strings, or a matrix of strings per generation</dd>
       <dt>test.args</dt>
-      <dd>a list of named arguments passed on to <code>mantel.test</code></dd>
+      <dd>a list of named arguments passed on to <a href='mantel.test.html'>mantel.test</a></dd>
       <dt>...</dt>
       <dd>extra arguments passed on to the plotting function - here you
 might want to specify parameters like <code>ylim</code>..</dd>
@@ -85,8 +85,8 @@ of internally.</p>
 </div>
 <strong class='message'>Permutation space is small, enumerating all 24 possible permutations.</strong>
 <p><img src='mantel.development-3.png' alt='' width='400' height='400' /></p>
-<div class='output'>  mean sd        veridical p     z        msample   
-0 0    0.4074407 0.4264014 0.008 1.046536 Numeric,24
+<div class='output'>  mean        sd veridical     p        z      msample
+0    0 0.4074407 0.4264014 0.008 1.046536 0.426401....
 </div>
 <div class='input'>m &lt;- matrix(c(&quot;sadasd&quot;, &quot;iuerwh&quot;, &quot;sdfgkj&quot;, &quot;uofidsgf&quot;, &quot;asd&quot;, &quot;asdf&quot;, &quot;&quot;, &quot;f&quot;), nrow=2, byrow=T)
 mantel.development(allmeaningcombinations(c(2,2)), m, plot=&quot;r&quot;)
@@ -94,18 +94,18 @@ mantel.development(allmeaningcombinations(c(2,2)), m, plot=&quot;r&quot;)
 <strong class='message'>Permutation space is small, enumerating all 24 possible permutations.</strong>
 <strong class='message'>Permutation space is small, enumerating all 24 possible permutations.</strong>
 <p><img src='mantel.development-8.png' alt='' width='400' height='400' /></p>
-<div class='output'>  mean sd        veridical  p     z         msample   
-0 0    0.1001671 0.06933752 0.016 0.6922187 Numeric,24
-1 0    0.4074407 0.4264014  0.008 1.046536  Numeric,24
+<div class='output'>  mean        sd  veridical     p         z      msample
+0    0 0.1001671 0.06933752 0.016 0.6922187 0.069337....
+1    0 0.4074407 0.42640143 0.008 1.0465362 0.426401....
 </div>
 <div class='input'>mantel.development(allmeaningcombinations(c(2,2)), m, plot=&quot;z&quot;)
 </div>
 <strong class='message'>Permutation space is small, enumerating all 24 possible permutations.</strong>
 <strong class='message'>Permutation space is small, enumerating all 24 possible permutations.</strong>
 <p><img src='mantel.development-13.png' alt='' width='400' height='400' /></p>
-<div class='output'>  mean sd        veridical  p     z         msample   
-0 0    0.1001671 0.06933752 0.016 0.6922187 Numeric,24
-1 0    0.4074407 0.4264014  0.008 1.046536  Numeric,24
+<div class='output'>  mean        sd  veridical     p         z      msample
+0    0 0.1001671 0.06933752 0.016 0.6922187 0.069337....
+1    0 0.4074407 0.42640143 0.008 1.0465362 0.426401....
 </div></pre>
   </div>
   <div class="span4">

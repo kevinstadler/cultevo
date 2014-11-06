@@ -10,7 +10,7 @@ mantel.development(meanings, strings, test.args = NULL, ..., plot = NULL)
 
 \item{strings}{either a vector of strings, or a matrix of strings per generation}
 
-\item{test.args}{a list of named arguments passed on to \code{mantel.test}}
+\item{test.args}{a list of named arguments passed on to \link{\code{mantel.test}}}
 
 \item{...}{extra arguments passed on to the plotting function - here you
 might want to specify parameters like \code{ylim}..}

@@ -21,7 +21,7 @@ matrix and an optional permutation specification as its arguments - you
 shouldn't normally have to change this}
 }
 \value{
-a list specifying the results of the Mantel test
+a dataframe specifying the results of the Mantel test(s)
 }
 \description{
 Performs a Mantel permutation test on two distance matrices.
