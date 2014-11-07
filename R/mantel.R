@@ -67,10 +67,18 @@ mantel.test <- function(m1, m2, maxtrials=1000, conflate=FALSE, shuffle=shuffle.
     msample <- replicate(maxtrials, cor(m1, shuffle(m2)[indices]))
   }
   c <- sum(msample >= veridical)
+  p <- c/length(msample)
   mn <- mean(msample)
   s <- sd(msample)
   z <- (veridical-mn)/s
-  return(data.frame(mean=mn, sd=s, veridical=veridical, p=c/maxtrials, z=z, msample=I(list(msample))))
+  p.smoothed <- pnorm(z, lower.tail=FALSE)
+  # suppress warnings about tied r's
+  normality <- suppressWarnings(ks.test(msample, "pnorm", mn, s))
+  if (normality$p.value < 0.1) {
+    warning("The sample of randomised r's is not normally distributed, use that z score with a grain of salt")
+    p.smoothed <- NA
+  }
+  data.frame(veridical=veridical, mean=mn, sd=s, z=z, p=p, p.smoothed=p.smoothed, msample=I(list(msample)))
 }
 
 #' Run Mantel tests on a set of consecutive data.

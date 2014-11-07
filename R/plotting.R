@@ -13,7 +13,7 @@ if (!suppressWarnings(require(Hmisc, quietly=TRUE))) {
 # lookup table for plotting functions for different mantel test measures
 mantel.plotfuns <- list()
 
-mantel.plotfuns[["z"]] <- function(mantels, ylim=range(1, mantels[,"z"])+c(-1,1), ...) {
+mantel.plotfuns[["z"]] <- function(mantels, ylim=range(0, mantels[,"z"])+c(0,1), ...) {
   plot(1:nrow(mantels), mantels[,"z"], ylab="z score", ylim=ylim, ...)
   abline(h=0, lty=2, col="grey")
 }
