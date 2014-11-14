@@ -24,8 +24,8 @@
 #' @export
 rep.matrix <- function(m, times=1, each=1, times.row=times, times.col=times, each.row=each, each.col=each) {
   # replicate individual elements
-  m <- matrix(rep(as.matrix(m), each=each.col), nrow=each.col*dim(m)[1])
-  m <- matrix(rep(t(m), each=each.row), nrow=each.row*dim(m)[2])
+  m <- matrix(rep(m, each=each.row), ncol=each.row*dim(m)[1], byrow=TRUE)
+  m <- matrix(rep(m, each=each.col), ncol=each.col*dim(m)[1], byrow=TRUE)
   # replicate entire matrix
   do.call(cbind, replicate(times.col, do.call(rbind, replicate(times.row, m, simplify=FALSE)), simplify=FALSE))
 }
