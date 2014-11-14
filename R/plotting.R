@@ -12,16 +12,22 @@ if (suppressWarnings(require(Hmisc, quietly=TRUE))) {
   }
 }
 
-red.if.na <- function(x) {
-  c("black", "red")[1+sapply(x, is.na)]
+red.if.na <- function(x, default="black") {
+  mapply(function(x,d) if (is.na(x)) "red" else d, x, default)
 }
+blue.if.true <- function(x, default="black") {
+  mapply(function(x,d) if (x) "blue" else d, x, default)
+}
+# combinable:
+# blue.if.true(c(T, F, F), red.if.na(c(NA, NA, 3)))
+
 
 # lookup table for plotting functions for different mantel test measures
 mantel.plotfuns <- list()
 
-mantel.plotfuns[["z"]] <- function(mantels, ylim=range(0, mantels[,"z"])+c(0,1), ...) {
+mantel.plotfuns[["z"]] <- function(mantels, ylim=range(0, mantels[,"z"])+c(0,1), col=blue.if.true(mantels[,"is.unique.max"], red.if.na(mantels[,"p.smoothed"])), ...) {
   # TODO add msample histogram when nrow(mantels) == 1
-  plot(1:nrow(mantels), mantels[,"z"], ylab="z score", ylim=ylim, col=red.if.na(mantels[,"p.smoothed"]), ...)
+  plot(1:nrow(mantels), mantels[,"z"], ylab="z score", ylim=ylim, col=col, ...)
   abline(h=0, lty=2, col="grey")
 }
 
@@ -31,7 +37,7 @@ mantel.plotfuns[["r"]] <- function(mantels, ylim=range(0.1, mantels[,"veridical"
   # plot correlation coefficient reference points
   abline(h=-1:1, lty=c(3,2,3), col="grey")
   # blue points signify that no single larger r value has been sampled
-  points(1:nrow(mantels), mantels[,"veridical"], col=c("black", "blue")[1+mantels[,"is.unique.max"]])
+  points(1:nrow(mantels), mantels[,"veridical"], col=blue.if.true(mantels[,"is.unique.max"]))
   # label the veridical rs with their z scores
   text(1:nrow(mantels), mantels[,"veridical"], labels=paste("z", round(unlist(mantels[,"z"]), digits=2), sep="="), pos=2+sign(unlist(mantels[,"z"])))
 }
