@@ -55,6 +55,39 @@ normalisedlevenshteindists <- function(strings) {
   as.dist(levs / outer(lens, lens, pmax))
 }
 
+#' Construct a distance matrix by reading distances from a file or dataframe
+#'
+#' @param data a filename, dataframe or matrix
+#' @param el1.column the column name or id specifying the first element
+#' @param el2.column the column name or id specifying the second element
+#' @param dist.columns the column name(s) or id(s) specifying the distance(s)
+#'   between the two corresponding elements
+#' @return a distance matrix (or list of distance matrixes when there is more
+#'   than one \code{dist.columns}) of type \code{matrix}
+#' @examples
+#' read.dist(cbind(c(1,1,1,2,2,3), c(2,3,4,3,4,4), 1:6, 6:1), dist.columns=c(3,4))
+#' @export
+read.dist <- function(data, el1.column=1, el2.column=2, dist.columns=3) {
+  if (is.character(data)) {
+    data <- read.csv(filename, header=TRUE)
+  }
+  els <- unique(c(data[,el1.column], data[,el2.column]))
+  # create as many matrices as there are dist.columns
+  d <- replicate(length(dist.columns), matrix(0, nrow=length(els), ncol=length(els)))
+  el1s <- match(data[,el1.column], els)
+  el2s <- match(data[,el2.column], els)
+  indices <- cbind(rep.matrix(cbind(el1s, el2s), each.row=length(dist.columns)), 1:length(dist.columns))
+  d[indices] <- as.matrix(data[,dist.columns])
+  if (length(dist.columns) == 1) {
+    return(d[,,1])
+  } else {
+    # turn 3d array into named list
+    d <- lapply(1:length(dist.columns), function(i)d[,,i])
+    names(d) <- dist.columns
+    return(d)
+  }
+}
+
 #' Check or fix a distance matrix.
 #' 
 #' Checks or fixes the given distance matrix specification and, if possible,
@@ -73,6 +106,7 @@ normalisedlevenshteindists <- function(strings) {
 #' @return a symmetric \code{matrix} object (or list of such objects) of the
 #'   same dimension as \code{d}
 #' @seealso \code{\link{dist}}
+#' @export
 check.dist <- function(d) {
   UseMethod("check.dist", d)
 }
