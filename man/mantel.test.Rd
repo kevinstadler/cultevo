@@ -3,18 +3,20 @@
 \alias{mantel.test}
 \title{Perform a Mantel test.}
 \usage{
-mantel.test(m1, m2, maxtrials = 1000, conflate = FALSE,
+mantel.test(m1, m2, maxtrials = 1000, conflate = FALSE, ks.level = 0.05,
   shuffle = shuffle.locations)
 }
 \arguments{
-\item{m1}{a (meaning) distance matrix}
+\item{m1}{a (meaning) distance matrix, or list of matrices}
 
-\item{m2}{a (string) distance matrix}
+\item{m2}{a (string) distance matrix, or list of matrices}
 
 \item{maxtrials}{maximum number of permutations to be tested}
 
 \item{conflate}{if \code{TRUE}, entries with 0 distance in \code{m1} will be
 conflated by averaging over the corresponding entries in \code{m2}}
+
+\item{ks.level}{p-level below which a failure to pass}
 
 \item{shuffle}{a function applied to \code{m2} to shuffle entries, taking a
 matrix and an optional permutation specification as its arguments - you
@@ -26,6 +28,25 @@ a dataframe specifying the results of the Mantel test(s)
 \description{
 Performs a Mantel permutation test on two distance matrices.
 }
+\details{
+Given two distance matrices (or list of distance matrices) \code{m1} and
+\code{m2}, performs a Mantel permutation test on the two matrices (or all
+pairwise combinations of matrices if at least one of the parameters is a
+list of matrices), and returns the outcome of the test(s) in a data frame.
+
+The distance matrices can either be of type \link{\code{dist}}, plain R
+matrices or any object that can be interpreted by \link{\code{check.dist}}.
+
+If the number of possible permutations is reasonably close to
+\code{maxtrials}, a deterministic enumeration of all the permutations will
+be carried out instead of random sampling.
+
+A warning will be produced if the randomly sampled \code{r} coefficients are
+not normally distributed according to a Kolmogorov-Smirnoff test, at the
+level specified by \code{ks.level}). Being normally distributed is a
+condition for the calculation of a meaningful z score. Failing the test of
+normality will also be signalled by \code{p.smoothed} being set to \code{NA}.
+}
 \examples{
 # small distance matrix, Mantel test run deterministically
 mantel.test(dist(1:4), dist(1:4))
@@ -33,6 +54,7 @@ mantel.test(dist(1:4), dist(1:4))
 mantel.test(dist(1:7), dist(1:7))
 }
 \seealso{
-\code{\link{hammingdists}}, \code{\link{normalisedlevenshteindists}}
+\code{|link{cor}}, \code{\link{hammingdists}},
+  \code{\link{normalisedlevenshteindists}}
 }
 

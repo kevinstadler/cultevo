@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>plot.mantels. mantel 0.1</title>
+<title>plot.mantel. mantel 0.2</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="">
 
@@ -20,7 +20,7 @@
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">mantel 0.1</a>
+      <a class="brand" href="#">mantel 0.2</a>
       <div class="nav">
         <ul class="nav">
           <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
@@ -35,38 +35,43 @@
         
       </header>
       
-      <h1>Plot outcome measures of consecutive Mantel tests.</h1>
+      <h1>Plot a Mantel test result.</h1>
 
 <div class="row">
   <div class="span8">
     <h2>Usage</h2>
-    <pre><div>"plot"(mantels, plot, xlab&nbsp;=&nbsp;"generation", ...)</div></pre>
+    <pre><div>"plot"(mantels, plot&nbsp;=&nbsp;"r", xlab&nbsp;=&nbsp;"generation", ...)</div></pre>
     
     <h2>Arguments</h2>
     <dl>
       <dt>mantels</dt>
-      <dd>a matrix or data frame of Mantel test results</dd>
+      <dd>a Mantel test result (a data frame of class 'mantel')</dd>
       <dt>plot</dt>
       <dd>the measure to be visualised, currently supported: 'r' and 'z'</dd>
       <dt>...</dt>
       <dd>additional parameters to be passed on to the plotting function</dd>
     </dl>
     
-    <div class="Plot outcome measures of consecutive Mantel tests.">
-      <h2>Plot outcome measures of consecutive Mantel tests.</h2>
+    <div class="Plot a Mantel test result.">
+      <h2>Plot a Mantel test result.</h2>
       
     </div>
 
     <div class="Description">
       <h2>Description</h2>
       
-      <p>Plot outcome measures of consecutive Mantel tests.</p>
+      <p>Plots the result of one or more Mantel permutation tests.</p>
   
     </div>
-      </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>plot(mantel.test(hammingdists(allmeaningcombinations(c(2,2,2,2))), suppressWarnings(as.dist(1:16))))
+</div>
+<p><img src='plot.mantel-2.png' alt='' width='400' height='400' /></p></pre>
+  </div>
   <div class="span4">
     <!-- <ul>
-      <li>plot.mantels</li>
+      <li>plot.mantel</li>
     </ul>
     <ul>
       
@@ -74,7 +79,7 @@
       
     <h2>See also</h2>
     
-<a href='mantel.development.html'>mantel.development</a>
+<a href='mantel.development.html'>mantel.development</a>, <a href='http://www.inside-r.org/packages/cran/graphics/docs/plot.default'>plot.default</a>
 
         
   </div>

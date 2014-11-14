@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>check.dist. mantel 0.1</title>
+<title>check.dist. mantel 0.2</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="">
 
@@ -20,7 +20,7 @@
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">mantel 0.1</a>
+      <a class="brand" href="#">mantel 0.2</a>
       <div class="nav">
         <ul class="nav">
           <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
@@ -35,38 +35,51 @@
         
       </header>
       
-      <h1>Check or fix a symmetric distance matrix.</h1>
+      <h1>Check or fix a distance matrix.</h1>
 
 <div class="row">
   <div class="span8">
     <h2>Usage</h2>
-    <pre><div>check.dist(m)</div></pre>
+    <pre><div>check.dist(d)</div></pre>
     
     <h2>Arguments</h2>
     <dl>
-      <dt>m</dt>
-      <dd>a distance matrix</dd>
+      <dt>d</dt>
+      <dd>an object (or list of objects) specifying a distance matrix</dd>
     </dl>
     
-    <div class="Check or fix a symmetric distance matrix.">
-      <h2>Check or fix a symmetric distance matrix.</h2>
+    <div class="Check or fix a distance matrix.">
+      <h2>Check or fix a distance matrix.</h2>
       
     </div>
 
     <div class="Value">
       <h2>Value</h2>
       
-      <p>a symmetric matrix of the same size as <code>m</code>, with 0s in the diagonal</p>
+      <p>a symmetric <code>matrix</code> object (or list of such objects) of the
+  same dimension as <code>d</code></p>
   
     </div>
 
     <div class="Description">
       <h2>Description</h2>
       
-      <p>If <code>m</code> is a matrix, check whether it is a valid specification of a
-distance matrix and return it, making it symmetric if it isn't already.
-For all other obect types, try to coerce <code>m</code> to a <code>dist</code> object
-and return the corresponding distance matrix.</p>
+      <p>Checks or fixes the given distance matrix specification and, if possible,
+returns an equivalent symmetric <code>matrix</code> object with 0s in the diagonal.</p>
+  
+    </div>
+
+    <div class="Details">
+      <h2>Details</h2>
+      
+      <p>If the argument is a matrix, check whether it is a valid specification of a
+distance matrix and return it, making it symmetric if it isn't already.</p>
+  
+      <p>If the argument is a list, calls <code>check.dist</code> on every of its elements
+and returns a list of the results.</p>
+  
+      <p>For all other object types, attempts to coerce <code>m</code> to a <code>dist</code>
+object and return the corresponding distance matrix.</p>
   
     </div>
       </div>

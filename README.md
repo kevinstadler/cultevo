@@ -20,7 +20,7 @@ and then fire away some Mantel tests! A nice HTML documentation is available at 
 
 See [mantel.file()](https://rawgit.com/kevinstadler/mantel/master/doc/mantel.file.html) for straightforward computation of Mantel tests from an input file. While the command is highly customisable, if you don't want to mess about with all its parameters it is simplest if you have tab-separated `.csv` files with the strings in the first column, followed by meaning specifications in the remaining columns.
 
-If you already have the distance matrices computed and you just want to run the actual tests, have a look at [mantel.test()](https://rawgit.com/kevinstadler/mantel/master/doc/mantel.test.html).
+If you already have the distance matrices computed and you just want to run the actual tests, have a look at [mantel.test()](https://rawgit.com/kevinstadler/mantel/master/doc/mantel.test.html). To visualise the outcome of one or more tests, call [plot.mantel()](https://rawgit.com/kevinstadler/mantel/master/doc/plot.mantel.html).
 
 ## Links
 

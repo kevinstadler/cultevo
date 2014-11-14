@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>mantel.test. mantel 0.1</title>
+<title>mantel.test. mantel 0.2</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="">
 
@@ -20,7 +20,7 @@
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">mantel 0.1</a>
+      <a class="brand" href="#">mantel 0.2</a>
       <div class="nav">
         <ul class="nav">
           <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
@@ -40,19 +40,21 @@
 <div class="row">
   <div class="span8">
     <h2>Usage</h2>
-    <pre><div>mantel.test(m1, m2, maxtrials&nbsp;=&nbsp;1000, conflate&nbsp;=&nbsp;FALSE, shuffle&nbsp;=&nbsp;shuffle.locations)</div></pre>
+    <pre><div>mantel.test(m1, m2, maxtrials&nbsp;=&nbsp;1000, conflate&nbsp;=&nbsp;FALSE, ks.level&nbsp;=&nbsp;0.05, shuffle&nbsp;=&nbsp;shuffle.locations)</div></pre>
     
     <h2>Arguments</h2>
     <dl>
       <dt>m1</dt>
-      <dd>a (meaning) distance matrix</dd>
+      <dd>a (meaning) distance matrix, or list of matrices</dd>
       <dt>m2</dt>
-      <dd>a (string) distance matrix</dd>
+      <dd>a (string) distance matrix, or list of matrices</dd>
       <dt>maxtrials</dt>
       <dd>maximum number of permutations to be tested</dd>
       <dt>conflate</dt>
       <dd>if <code>TRUE</code>, entries with 0 distance in <code>m1</code> will be
 conflated by averaging over the corresponding entries in <code>m2</code></dd>
+      <dt>ks.level</dt>
+      <dd>p-level below which a failure to pass</dd>
       <dt>shuffle</dt>
       <dd>a function applied to <code>m2</code> to shuffle entries, taking a
 matrix and an optional permutation specification as its arguments - you
@@ -77,20 +79,51 @@ shouldn't normally have to change this</dd>
       <p>Performs a Mantel permutation test on two distance matrices.</p>
   
     </div>
+
+    <div class="Details">
+      <h2>Details</h2>
+      
+      <p>Given two distance matrices (or list of distance matrices) <code>m1</code> and
+<code>m2</code>, performs a Mantel permutation test on the two matrices (or all
+pairwise combinations of matrices if at least one of the parameters is a
+list of matrices), and returns the outcome of the test(s) in a data frame.</p>
+  
+      <p>The distance matrices can either be of type <a href='http://www.inside-r.org/packages/cran/stats/docs/dist'>dist</a>, plain R
+matrices or any object that can be interpreted by <a href='check.dist.html'>check.dist</a>.</p>
+  
+      <p>If the number of possible permutations is reasonably close to
+<code>maxtrials</code>, a deterministic enumeration of all the permutations will
+be carried out instead of random sampling.</p>
+  
+      <p>A warning will be produced if the randomly sampled <code>r</code> coefficients are
+not normally distributed according to a Kolmogorov-Smirnoff test, at the
+level specified by <code>ks.level</code>). Being normally distributed is a
+condition for the calculation of a meaningful z score. Failing the test of
+normality will also be signalled by <code>p.smoothed</code> being set to <code>NA</code>.</p>
+  
+    </div>
     
     <h2 id="examples">Examples</h2>
     <pre class="examples"><div class='input'># small distance matrix, Mantel test run deterministically
 mantel.test(dist(1:4), dist(1:4))
 </div>
 <strong class='message'>Permutation space is small, enumerating all 24 possible permutations.</strong>
-<div class='output'>         mean        sd veridical     p        z      msample
-1 -4.6248e-18 0.4568322         1 0.002 2.188988 1, 0.4, ....
+<strong class='warning'>Warning message:
+The sample of randomised r&#39;s is not normally distributed, use that z score with a grain of salt</strong>
+<div class='output'>  veridical        mean        sd        z p.value p.smoothed sample.size
+1         1 -4.6248e-18 0.4568322 2.188988    0.12         NA          24
+       msample
+1 1, 0.4, ....
 </div>
 <div class='input'># smallest distance matrix using random permutations (with maxtrials=1000)
 mantel.test(dist(1:7), dist(1:7))
 </div>
-<div class='output'>           mean        sd veridical p        z      msample
-1 -0.0003928571 0.2217385         1 0 4.511589 -0.05, 0....
+<strong class='warning'>Warning message:
+The sample of randomised r&#39;s is not normally distributed, use that z score with a grain of salt</strong>
+<div class='output'>  veridical        mean        sd        z     p.value p.smoothed sample.size
+1         1 0.006785714 0.2248117 4.417983 0.000999001         NA        1000
+       msample
+1 -0.13571....
 </div></pre>
   </div>
   <div class="span4">
@@ -103,7 +136,8 @@ mantel.test(dist(1:7), dist(1:7))
       
     <h2>See also</h2>
     
-<code><a href='hammingdists.html'>hammingdists</a></code>, <code><a href='normalisedlevenshteindists.html'>normalisedlevenshteindists</a></code>
+<code>|link{cor}</code>, <code><a href='hammingdists.html'>hammingdists</a></code>,
+  <code><a href='normalisedlevenshteindists.html'>normalisedlevenshteindists</a></code>
 
         
   </div>

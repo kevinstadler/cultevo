@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>mantel.file. mantel 0.1</title>
+<title>mantel.file. mantel 0.2</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="">
 
@@ -20,7 +20,7 @@
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">mantel 0.1</a>
+      <a class="brand" href="#">mantel 0.2</a>
       <div class="nav">
         <ul class="nav">
           <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
@@ -62,7 +62,7 @@ is specified, <code>stringcolumns</code> should be a single index/name.</dd>
       <dd>a list of named arguments passed on to <a href='mantel.test.html'>mantel.test</a></dd>
       <dt>...</dt>
       <dd>extra arguments are passed on to <a href='mantel.development.html'>mantel.development</a>
-(and potentially further to <a href='mantel.test.html'>mantel.test</a> and <a href='plot.mantels.html'>plot.mantels</a>)</dd>
+(and potentially further to <a href='mantel.test.html'>mantel.test</a> and <a href='plot.mantel.html'>plot.mantel</a>)</dd>
     </dl>
     
     <div class="Read data from a tab or comma-separated file and run Mantel tests on the data.">
@@ -76,7 +76,7 @@ is specified, <code>stringcolumns</code> should be a single index/name.</dd>
       <p>Reads the given .csv file and runs Mantel tests on it, optionally plotting
 the results. Plotting is controlled solely through the <code>...</code> arguments
 which are passed on to <a href='mantel.development.html'>mantel.development</a> and
-<a href='plot.mantels.html'>plot.mantels</a> respectively.
+<a href='plot.mantel.html'>plot.mantel</a> respectively.
 If none of the column-arguments are specified it is assumed that the first
 column gives the strings and all remaining columns encode the different
 meanings. See <code>mantelexample.csv</code> for a minimal example.</p>
@@ -87,26 +87,37 @@ meanings. See <code>mantelexample.csv</code> for a minimal example.</p>
     <pre class="examples"><div class='input'>mantel.file(system.file(&quot;minimalexample.csv&quot;, package=&quot;mantel&quot;), plot=&quot;r&quot;)
 </div>
 <strong class='message'>Permutation space is small, enumerating all 24 possible permutations.</strong>
-<p><img src='mantel.file-3.png' alt='' width='400' height='400' /></p>
-<div class='output'>  mean        sd veridical     p        z      msample
-0    0 0.7223151         1 0.008 1.384437 1, -0.5,....
+<strong class='warning'>Warning message:
+The sample of randomised r&#39;s is not normally distributed, use that z score with a grain of salt</strong>
+<p><img src='mantel.file-4.png' alt='' width='400' height='400' /></p>
+<div class='output'>  veridical mean        sd        z p.value p.smoothed sample.size      msample
+0         1    0 0.7223151 1.384437    0.36         NA          24 1, -0.5,....
 </div>
 <div class='input'>mantel.file(system.file(&quot;minimalexample.csv&quot;, package=&quot;mantel&quot;), plot=&quot;r&quot;, test.args=list(maxtrials=10, conflate=TRUE))
 </div>
 <strong class='warning'>Warning message:
 Specified conflate=TRUE, but there was nothing to conflate.</strong>
-<p><img src='mantel.file-7.png' alt='' width='400' height='400' /></p>
-<div class='output'>  mean        sd veridical   p         z      msample
-0  0.4 0.7745967         1 0.6 0.7745967 1, 1, -0....
+<strong class='warning'>Warning message:
+The sample of randomised r&#39;s is not normally distributed, use that z score with a grain of salt</strong>
+<p><img src='mantel.file-9.png' alt='' width='400' height='400' /></p>
+<div class='output'>  veridical  mean        sd       z   p.value p.smoothed sample.size
+0         1 -0.35 0.4743416 2.84605 0.1818182         NA          10
+       msample
+0 1, -0.5,....
 </div>
 <div class='input'>mantel.file(system.file(&quot;generationsalongrows.csv&quot;, package=&quot;mantel&quot;), plot=&quot;r&quot;, generationcolumn=4)
 </div>
 <strong class='message'>Permutation space is small, enumerating all 24 possible permutations.</strong>
 <strong class='message'>Permutation space is small, enumerating all 24 possible permutations.</strong>
-<p><img src='mantel.file-12.png' alt='' width='400' height='400' /></p>
-<div class='output'>          mean        sd veridical     p        z      msample
-0 3.699219e-17 0.6371101 0.6591831 0.008 1.034645 0.659183....
-1 0.000000e+00 0.7223151 1.0000000 0.008 1.384437 1, -0.5,....
+<strong class='warning'>Warning message:
+The sample of randomised r&#39;s is not normally distributed, use that z score with a grain of salt</strong>
+<p><img src='mantel.file-15.png' alt='' width='400' height='400' /></p>
+<div class='output'>  veridical         mean        sd        z p.value p.smoothed sample.size
+0 0.6591831 3.699219e-17 0.6371101 1.034645    0.36  0.1504173          24
+1 1.0000000 0.000000e+00 0.7223151 1.384437    0.36         NA          24
+       msample
+0 0.659183....
+1 1, -0.5,....
 </div></pre>
   </div>
   <div class="span4">
@@ -123,7 +134,7 @@ Specified conflate=TRUE, but there was nothing to conflate.</strong>
 
 <a href='mantel.test.html'>mantel.test</a>
 
-<a href='plot.mantels.html'>plot.mantels</a>
+<a href='plot.mantel.html'>plot.mantel</a>
 
         
   </div>

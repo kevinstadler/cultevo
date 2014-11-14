@@ -25,13 +25,13 @@ is specified, \code{stringcolumns} should be a single index/name.}
 \item{test.args}{a list of named arguments passed on to \link{\code{mantel.test}}}
 
 \item{...}{extra arguments are passed on to \link{\code{mantel.development}}
-(and potentially further to \link{\code{mantel.test}} and \link{\code{plot.mantels}})}
+(and potentially further to \link{\code{mantel.test}} and \link{\code{plot.mantel}})}
 }
 \description{
 Reads the given .csv file and runs Mantel tests on it, optionally plotting
 the results. Plotting is controlled solely through the \code{...} arguments
 which are passed on to \link{\code{mantel.development}} and
-\link{\code{plot.mantels}} respectively.
+\link{\code{plot.mantel}} respectively.
 If none of the column-arguments are specified it is assumed that the first
 column gives the strings and all remaining columns encode the different
 meanings. See \code{mantelexample.csv} for a minimal example.
@@ -46,6 +46,6 @@ mantel.file(system.file("generationsalongrows.csv", package="mantel"), plot="r",
 
 \link{\code{mantel.test}}
 
-\link{\code{plot.mantels}}
+\link{\code{plot.mantel}}
 }
 

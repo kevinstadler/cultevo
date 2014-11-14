@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>meaningspace.optionalarguments. mantel 0.2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">mantel 0.2</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>Construct the distance matrix for the 'optional arguments' experiment.</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>meaningspace.optionalarguments(unspecifieddistance)</div></pre>
+        
+    <div class="Construct the distance matrix for the 'optional arguments' experiment.">
+      <h2>Construct the distance matrix for the 'optional arguments' experiment.</h2>
+      
+    </div>
+
+    <div class="Description">
+      <h2>Description</h2>
+      
+      <p>Constructs a matrix with all meaning combinations for the optional arguments
+experiment. the globally shared part of this meaning space design is 2x2x2x2,
+but then the upper half of the meaning space this is again combined with
+all combinations of an additional 2x2 space (the ground) while the
+corresponding lower half is filled with dummy values for the non-specified
+ground according to the unspecifieddistance argument which can be 1, 2 or 3.</p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>meaningspace.optionalarguments(3)
+</div>
+<div class='output'>           Var6 Var5 Var4 Var3 Var2 Var1
+ [1,] &quot;tr&quot; &quot;ci&quot; &quot;ci&quot; &quot;sg&quot; &quot;sg&quot; &quot;bn&quot; &quot;pf&quot;
+ [2,] &quot;tr&quot; &quot;ci&quot; &quot;ci&quot; &quot;sg&quot; &quot;sg&quot; &quot;bn&quot; &quot;cn&quot;
+ [3,] &quot;tr&quot; &quot;ci&quot; &quot;ci&quot; &quot;sg&quot; &quot;sg&quot; &quot;sl&quot; &quot;pf&quot;
+ [4,] &quot;tr&quot; &quot;ci&quot; &quot;ci&quot; &quot;sg&quot; &quot;sg&quot; &quot;sl&quot; &quot;cn&quot;
+ [5,] &quot;tr&quot; &quot;ci&quot; &quot;ci&quot; &quot;sg&quot; &quot;pl&quot; &quot;bn&quot; &quot;pf&quot;
+ [6,] &quot;tr&quot; &quot;ci&quot; &quot;ci&quot; &quot;sg&quot; &quot;pl&quot; &quot;bn&quot; &quot;cn&quot;
+ [7,] &quot;tr&quot; &quot;ci&quot; &quot;ci&quot; &quot;sg&quot; &quot;pl&quot; &quot;sl&quot; &quot;pf&quot;
+ [8,] &quot;tr&quot; &quot;ci&quot; &quot;ci&quot; &quot;sg&quot; &quot;pl&quot; &quot;sl&quot; &quot;cn&quot;
+ [9,] &quot;tr&quot; &quot;ci&quot; &quot;ci&quot; &quot;pl&quot; &quot;sg&quot; &quot;bn&quot; &quot;pf&quot;
+[10,] &quot;tr&quot; &quot;ci&quot; &quot;ci&quot; &quot;pl&quot; &quot;sg&quot; &quot;bn&quot; &quot;cn&quot;
+[11,] &quot;tr&quot; &quot;ci&quot; &quot;ci&quot; &quot;pl&quot; &quot;sg&quot; &quot;sl&quot; &quot;pf&quot;
+[12,] &quot;tr&quot; &quot;ci&quot; &quot;ci&quot; &quot;pl&quot; &quot;sg&quot; &quot;sl&quot; &quot;cn&quot;
+[13,] &quot;tr&quot; &quot;ci&quot; &quot;ci&quot; &quot;pl&quot; &quot;pl&quot; &quot;bn&quot; &quot;pf&quot;
+[14,] &quot;tr&quot; &quot;ci&quot; &quot;ci&quot; &quot;pl&quot; &quot;pl&quot; &quot;bn&quot; &quot;cn&quot;
+[15,] &quot;tr&quot; &quot;ci&quot; &quot;ci&quot; &quot;pl&quot; &quot;pl&quot; &quot;sl&quot; &quot;pf&quot;
+[16,] &quot;tr&quot; &quot;ci&quot; &quot;ci&quot; &quot;pl&quot; &quot;pl&quot; &quot;sl&quot; &quot;cn&quot;
+[17,] &quot;tr&quot; &quot;ci&quot; &quot;sq&quot; &quot;sg&quot; &quot;sg&quot; &quot;bn&quot; &quot;pf&quot;
+[18,] &quot;tr&quot; &quot;ci&quot; &quot;sq&quot; &quot;sg&quot; &quot;sg&quot; &quot;bn&quot; &quot;cn&quot;
+[19,] &quot;tr&quot; &quot;ci&quot; &quot;sq&quot; &quot;sg&quot; &quot;sg&quot; &quot;sl&quot; &quot;pf&quot;
+[20,] &quot;tr&quot; &quot;ci&quot; &quot;sq&quot; &quot;sg&quot; &quot;sg&quot; &quot;sl&quot; &quot;cn&quot;
+[21,] &quot;tr&quot; &quot;ci&quot; &quot;sq&quot; &quot;sg&quot; &quot;pl&quot; &quot;bn&quot; &quot;pf&quot;
+[22,] &quot;tr&quot; &quot;ci&quot; &quot;sq&quot; &quot;sg&quot; &quot;pl&quot; &quot;bn&quot; &quot;cn&quot;
+[23,] &quot;tr&quot; &quot;ci&quot; &quot;sq&quot; &quot;sg&quot; &quot;pl&quot; &quot;sl&quot; &quot;pf&quot;
+[24,] &quot;tr&quot; &quot;ci&quot; &quot;sq&quot; &quot;sg&quot; &quot;pl&quot; &quot;sl&quot; &quot;cn&quot;
+[25,] &quot;tr&quot; &quot;ci&quot; &quot;sq&quot; &quot;pl&quot; &quot;sg&quot; &quot;bn&quot; &quot;pf&quot;
+[26,] &quot;tr&quot; &quot;ci&quot; &quot;sq&quot; &quot;pl&quot; &quot;sg&quot; &quot;bn&quot; &quot;cn&quot;
+[27,] &quot;tr&quot; &quot;ci&quot; &quot;sq&quot; &quot;pl&quot; &quot;sg&quot; &quot;sl&quot; &quot;pf&quot;
+[28,] &quot;tr&quot; &quot;ci&quot; &quot;sq&quot; &quot;pl&quot; &quot;sg&quot; &quot;sl&quot; &quot;cn&quot;
+[29,] &quot;tr&quot; &quot;ci&quot; &quot;sq&quot; &quot;pl&quot; &quot;pl&quot; &quot;bn&quot; &quot;pf&quot;
+[30,] &quot;tr&quot; &quot;ci&quot; &quot;sq&quot; &quot;pl&quot; &quot;pl&quot; &quot;bn&quot; &quot;cn&quot;
+[31,] &quot;tr&quot; &quot;ci&quot; &quot;sq&quot; &quot;pl&quot; &quot;pl&quot; &quot;sl&quot; &quot;pf&quot;
+[32,] &quot;tr&quot; &quot;ci&quot; &quot;sq&quot; &quot;pl&quot; &quot;pl&quot; &quot;sl&quot; &quot;cn&quot;
+[33,] &quot;tr&quot; &quot;sq&quot; &quot;ci&quot; &quot;sg&quot; &quot;sg&quot; &quot;bn&quot; &quot;pf&quot;
+[34,] &quot;tr&quot; &quot;sq&quot; &quot;ci&quot; &quot;sg&quot; &quot;sg&quot; &quot;bn&quot; &quot;cn&quot;
+[35,] &quot;tr&quot; &quot;sq&quot; &quot;ci&quot; &quot;sg&quot; &quot;sg&quot; &quot;sl&quot; &quot;pf&quot;
+[36,] &quot;tr&quot; &quot;sq&quot; &quot;ci&quot; &quot;sg&quot; &quot;sg&quot; &quot;sl&quot; &quot;cn&quot;
+[37,] &quot;tr&quot; &quot;sq&quot; &quot;ci&quot; &quot;sg&quot; &quot;pl&quot; &quot;bn&quot; &quot;pf&quot;
+[38,] &quot;tr&quot; &quot;sq&quot; &quot;ci&quot; &quot;sg&quot; &quot;pl&quot; &quot;bn&quot; &quot;cn&quot;
+[39,] &quot;tr&quot; &quot;sq&quot; &quot;ci&quot; &quot;sg&quot; &quot;pl&quot; &quot;sl&quot; &quot;pf&quot;
+[40,] &quot;tr&quot; &quot;sq&quot; &quot;ci&quot; &quot;sg&quot; &quot;pl&quot; &quot;sl&quot; &quot;cn&quot;
+[41,] &quot;tr&quot; &quot;sq&quot; &quot;ci&quot; &quot;pl&quot; &quot;sg&quot; &quot;bn&quot; &quot;pf&quot;
+[42,] &quot;tr&quot; &quot;sq&quot; &quot;ci&quot; &quot;pl&quot; &quot;sg&quot; &quot;bn&quot; &quot;cn&quot;
+[43,] &quot;tr&quot; &quot;sq&quot; &quot;ci&quot; &quot;pl&quot; &quot;sg&quot; &quot;sl&quot; &quot;pf&quot;
+[44,] &quot;tr&quot; &quot;sq&quot; &quot;ci&quot; &quot;pl&quot; &quot;sg&quot; &quot;sl&quot; &quot;cn&quot;
+[45,] &quot;tr&quot; &quot;sq&quot; &quot;ci&quot; &quot;pl&quot; &quot;pl&quot; &quot;bn&quot; &quot;pf&quot;
+[46,] &quot;tr&quot; &quot;sq&quot; &quot;ci&quot; &quot;pl&quot; &quot;pl&quot; &quot;bn&quot; &quot;cn&quot;
+[47,] &quot;tr&quot; &quot;sq&quot; &quot;ci&quot; &quot;pl&quot; &quot;pl&quot; &quot;sl&quot; &quot;pf&quot;
+[48,] &quot;tr&quot; &quot;sq&quot; &quot;ci&quot; &quot;pl&quot; &quot;pl&quot; &quot;sl&quot; &quot;cn&quot;
+[49,] &quot;tr&quot; &quot;sq&quot; &quot;sq&quot; &quot;sg&quot; &quot;sg&quot; &quot;bn&quot; &quot;pf&quot;
+[50,] &quot;tr&quot; &quot;sq&quot; &quot;sq&quot; &quot;sg&quot; &quot;sg&quot; &quot;bn&quot; &quot;cn&quot;
+[51,] &quot;tr&quot; &quot;sq&quot; &quot;sq&quot; &quot;sg&quot; &quot;sg&quot; &quot;sl&quot; &quot;pf&quot;
+[52,] &quot;tr&quot; &quot;sq&quot; &quot;sq&quot; &quot;sg&quot; &quot;sg&quot; &quot;sl&quot; &quot;cn&quot;
+[53,] &quot;tr&quot; &quot;sq&quot; &quot;sq&quot; &quot;sg&quot; &quot;pl&quot; &quot;bn&quot; &quot;pf&quot;
+[54,] &quot;tr&quot; &quot;sq&quot; &quot;sq&quot; &quot;sg&quot; &quot;pl&quot; &quot;bn&quot; &quot;cn&quot;
+[55,] &quot;tr&quot; &quot;sq&quot; &quot;sq&quot; &quot;sg&quot; &quot;pl&quot; &quot;sl&quot; &quot;pf&quot;
+[56,] &quot;tr&quot; &quot;sq&quot; &quot;sq&quot; &quot;sg&quot; &quot;pl&quot; &quot;sl&quot; &quot;cn&quot;
+[57,] &quot;tr&quot; &quot;sq&quot; &quot;sq&quot; &quot;pl&quot; &quot;sg&quot; &quot;bn&quot; &quot;pf&quot;
+[58,] &quot;tr&quot; &quot;sq&quot; &quot;sq&quot; &quot;pl&quot; &quot;sg&quot; &quot;bn&quot; &quot;cn&quot;
+[59,] &quot;tr&quot; &quot;sq&quot; &quot;sq&quot; &quot;pl&quot; &quot;sg&quot; &quot;sl&quot; &quot;pf&quot;
+[60,] &quot;tr&quot; &quot;sq&quot; &quot;sq&quot; &quot;pl&quot; &quot;sg&quot; &quot;sl&quot; &quot;cn&quot;
+[61,] &quot;tr&quot; &quot;sq&quot; &quot;sq&quot; &quot;pl&quot; &quot;pl&quot; &quot;bn&quot; &quot;pf&quot;
+[62,] &quot;tr&quot; &quot;sq&quot; &quot;sq&quot; &quot;pl&quot; &quot;pl&quot; &quot;bn&quot; &quot;cn&quot;
+[63,] &quot;tr&quot; &quot;sq&quot; &quot;sq&quot; &quot;pl&quot; &quot;pl&quot; &quot;sl&quot; &quot;pf&quot;
+[64,] &quot;tr&quot; &quot;sq&quot; &quot;sq&quot; &quot;pl&quot; &quot;pl&quot; &quot;sl&quot; &quot;cn&quot;
+[65,] &quot;in&quot; &quot;ci&quot; &quot;00&quot; &quot;sg&quot; &quot;00&quot; &quot;bn&quot; &quot;pf&quot;
+[66,] &quot;in&quot; &quot;ci&quot; &quot;00&quot; &quot;sg&quot; &quot;00&quot; &quot;bn&quot; &quot;cn&quot;
+[67,] &quot;in&quot; &quot;ci&quot; &quot;00&quot; &quot;sg&quot; &quot;00&quot; &quot;sl&quot; &quot;pf&quot;
+[68,] &quot;in&quot; &quot;ci&quot; &quot;00&quot; &quot;sg&quot; &quot;00&quot; &quot;sl&quot; &quot;cn&quot;
+[69,] &quot;in&quot; &quot;ci&quot; &quot;00&quot; &quot;pl&quot; &quot;00&quot; &quot;bn&quot; &quot;pf&quot;
+[70,] &quot;in&quot; &quot;ci&quot; &quot;00&quot; &quot;pl&quot; &quot;00&quot; &quot;bn&quot; &quot;cn&quot;
+[71,] &quot;in&quot; &quot;ci&quot; &quot;00&quot; &quot;pl&quot; &quot;00&quot; &quot;sl&quot; &quot;pf&quot;
+[72,] &quot;in&quot; &quot;ci&quot; &quot;00&quot; &quot;pl&quot; &quot;00&quot; &quot;sl&quot; &quot;cn&quot;
+[73,] &quot;in&quot; &quot;sq&quot; &quot;00&quot; &quot;sg&quot; &quot;00&quot; &quot;bn&quot; &quot;pf&quot;
+[74,] &quot;in&quot; &quot;sq&quot; &quot;00&quot; &quot;sg&quot; &quot;00&quot; &quot;bn&quot; &quot;cn&quot;
+[75,] &quot;in&quot; &quot;sq&quot; &quot;00&quot; &quot;sg&quot; &quot;00&quot; &quot;sl&quot; &quot;pf&quot;
+[76,] &quot;in&quot; &quot;sq&quot; &quot;00&quot; &quot;sg&quot; &quot;00&quot; &quot;sl&quot; &quot;cn&quot;
+[77,] &quot;in&quot; &quot;sq&quot; &quot;00&quot; &quot;pl&quot; &quot;00&quot; &quot;bn&quot; &quot;pf&quot;
+[78,] &quot;in&quot; &quot;sq&quot; &quot;00&quot; &quot;pl&quot; &quot;00&quot; &quot;bn&quot; &quot;cn&quot;
+[79,] &quot;in&quot; &quot;sq&quot; &quot;00&quot; &quot;pl&quot; &quot;00&quot; &quot;sl&quot; &quot;pf&quot;
+[80,] &quot;in&quot; &quot;sq&quot; &quot;00&quot; &quot;pl&quot; &quot;00&quot; &quot;sl&quot; &quot;cn&quot;
+</div></pre>
+  </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>meaningspace.optionalarguments</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+        
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

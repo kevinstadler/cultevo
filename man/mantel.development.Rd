@@ -8,7 +8,10 @@ mantel.development(meanings, strings, test.args = NULL, ..., plot = NULL)
 \arguments{
 \item{meanings}{a matrix specifying all meaning combinations, as described in \link{\code{hammingdists}}}
 
-\item{strings}{either a vector of strings, or a matrix of strings per generation}
+\item{strings}{either a vector of strings, or a matrix of strings per
+generation, organised along rows. The result of \code{read.table} can be
+passed directly (or \code{t(read.table("..."))} if strings from the same
+generation are organised in the same column rather than the same row).}
 
 \item{test.args}{a list of named arguments passed on to \link{\code{mantel.test}}}
 
@@ -32,6 +35,7 @@ mantel.development(allmeaningcombinations(c(2,2)), c("asd", "asdf", "", "f"), pl
 m <- matrix(c("sadasd", "iuerwh", "sdfgkj", "uofidsgf", "asd", "asdf", "", "f"), nrow=2, byrow=T)
 mantel.development(allmeaningcombinations(c(2,2)), m, plot="r")
 mantel.development(allmeaningcombinations(c(2,2)), m, plot="z")
+mantel.development(allmeaningcombinations(c(2,2)), read.table("stringsonlyexample.csv"), plot="r")
 }
 \seealso{
 \link{\code{hammingdists}}
