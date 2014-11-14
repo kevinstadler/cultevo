@@ -71,13 +71,13 @@ read.dist <- function(data, el1.column=1, el2.column=2, dist.columns=3) {
   if (is.character(data)) {
     data <- read.csv(filename, header=TRUE)
   }
-  els <- unique(c(data[,el1.column], data[,el2.column]))
+  els <- sort(unique(c(data[,el1.column], data[,el2.column])))
   # create as many matrices as there are dist.columns
   d <- replicate(length(dist.columns), matrix(0, nrow=length(els), ncol=length(els)))
   el1s <- match(data[,el1.column], els)
   el2s <- match(data[,el2.column], els)
   indices <- cbind(rep.matrix(cbind(el1s, el2s), each.row=length(dist.columns)), 1:length(dist.columns))
-  d[indices] <- as.matrix(data[,dist.columns])
+  d[indices] <- as.vector(t(data[,dist.columns]))
   if (length(dist.columns) == 1) {
     return(d[,,1])
   } else {
@@ -111,12 +111,15 @@ check.dist <- function(d) {
   UseMethod("check.dist", d)
 }
 
+#' @S3method check.dist dist
 check.dist.dist <- as.matrix
 
+#' @export
 check.dist.default <- function(d) {
   as.matrix(tryCatch(as.dist(d), warning=function(w)stop(w)))
 }
 
+#' @export
 check.dist.matrix <- function(m) {
   if (any(diag(m) != 0)) {
     stop("Not a valid distance matrix: nonzero diagonal entries")
