@@ -30,7 +30,8 @@ mantel.plotfuns[["r"]] <- function(mantels, ylim=range(0.1, mantels[,"veridical"
   errbar(1:nrow(mantels), mantels[,"mean"], unlist(mantels[,"mean"])+unlist(mantels[,"sd"]), unlist(mantels[,"mean"])-unlist(mantels[,"sd"]), ylab="r", ylim=ylim, errbar.col=red.if.na(mantels[,"p.smoothed"]), ...)
   # plot correlation coefficient reference points
   abline(h=-1:1, lty=c(3,2,3), col="grey")
-  points(1:nrow(mantels), mantels[,"veridical"], col="blue")
+  # blue points signify that no single larger r value has been sampled
+  points(1:nrow(mantels), mantels[,"veridical"], col=c("black", "blue")[1+mantels[,"is.unique.max"]])
   # label the veridical rs with their z scores
   text(1:nrow(mantels), mantels[,"veridical"], labels=paste("z", round(unlist(mantels[,"z"]), digits=2), sep="="), pos=2+sign(unlist(mantels[,"z"])))
 }
