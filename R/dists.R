@@ -55,29 +55,52 @@ normalisedlevenshteindists <- function(strings) {
   as.dist(levs / outer(lens, lens, pmax))
 }
 
-#' Check or fix a symmetric distance matrix.
+#' Check or fix a distance matrix.
 #' 
-#' If \code{m} is a matrix, check whether it is a valid specification of a
+#' Checks or fixes the given distance matrix specification and, if possible,
+#' returns an equivalent symmetric \code{matrix} object with 0s in the diagonal.
+#' 
+#' If the argument is a matrix, check whether it is a valid specification of a
 #' distance matrix and return it, making it symmetric if it isn't already.
-#' For all other obect types, try to coerce \code{m} to a \code{dist} object
-#' and return the corresponding distance matrix.
 #' 
-#' @param m a distance matrix
-#' @return a symmetric matrix of the same size as \code{m}, with 0s in the diagonal
+#' If the argument is a list, calls \code{check.dist} on every of its elements
+#' and returns a list of the results.
+#' 
+#' For all other object types, attempts to coerce \code{m} to a \code{dist}
+#' object and return the corresponding distance matrix.
+#' 
+#' @param d an object (or list of objects) specifying a distance matrix
+#' @return a symmetric \code{matrix} object (or list of such objects) of the
+#'   same dimension as \code{d}
 #' @seealso \code{\link{dist}}
-check.dist <- function(m) {
-  if (is.matrix(m)) {
-    if (any(diag(m) != 0)) {
-      stop("Not a valid distance matrix: nonzero diagonal entries")
-    } else if (any(m[upper.tri(m)] != 0, na.rm = TRUE) && !isSymmetric(m)) {
-      if (any(m[lower.tri(m)] != 0, na.rm = TRUE)) {
-        stop("Not a valid distance matrix: distances are not symmetric. If only specifying one side then enter distances in the lower triangle of the matrix.")
-      } else {
-        m <- t(m)
-      }
+check.dist <- function(d) {
+  UseMethod("check.dist", d)
+}
+
+check.dist.dist <- as.matrix
+
+check.dist.default <- function(d) {
+  as.matrix(tryCatch(as.dist(d), warning=function(w)stop(w)))
+}
+
+check.dist.matrix <- function(m) {
+  if (any(diag(m) != 0)) {
+    stop("Not a valid distance matrix: nonzero diagonal entries")
+  } else if (any(m[upper.tri(m)] != 0, na.rm = TRUE) && !isSymmetric(m)) {
+    if (any(m[lower.tri(m)] != 0, na.rm = TRUE)) {
+      stop("Not a valid distance matrix: distances are not symmetric. The matrix either has to be symmetric or have one of its triangles unspecified (0 or NA).")
+    } else {
+      m <- t(m)
     }
   }
-  as.matrix(tryCatch(as.dist(m)), warning=function(w)stop(w))
+  check.dist.default(m)
+}
+
+check.dist.list <- function(ms) {
+  ms <- lapply(ms, check.dist)
+  # TODO check if all elements have the same dimension?
+  attr(ms, "dim") <- dim(ms[1])
+  return(ms)
 }
 
 #' Permute the rows/columns of a matrix.
