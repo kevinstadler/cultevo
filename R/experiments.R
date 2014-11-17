@@ -64,15 +64,62 @@ experiment.optionalarguments.allchains <- function(unspecifieddistance=3, plot="
   for (i in 1:4) {
     print(paste("Chain", i))
     filename <- paste("chain", i, ".tsv", sep="")
-    print(experiment.optionalarguments(filename, unspecifieddistance, plot=plot, ylim=c(-0.1, 0.8), ...))
+    print(experiment.optionalarguments(filename, unspecifieddistance, plot=plot, ...))
   }
 }
 
 # visualise the two different measures
 #experiment.optionalarguments.allchains(1, plot="r", ylim=c(-0.1, 0.7))
-#experiment.optionalarguments.allchains(1, plot="z", ylim=c(-1, 30))
+#experiment.optionalarguments.allchains(1, plot="z", ylim=c(-2, 30))
 # original plot with the old distance measure (intransitives have distance 3)
-#experiment.optionalarguments.allchains(3, plot="z", ylim=c(-1, 30))
+#experiment.optionalarguments.allchains(3, plot="z", ylim=c(-2, 30))
 # look at the underlying r and mantel test variance
 #experiment.optionalarguments.allchains(3, plot="r", ylim=c(-0.1, 0.7))
+#experiment.optionalarguments.allchains(3, plot="r", ylim=c(-0.1, 0.7), test.args=c(maxtrials=10000))
 
+# pixel distances
+#' @export
+experiment.pixel <- function(chains=paste("chain", 1:4, sep=""), poolByGeneration=NULL, plot="r", ref=NULL, ylim=if (plot=="z") c(-1,7) else c(-0.1, 0.3), ...) {
+  data <- read.csv("pairwise_movement_r1.csv", header=TRUE)
+  if (!is.null(plot)) {
+    if (!is.null(ref)) {
+      ref <- read.csv(ref)
+    }
+    par(mfcol=c(if (is.null(ref)) 1 else 2,length(chains)))
+  }
+  for (chain in chains) {
+    ch <- subset(data, Chain == chain)
+    generations <- sort(unique(data$Generation))
+    if (is.null(poolByGeneration)) {
+      generations <- expand.grid(levels(data$Participant), generations)
+      subfun <- function(comb) subset(ch, Generation == comb[[2]] & Participant == comb[[1]])
+    } else {
+      generations <- as.matrix(generations)
+      if (poolByGeneration == "average") {
+        subfun <- function(comb) aggregate(cbind(MeaningDistance, SignalDistance) ~ Meaning1 + Meaning2, data=subset(ch, Generation == comb), FUN=mean)
+      } else { # "pool"
+        subfun <- function(comb) subset(ch, Generation == comb)
+      }
+    }
+    alltests <- do.call(rbind, apply(generations, 1,
+        function(comb) {
+          dists <- read.dist(subfun(comb), "Meaning1", "Meaning2", c("MeaningDistance", "SignalDistance"))
+          mantel.test(dists$MeaningDistance, dists$SignalDistance)}))
+    print(alltests)
+    if (!is.null(plot)) {
+      plot(alltests, plot=plot, main=paste("pooling:", poolByGeneration), ylim=ylim, ...)
+      if (!is.null(ref)) {
+        plot(subset(ref, Chain == chain)$z_score, ylim=c(-1,7))
+      }
+    }
+  }
+}
+#experiment.pixel()
+#experiment.pixel(poolByGeneration="average")
+#experiment.pixel(poolByGeneration="pool")
+
+# comparison
+#experiment.pixel(ref="mantel_results_r1.csv", plot="z")
+#experiment.pixel(ref="mantel_results_r1.csv")
+#experiment.pixel(ref="mantel_results_r1.csv", poolByGeneration="average", plot="z")
+#experiment.pixel(ref="mantel_results_r1.csv", poolByGeneration="pool", plot="z")
