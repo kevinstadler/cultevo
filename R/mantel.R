@@ -173,7 +173,7 @@ mantel.test <- function(m1, m2, maxtrials=1000, method="pearson", conflate=FALSE
 #' @return a dataframe of class \code{\link{mantel}} specifying the results of
 #'   the Mantel test(s)
 #' @examples
-#' mantel.development(allmeaningcombinations(c(2,2)), c("asd", "asdf", "", "f"), plot="r")
+#' mantel.development(allmeaningcombinations(c(2,2)), c("asd", "asdf", "", "f"), plot="msample")
 #' m <- matrix(c("sadasd", "iuerwh", "sdfgkj", "uofidsgf", "asd", "asdf", "", "f"), nrow=2, byrow=T)
 #' mantel.development(allmeaningcombinations(c(2,2)), m, plot="r")
 #' mantel.development(allmeaningcombinations(c(2,2)), m, plot="z")
@@ -220,7 +220,7 @@ mantel.development <- function(meanings, strings, test.args=NULL, ..., plot=NULL
 #'   the Mantel test(s)
 #' @examples
 #' mantel.file(system.file("minimalexample.csv", package="mantel"), plot="msample")
-#' mantel.file(system.file("minimalexample.csv", package="mantel"), plot="msample", test.args=list(maxtrials=10, conflate=TRUE))
+#' mantel.file(system.file("minimalexample.csv", package="mantel"), plot="msample", test.args=list(method="kendall", maxtrials=500))
 #' mantel.file(system.file("generationsalongrows.csv", package="mantel"), plot="msample", generationcolumn=4)
 #' @seealso \link{\code{mantel.development}}
 #' @seealso \link{\code{mantel.test}}

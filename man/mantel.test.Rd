@@ -3,8 +3,8 @@
 \alias{mantel.test}
 \title{Perform a Mantel test.}
 \usage{
-mantel.test(m1, m2, maxtrials = 1000, conflate = FALSE, ks.level = 0.05,
-  shuffle = shuffle.locations)
+mantel.test(m1, m2, maxtrials = 1000, method = "pearson",
+  conflate = FALSE, ks.level = 0.05, shuffle = shuffle.locations)
 }
 \arguments{
 \item{m1}{a (meaning) distance matrix, or list of matrices}
@@ -16,14 +16,16 @@ mantel.test(m1, m2, maxtrials = 1000, conflate = FALSE, ks.level = 0.05,
 \item{conflate}{if \code{TRUE}, entries with 0 distance in \code{m1} will be
 conflated by averaging over the corresponding entries in \code{m2}}
 
-\item{ks.level}{p-level below which a failure to pass}
+\item{ks.level}{p-level below which a failure to pass the Kolmogorov-Smirnov
+test will result in a warning, and \code{p.smoothed} be set to \code{NA}}
 
 \item{shuffle}{a function applied to \code{m2} to shuffle entries, taking a
 matrix and an optional permutation specification as its arguments - you
 shouldn't normally have to change this}
 }
 \value{
-a dataframe specifying the results of the Mantel test(s)
+a dataframe of class \code{\link{mantel}} specifying the results of
+  the Mantel test(s)
 }
 \description{
 Performs a Mantel permutation test on two distance matrices.
@@ -54,7 +56,7 @@ mantel.test(dist(1:4), dist(1:4))
 mantel.test(dist(1:7), dist(1:7))
 }
 \seealso{
-\code{|link{cor}}, \code{\link{hammingdists}},
-  \code{\link{normalisedlevenshteindists}}
+\code{|link{mantel}}, \code{|link{cor}}, \code{\link{hammingdists}},
+  \code{\link{normalisedlevenshteindists}}, \code{\link{ks.test}}
 }
 

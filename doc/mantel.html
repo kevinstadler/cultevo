@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>mantel. mantel 0.2</title>
+<title>mantel. mantel 0.2.1</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="">
 
@@ -20,7 +20,7 @@
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">mantel 0.2</a>
+      <a class="brand" href="#">mantel 0.2.1</a>
       <div class="nav">
         <ul class="nav">
           <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
@@ -35,20 +35,58 @@
         
       </header>
       
-      <h1>An R package for computing distance matrices and performing Mantel tests</h1>
+      <h1>Object class for storing the results of one or more Mantel tests</h1>
 
 <div class="row">
   <div class="span8">
         
-    <div class="An R package for computing distance matrices and performing Mantel tests">
-      <h2>An R package for computing distance matrices and performing Mantel tests</h2>
+    <div class="Object class for storing the results of one or more Mantel tests">
+      <h2>Object class for storing the results of one or more Mantel tests</h2>
       
     </div>
 
     <div class="Description">
       <h2>Description</h2>
       
-      <p>An R package for computing distance matrices and performing Mantel tests</p>
+      <p>A data frame storing the results of one or more Mantel tests, one test per
+row. Multiple <code>mantel</code> objects can easily be combined by calling
+<code>rbind(test1, test2, ...)</code></p>
+  
+    </div>
+
+    <div class="Details">
+      <h2>Details</h2>
+      
+      <p>The data frame contains the following columns:
+<dl>
+<dt><code>method</code></dt><dd>Character string specifying the type of correlation
+         coefficient used (typically "pearson")</dd>
+<dt><code>veridical</code></dt><dd>The correlation coefficient between the distances
+         in the two distance matrices</dd>
+<dt><code>sample.size</code></dt><dd>The number of permutations carried out</dd>
+<dt><code>msample</code></dt><dd>A list of correlation coefficients calculated from
+         the <code>sample.size</code> permutations of the input matrices</dd>
+<dt><code>mean</code></dt><dd>Average correlation coefficient produced by the permutations</dd>
+<dt><code>sd</code></dt><dd>Standard deviation of the correlation coefficients</dd>
+<dt><code>z</code></dt><dd>Standard score, <code>(veridical-mean)/sd</code></dd>
+<dt><code>ks.level</code></dt><dd>p-value of the Kolmogorov-Smirnov test of
+         normality of <code>msample</code>. If this value is low, <code>sd</code> and
+         <code>z</code> might not be very meaningful.</dd>
+<dt><code>p.value</code></dt><dd>Empirical p-value computed from the Mantel test:
+         let <code>ngreater</code> be the number of correlation coefficients in
+         <code>msample</code> greater than or equal to <code>veridical</code>, then
+         <code>p.value</code> is <code>(ngreater+1)(sample.size+1</code></dd>
+<dt><code>p.smoothed</code></dt><dd>The theoretical p-value that would correspond
+         to the standard <code>z</code> score as calculated above. If the
+         <code>ks.level</code> is less than was specified as an argument to
+         <a href='mantel.test.html'>mantel.test</a>, <code>p.smoothed</code> will be set to <code>NA</code>.</dd>
+<dt><code>is.unique.max</code></dt><dd>Logical, <code>TRUE</code> iff the veridical
+         correlation coefficient is greater than any of the coefficients
+         calculated for the permutations. If this is true, then
+         <code>p.value == 1/(sample.size+1)</code></dd>
+</dl></p>
+  
+      <p></p>
   
     </div>
       </div>

@@ -27,6 +27,10 @@ is specified, \code{stringcolumns} should be a single index/name.}
 \item{...}{extra arguments are passed on to \link{\code{mantel.development}}
 (and potentially further to \link{\code{mantel.test}} and \link{\code{plot.mantel}})}
 }
+\value{
+a dataframe of class \code{\link{mantel}} specifying the results of
+  the Mantel test(s)
+}
 \description{
 Reads the given .csv file and runs Mantel tests on it, optionally plotting
 the results. Plotting is controlled solely through the \code{...} arguments
@@ -38,7 +42,7 @@ meanings. See \code{mantelexample.csv} for a minimal example.
 }
 \examples{
 mantel.file(system.file("minimalexample.csv", package="mantel"), plot="msample")
-mantel.file(system.file("minimalexample.csv", package="mantel"), plot="msample", test.args=list(maxtrials=10, conflate=TRUE))
+mantel.file(system.file("minimalexample.csv", package="mantel"), plot="msample", test.args=list(method="kendall", maxtrials=500))
 mantel.file(system.file("generationsalongrows.csv", package="mantel"), plot="msample", generationcolumn=4)
 }
 \seealso{

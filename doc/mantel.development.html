@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>mantel.development. mantel 0.2</title>
+<title>mantel.development. mantel 0.2.1</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="">
 
@@ -20,7 +20,7 @@
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">mantel 0.2</a>
+      <a class="brand" href="#">mantel 0.2.1</a>
       <div class="nav">
         <ul class="nav">
           <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
@@ -35,7 +35,7 @@
         
       </header>
       
-      <h1>Run Mantel tests on a set of consecutive data.</h1>
+      <h1>Run consecutive Mantel tests on a set of data.</h1>
 
 <div class="row">
   <div class="span8">
@@ -61,15 +61,16 @@ might want to specify parameters like <code>ylim</code>..</dd>
 currently supported are <code>"r"</code> and <code>"z"</code>.</dd>
     </dl>
     
-    <div class="Run Mantel tests on a set of consecutive data.">
-      <h2>Run Mantel tests on a set of consecutive data.</h2>
+    <div class="Run consecutive Mantel tests on a set of data.">
+      <h2>Run consecutive Mantel tests on a set of data.</h2>
       
     </div>
 
     <div class="Value">
       <h2>Value</h2>
       
-      <p>a matrix of test results</p>
+      <p>a dataframe of class <code><a href='mantel.html'>mantel</a></code> specifying the results of
+  the Mantel test(s)</p>
   
     </div>
 
@@ -84,60 +85,62 @@ of internally.</p>
     </div>
     
     <h2 id="examples">Examples</h2>
-    <pre class="examples"><div class='input'>mantel.development(allmeaningcombinations(c(2,2)), c(&quot;asd&quot;, &quot;asdf&quot;, &quot;&quot;, &quot;f&quot;), plot=&quot;r&quot;)
+    <pre class="examples"><div class='input'>mantel.development(allmeaningcombinations(c(2,2)), c(&quot;asd&quot;, &quot;asdf&quot;, &quot;&quot;, &quot;f&quot;), plot=&quot;msample&quot;)
 </div>
 <strong class='message'>Permutation space is small, enumerating all 24 possible permutations.</strong>
 <p><img src='mantel.development-3.png' alt='' width='400' height='400' /></p>
-<div class='output'>  veridical mean        sd        z p.value p.smoothed sample.size      msample
-0 0.4264014    0 0.4074407 1.046536    0.36  0.1476568          24 0.426401....
+<div class='output'>   method veridical         mean        sd        z p.value   ks.level
+0 pearson 0.4264014 1.387779e-17 0.4074407 1.046536    0.36 0.06065343
+  p.smoothed is.unique.max sample.size      msample
+0  0.1476568         FALSE          24 0.426401....
 </div>
 <div class='input'>m &lt;- matrix(c(&quot;sadasd&quot;, &quot;iuerwh&quot;, &quot;sdfgkj&quot;, &quot;uofidsgf&quot;, &quot;asd&quot;, &quot;asdf&quot;, &quot;&quot;, &quot;f&quot;), nrow=2, byrow=T)
 mantel.development(allmeaningcombinations(c(2,2)), m, plot=&quot;r&quot;)
 </div>
 <strong class='message'>Permutation space is small, enumerating all 24 possible permutations.</strong>
 <strong class='warning'>Warning message:
-The sample of randomised r&#39;s is not normally distributed, use that z score with a grain of salt</strong>
+The sample of randomised r&#39;s does not look normally distributed, use that z score with a grain of salt</strong>
 <strong class='message'>Permutation space is small, enumerating all 24 possible permutations.</strong>
 <p><img src='mantel.development-9.png' alt='' width='400' height='400' /></p>
-<div class='output'>   veridical mean        sd         z p.value p.smoothed sample.size
-0 0.06933752    0 0.1001671 0.6922187    0.68         NA          24
-1 0.42640143    0 0.4074407 1.0465362    0.36  0.1476568          24
-       msample
-0 0.069337....
-1 0.426401....
+<div class='output'>   method  veridical         mean        sd         z p.value     ks.level
+0 pearson 0.06933752 0.000000e+00 0.1001671 0.6922187    0.68 0.0003836841
+1 pearson 0.42640143 1.387779e-17 0.4074407 1.0465362    0.36 0.0606534261
+  p.smoothed is.unique.max sample.size      msample
+0         NA         FALSE          24 0.069337....
+1  0.1476568         FALSE          24 0.426401....
 </div>
 <div class='input'>mantel.development(allmeaningcombinations(c(2,2)), m, plot=&quot;z&quot;)
 </div>
 <strong class='message'>Permutation space is small, enumerating all 24 possible permutations.</strong>
 <strong class='warning'>Warning message:
-The sample of randomised r&#39;s is not normally distributed, use that z score with a grain of salt</strong>
+The sample of randomised r&#39;s does not look normally distributed, use that z score with a grain of salt</strong>
 <strong class='message'>Permutation space is small, enumerating all 24 possible permutations.</strong>
 <p><img src='mantel.development-15.png' alt='' width='400' height='400' /></p>
-<div class='output'>   veridical mean        sd         z p.value p.smoothed sample.size
-0 0.06933752    0 0.1001671 0.6922187    0.68         NA          24
-1 0.42640143    0 0.4074407 1.0465362    0.36  0.1476568          24
-       msample
-0 0.069337....
-1 0.426401....
+<div class='output'>   method  veridical         mean        sd         z p.value     ks.level
+0 pearson 0.06933752 0.000000e+00 0.1001671 0.6922187    0.68 0.0003836841
+1 pearson 0.42640143 1.387779e-17 0.4074407 1.0465362    0.36 0.0606534261
+  p.smoothed is.unique.max sample.size      msample
+0         NA         FALSE          24 0.069337....
+1  0.1476568         FALSE          24 0.426401....
 </div>
-<div class='input'>mantel.development(allmeaningcombinations(c(2,2)), read.table(&quot;stringsonlyexample.csv&quot;), plot=&quot;r&quot;)
+<div class='input'>mantel.development(allmeaningcombinations(c(2,2)), read.table(system.file(&quot;stringsonlyexample.csv&quot;, package=&quot;mantel&quot;)), plot=&quot;r&quot;)
 </div>
 <strong class='message'>Permutation space is small, enumerating all 24 possible permutations.</strong>
 <strong class='warning'>Warning message:
-The sample of randomised r&#39;s is not normally distributed, use that z score with a grain of salt</strong>
+The sample of randomised r&#39;s does not look normally distributed, use that z score with a grain of salt</strong>
 <strong class='message'>Permutation space is small, enumerating all 24 possible permutations.</strong>
 <strong class='message'>Permutation space is small, enumerating all 24 possible permutations.</strong>
 <strong class='warning'>Warning message:
-The sample of randomised r&#39;s is not normally distributed, use that z score with a grain of salt</strong>
+The sample of randomised r&#39;s does not look normally distributed, use that z score with a grain of salt</strong>
 <p><img src='mantel.development-23.png' alt='' width='400' height='400' /></p>
-<div class='output'>  veridical         mean        sd         z p.value p.smoothed sample.size
-0 0.5736807 1.851049e-17 0.6043322 0.9492805    0.36         NA          24
-1 0.0000000 0.000000e+00 0.6159924 0.0000000    0.68        0.5          24
-2 0.8500000 3.699275e-17 0.6210965 1.3685474    0.36         NA          24
-       msample
-0 0.573680....
-1 0, 0.738....
-2 0.85, -0....
+<div class='output'>   method veridical         mean        sd         z p.value    ks.level
+0 pearson 0.5736807 1.851049e-17 0.6043322 0.9492805    0.36 0.014057043
+1 pearson 0.0000000 0.000000e+00 0.6159924 0.0000000    0.68 0.203854643
+2 pearson 0.8500000 3.699275e-17 0.6210965 1.3685474    0.36 0.004081754
+  p.smoothed is.unique.max sample.size      msample
+0         NA         FALSE          24 0.573680....
+1        0.5         FALSE          24 0, 0.738....
+2         NA         FALSE          24 0.85, -0....
 </div></pre>
   </div>
   <div class="span4">

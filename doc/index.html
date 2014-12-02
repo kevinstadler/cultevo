@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>Index. mantel 0.2</title>
+<title>Index. mantel 0.2.1</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="">
 
@@ -20,7 +20,7 @@
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">mantel 0.2</a>
+      <a class="brand" href="#">mantel 0.2.1</a>
       <div class="nav">
         <ul class="nav">
           <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
@@ -46,10 +46,7 @@
 <pre><code>devtools::install_github(&quot;kevinstadler/mantel&quot;)
 </code></pre>
 
-<p>If this doesn&#39;t work you probably need to install the <code>devtools</code> package first:</p>
-
-<pre><code>install.packages(&quot;devtools&quot;)
-</code></pre>
+<p>If this doesn&#39;t work you probably need to install the <a href="http://cran.r-project.org/web/packages/devtools/index.html">devtools</a> package first: <code>install.packages(&quot;devtools&quot;)</code></p>
 
 <h2>Usage</h2>
 
@@ -60,9 +57,9 @@
 
 <p>and then fire away some Mantel tests! A nice HTML documentation is available at <a href="https://rawgit.com/kevinstadler/mantel/master/doc/index.html">https://rawgit.com/kevinstadler/mantel/master/doc/index.html</a></p>
 
-<p>See <a href="https://rawgit.com/kevinstadler/mantel/master/doc/mantel.file.html">mantel.file()</a> for straightforward computation of Mantel tests from an input file. While the command is highly customisable, if you don&#39;t want to mess about with all its parameters it is simplest if you have tab-separated <code>.csv</code> files with the strings in the first column, followed by meaning specifications in the remaining columns.</p>
+<p>See <a href="https://rawgit.com/kevinstadler/mantel/master/doc/mantel.file.html">mantel.file()</a> for straightforward computation of Mantel tests from an input file. While the command is highly customisable, if you don&#39;t want to mess about with all its parameters it is simplest if you have <em>tab</em>-separated <code>.csv</code> files with the strings in the first column, followed by meaning specifications in the remaining columns.</p>
 
-<p>If you already have the distance matrices computed and you just want to run the actual tests, have a look at <a href="https://rawgit.com/kevinstadler/mantel/master/doc/mantel.test.html">mantel.test()</a>. To visualise the outcome of one or more tests, call <a href="https://rawgit.com/kevinstadler/mantel/master/doc/plot.mantel.html">plot.mantel()</a>.</p>
+<p>If you already have the distance matrices computed and you just want to run the actual tests, have a look at <a href="https://rawgit.com/kevinstadler/mantel/master/doc/mantel.test.html">mantel.test()</a>. To visualise the outcome of one or more tests, simply call <a href="https://rawgit.com/kevinstadler/mantel/master/doc/plot.mantel.html">plot()</a> on the object returned by the tests. If you want to inspect the raw data returned by the test more closely, have a look at the <a href="http://rawgit.com/kevinstadler/mantel/master/doc/mantel.html">mantel class</a>.</p>
 
 <h2>Links</h2>
 
@@ -96,10 +93,10 @@
         <code><a href="hammingdists.html">hammingdists</a></code><br />Compute all pairwise hamming distances between matrix rows.</li>
             
       <li>
-        <code><a href="mantel.html">mantel</a></code><br />An R package for computing distance matrices and performing Mantel tests</li>
+        <code><a href="mantel.html">mantel</a></code><br />Object class for storing the results of one or more Mantel tests</li>
             
       <li>
-        <code><a href="mantel.development.html">mantel.development</a></code><br />Run Mantel tests on a set of consecutive data.</li>
+        <code><a href="mantel.development.html">mantel.development</a></code><br />Run consecutive Mantel tests on a set of data.</li>
             
       <li>
         <code><a href="mantel.file.html">mantel.file</a></code><br />Read data from a tab or comma-separated file and run Mantel tests on the data.</li>
