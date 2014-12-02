@@ -41,7 +41,7 @@ mantel.plotfuns[["r"]] <- function(mantels, ylim=range(0.1, mantels$veridical, m
 }
 
 # grab the xaxt and xlab arguments to stop them from being passed on via ...
-mantel.plotfuns[["density"]] <- function(mantels, nbins=25, xaxt=NULL, xlab=NULL, main="", ...) {
+mantel.plotfuns[["msample"]] <- function(mantels, nbins=25, xaxt=NULL, xlab=NULL, main="", ...) {
   d <- list()
   if (nrow(mantels) > 1) {
     par(mfrow=c(1, nrow(mantels)), mar=c(5.1, 2.5, 2, 1))
@@ -70,7 +70,7 @@ mantel.plotfuns[["density"]] <- function(mantels, nbins=25, xaxt=NULL, xlab=NULL
 #' 
 #' Plots the result of one or more Mantel permutation tests. The exact
 #' visualisation used can be controlled with the \code{plot} parameter, which
-#' currently supports "r", "z" and "density".
+#' currently supports "r", "z" and "msample".
 #' 
 #' Red error bars or normal distribution fits signify that a Kolmogorov-Smirnov
 #' test of the randomised r's was significantly non-normal at the level
@@ -79,18 +79,17 @@ mantel.plotfuns[["density"]] <- function(mantels, nbins=25, xaxt=NULL, xlab=NULL
 #' the permutation test.
 #' 
 #' @param mantels a Mantel test result (a data frame of class \code{mantel})
-#' @param plot the measure to be visualised, currently supported: "r", "z" and "density"
+#' @param plot the measure to be visualised, currently supported: "r", "z" and "msample"
 #' @param ... additional parameters to be passed on to the plotting function
 #' @examples
 #' plot(mantel.test(hammingdists(allmeaningcombinations(c(2,2,2,2))), suppressWarnings(as.dist(1:16))))
 #' plot(mantel.test(hammingdists(allmeaningcombinations(c(2,2,2,2))), suppressWarnings(as.dist(1:16))), plot="z")
 #' @seealso \link{\code{mantel.development}}, \link{\code{mantel.test}}, \link{\code{plot.default}}
 #' @export
-plot.mantel <- function(mantels, plot=if (nrow(mantels)==1) "density" else "r", xlab="generation", ...) {
+plot.mantel <- function(mantels, plot=if (nrow(mantels)==1) "msample" else "r", xlab="generation", ...) {
   # suppress x axis drawing in the subroutine
   mantel.plotfuns[[plot]](mantels, xaxt="n", xlab=xlab, ...)
-  print(plot)
-  if (plot != "density") {
+  if (plot != "msample") {
     axis(1, at=1:nrow(mantels), labels=rownames(mantels))
   }
 }
