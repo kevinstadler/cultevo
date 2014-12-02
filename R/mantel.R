@@ -140,7 +140,7 @@ mantel.test <- function(m1, m2, maxtrials=1000, conflate=FALSE, ks.level=0.05, s
 #' m <- matrix(c("sadasd", "iuerwh", "sdfgkj", "uofidsgf", "asd", "asdf", "", "f"), nrow=2, byrow=T)
 #' mantel.development(allmeaningcombinations(c(2,2)), m, plot="r")
 #' mantel.development(allmeaningcombinations(c(2,2)), m, plot="z")
-#' mantel.development(allmeaningcombinations(c(2,2)), read.table("stringsonlyexample.csv"), plot="r")
+#' mantel.development(allmeaningcombinations(c(2,2)), read.table(system.file("stringsonlyexample.csv", package="mantel")), plot="r")
 #' @seealso \link{\code{hammingdists}}
 #' @seealso \link{\code{mantel.test}}
 #' @export
@@ -180,9 +180,9 @@ mantel.development <- function(meanings, strings, test.args=NULL, ..., plot=NULL
 #' @param ... extra arguments are passed on to \link{\code{mantel.development}}
 #'   (and potentially further to \link{\code{mantel.test}} and \link{\code{plot.mantel}})
 #' @examples
-#' mantel.file(system.file("minimalexample.csv", package="mantel"), plot="r")
-#' mantel.file(system.file("minimalexample.csv", package="mantel"), plot="r", test.args=list(maxtrials=10, conflate=TRUE))
-#' mantel.file(system.file("generationsalongrows.csv", package="mantel"), plot="r", generationcolumn=4)
+#' mantel.file(system.file("minimalexample.csv", package="mantel"), plot="density")
+#' mantel.file(system.file("minimalexample.csv", package="mantel"), plot="density", test.args=list(maxtrials=10, conflate=TRUE))
+#' mantel.file(system.file("generationsalongrows.csv", package="mantel"), plot="density", generationcolumn=4)
 #' @seealso \link{\code{mantel.development}}
 #' @seealso \link{\code{mantel.test}}
 #' @seealso \link{\code{plot.mantel}}

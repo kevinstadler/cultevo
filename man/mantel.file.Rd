@@ -37,9 +37,9 @@ column gives the strings and all remaining columns encode the different
 meanings. See \code{mantelexample.csv} for a minimal example.
 }
 \examples{
-mantel.file(system.file("minimalexample.csv", package="mantel"), plot="r")
-mantel.file(system.file("minimalexample.csv", package="mantel"), plot="r", test.args=list(maxtrials=10, conflate=TRUE))
-mantel.file(system.file("generationsalongrows.csv", package="mantel"), plot="r", generationcolumn=4)
+mantel.file(system.file("minimalexample.csv", package="mantel"), plot="msample")
+mantel.file(system.file("minimalexample.csv", package="mantel"), plot="msample", test.args=list(maxtrials=10, conflate=TRUE))
+mantel.file(system.file("generationsalongrows.csv", package="mantel"), plot="msample", generationcolumn=4)
 }
 \seealso{
 \link{\code{mantel.development}}

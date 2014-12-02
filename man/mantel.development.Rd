@@ -35,7 +35,7 @@ mantel.development(allmeaningcombinations(c(2,2)), c("asd", "asdf", "", "f"), pl
 m <- matrix(c("sadasd", "iuerwh", "sdfgkj", "uofidsgf", "asd", "asdf", "", "f"), nrow=2, byrow=T)
 mantel.development(allmeaningcombinations(c(2,2)), m, plot="r")
 mantel.development(allmeaningcombinations(c(2,2)), m, plot="z")
-mantel.development(allmeaningcombinations(c(2,2)), read.table("stringsonlyexample.csv"), plot="r")
+mantel.development(allmeaningcombinations(c(2,2)), read.table(system.file("stringsonlyexample.csv", package="mantel")), plot="r")
 }
 \seealso{
 \link{\code{hammingdists}}
