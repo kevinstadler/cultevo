@@ -43,14 +43,14 @@ meaningspace.optionalarguments <- function(unspecifieddistance) {
 
 # Read optional arguments experiment data and plot Mantel tests.
 # 
-# Runs and visualises Mantel tests for the initial language and 8 generations
-# of the optional arguments experiment, with data read from the given file.
+# Runs and visualises Mantel tests for the initial language and all generations
+# of the optional arguments experiment that can be read from the given file.
 #' @export
-experiment.optionalarguments <- function(filename, unspecifieddistance, ...) {
-  strings <- read.table(filename, sep="\t")[,1:9]
-  strings <- apply(strings, c(1,2), toString)
+experiment.optionalarguments <- function(filename, unspecifieddistance, plot="r", ...) {
+  strings <- read.table(filename, sep="\t", stringsAsFactors=FALSE)
+  strings[[ncol(strings)]] <- NULL # drop meaning spec
   meaningspace <- meaningspace.optionalarguments(unspecifieddistance)
-  mantel.development(meaningspace, t(strings), ...)
+  mantel.development(meaningspace, t(strings), plot=plot, ...)
 }
 
 # Run and plot Mantel tests for all generations read from the local files
@@ -110,6 +110,7 @@ experiment.pixel <- function(chains=paste("chain", 1:4, sep=""), poolByGeneratio
       plot(alltests, plot=plot, main=paste("pooling:", poolByGeneration), ylim=ylim, ...)
       if (!is.null(ref)) {
         plot(subset(ref, Chain == chain)$z_score, ylim=c(-1,7))
+        abline(h=0, col="gray")
       }
     }
   }
@@ -117,6 +118,7 @@ experiment.pixel <- function(chains=paste("chain", 1:4, sep=""), poolByGeneratio
 #experiment.pixel()
 #experiment.pixel(poolByGeneration="average")
 #experiment.pixel(poolByGeneration="pool")
+#experiment.pixel(plot="msample")
 
 # comparison
 #experiment.pixel(ref="mantel_results_r1.csv", plot="z")

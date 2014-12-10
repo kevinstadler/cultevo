@@ -116,7 +116,7 @@ mantel.test <- function(m1, m2, maxtrials=1000, method="pearson", conflate=FALSE
   indices <- which(lower.tri(m1))
   # extract values relevent for correlation computation
   m1 <- m1[indices]
-  veridical <- cor(m1, m2[indices], method=method)
+  duration <- max(0.001, system.time(veridical <- cor(m1, m2[indices], method=method))[[3]])
   # determine whether it would be more efficient to enumerate all permutations:
   # assuming we take 'maxtrials' samples, how many of the factorial(d) possible
   # values haven't been selected yet compared to the maximum number of trials?
@@ -125,6 +125,9 @@ mantel.test <- function(m1, m2, maxtrials=1000, method="pearson", conflate=FALSE
     message("Permutation space is small, enumerating all ", factorial(d), " possible permutations.")
     msample <- sapply(combinat::permn(d), function(perm)cor(m1, shuffle(m2, perm)[indices], method=method))
   } else {
+    if (duration*maxtrials > 60) {
+      message("Estimated time to evaluate all ", maxtrials, " permutations is ", duration*maxtrials, "s, go get yourself a biscuit!")
+    }
     msample <- replicate(maxtrials, cor(m1, shuffle(m2)[indices], method=method))
   }
   greater <- sum(msample >= veridical)
@@ -165,7 +168,8 @@ mantel.test <- function(m1, m2, maxtrials=1000, method="pearson", conflate=FALSE
 #'   generation, organised along rows. The result of \code{read.table} can be
 #'   passed directly (or \code{t(read.table("..."))} if strings from the same
 #'   generation are organised in the same column rather than the same row).
-#' @param test.args a list of named arguments passed on to \link{\code{mantel.test}}
+#' @param test.args a list of named arguments passed on to
+#'   \link{\code{mantel.test}}, e.g. \code{list(method="kendall", maxtrials=100)}
 #' @param plot specifies which mantel test outcome should be plotted (if any):
 #'   currently supported are \code{"r"} and \code{"z"}.
 #' @param ... extra arguments passed on to the plotting function - here you

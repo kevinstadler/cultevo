@@ -30,8 +30,10 @@ mantel.plotfuns[["z"]] <- function(mantels, ylim=range(0, mantels$z)+c(0,1), col
   abline(h=0, lty=2, col="grey")
 }
 
+method.label <- list(pearson="r", kendall=expression(tau), spearman=expression(rho))
+
 mantel.plotfuns[["r"]] <- function(mantels, ylim=range(0.1, mantels$veridical, mantels$mean+mantels$sd, mantels$mean-mantels$sd)+c(-0.1,0.1), xlab="", ...) {
-  errbar(1:nrow(mantels), mantels$mean, mantels$mean+mantels$sd, mantels$mean-mantels$sd, xlab=xlab, ylab="r (mean±sd)", ylim=ylim, errbar.col=red.if.na(mantels$p.smoothed), ...)
+  errbar(1:nrow(mantels), mantels$mean, mantels$mean+mantels$sd, mantels$mean-mantels$sd, xlab=xlab, ylab=paste(method.label[[mantels$method[1]]], " (mean±sd)", sep=""), ylim=ylim, errbar.col=red.if.na(mantels$p.smoothed), ...)
   # plot correlation coefficient reference points
   abline(h=-1:1, lty=c(3,2,3), col="grey")
   # blue points signify that no single larger r value has been sampled
@@ -54,7 +56,7 @@ mantel.plotfuns[["msample"]] <- function(mantels, nbins=25, main="", xaxt=NULL, 
   }
   for (i in 1:nrow(mantels)) {
     xlim <- range(mantels$msample[i], mantels$veridical[i])
-    plot(d[[i]], freq=FALSE, yaxs="i", xlim=xlim, ylim=c(0, maxdensity), xlab="r", ylab="Density", border="gray", main=paste("r=", round(mantels$veridical[i], digits=2), ", N=", mantels$sample.size[i], sep=""), ...)
+    plot(d[[i]], freq=FALSE, yaxs="i", xlim=xlim, ylim=c(0, maxdensity), xlab=method.label[[mantels$method[i]]], ylab="Density", border="gray", main=paste(method.label[[mantels$method[i]]], "=", round(mantels$veridical[i], digits=2), ", N=", mantels$sample.size[i], sep=""), ...)
     # add fit used for z score estimation
     curve({dnorm(x, mean=mantels$mean[i], sd=mantels$sd[i])}, col=red.if.na(mantels$p.smoothed[i]), lty=3, add=T)
     # mark veridical r

@@ -13,7 +13,8 @@ generation, organised along rows. The result of \code{read.table} can be
 passed directly (or \code{t(read.table("..."))} if strings from the same
 generation are organised in the same column rather than the same row).}
 
-\item{test.args}{a list of named arguments passed on to \link{\code{mantel.test}}}
+\item{test.args}{a list of named arguments passed on to
+\link{\code{mantel.test}}, e.g. \code{list(method="kendall", maxtrials=100)}}
 
 \item{...}{extra arguments passed on to the plotting function - here you
 might want to specify parameters like \code{ylim}..}
