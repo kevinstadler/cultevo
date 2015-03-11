@@ -1,7 +1,7 @@
-Package: mantel
+Package: cultevo
 Title: An R package for computing distance matrices and performing Mantel tests
-Version: 0.2.1
-Date: 2014-12-02
+Version: 1.0.0
+Date: 2015-03-02
 Authors@R: "Kevin Stadler <kevin.stadler@ed.ac.uk> [aut, cre]"
 Description: This package provides functions for computing distance matrices,
     performing Mantel tests on them, and visualising the results of those
@@ -12,5 +12,4 @@ Depends:
 License: MIT
 Suggests:
     combinat,
-    gputools,
     Hmisc
