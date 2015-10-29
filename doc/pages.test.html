@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>shuffle.locations. cultevo 1.0.0</title>
+<title>pages.test. cultevo 1.0.0</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="">
 
@@ -35,43 +35,58 @@
         
       </header>
       
-      <h1>Permute the rows/columns of a matrix.</h1>
+      <h1>Perform Page's test on the given data set, providing exact p values whre possible.</h1>
 
 <div class="row">
   <div class="span8">
     <h2>Usage</h2>
-    <pre><div>shuffle.locations(m, perm&nbsp;=&nbsp;sample.int(dim(m)[1]))</div></pre>
+    <pre><div>pages.test(data, ...)</div></pre>
     
     <h2>Arguments</h2>
     <dl>
-      <dt>perm</dt>
-      <dd>vector of indices specifying the new order of rows/columns</dd>
-      <dt>dist</dt>
-      <dd>a matrix with an equal number of rows and columns</dd>
+      <dt>data</dt>
+      <dd>a matrix or dataframe with the different conditions along
+columns and the replications along rows. Conversion of the data to ranks
+is taken care of internally.</dd>
+      <dt>...</dt>
+      <dd>extra parameters which are passed on to <code><a href='pagesL.html'>pagesL</a></code></dd>
     </dl>
     
-    <div class="Permute the rows/columns of a matrix.">
-      <h2>Permute the rows/columns of a matrix.</h2>
+    <div class="Perform Page's test on the given data set, providing exact p values whre possible.">
+      <h2>Perform Page's test on the given data set, providing exact p values whre possible.</h2>
       
     </div>
 
     <div class="Value">
       <h2>Value</h2>
       
-      <p>a matrix of the same size as <code>m</code></p>
+      <p>a list of class <code>PagesTest</code></p>
   
     </div>
 
     <div class="Description">
       <h2>Description</h2>
       
-      <p>Returns the given matrix with rows and columns permuted in the same order.</p>
+      <p>Page's test tests for monotonically increasing ranks across linearly ordered
+conditions. To test for monotonically <em>decreasing</em> trends you can
+either reverse the order of columns, or simply invert the ranks (i.e. by
+prepending the dataset with a <code>-</code>).</p>
   
     </div>
-      </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>pages.test(t(replicate(4, sample(4))))
+</div>
+<div class='output'>Page&#39;s test: L=103, k=4, N=4, p=3.374898e-01 (exact)
+</div>
+<div class='input'>pages.test(t(replicate(4, sample(10))))
+</div>
+<div class='output'>Page&#39;s test: L=1264, k=10, N=4, p=1.678337e-01 (exact)
+</div></pre>
+  </div>
   <div class="span4">
     <!-- <ul>
-      <li>shuffle.locations</li>
+      <li>pages.test</li>
     </ul>
     <ul>
       

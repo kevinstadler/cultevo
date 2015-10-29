@@ -1,12 +1,14 @@
 Package: cultevo
-Title: An R package for computing distance matrices and performing Mantel tests
+Title: A library of statistical tests for cultural evolution
 Version: 1.0.0
-Date: 2015-03-02
+Date: 2015-10-29
 Authors@R: "Kevin Stadler <kevin.stadler@ed.ac.uk> [aut, cre]"
-Description: This package provides functions for computing distance matrices,
-    performing Mantel tests on them, and visualising the results of those
-    tests.
-URL: https://rawgit.com/kevinstadler/mantel/master/doc/index.html
+Description: This package provides implementations of functions and statistical
+    tests often used in the study of cultural evolution. It provides functions
+    for computing distance matrices, performing Mantel tests on them,
+    visualising the results of those tests, as well as a robust implementation
+    of Page's L test for monotonicity.
+URL: https://rawgit.com/kevinstadler/cultevo/master/doc/index.html
 Depends:
     R (>= 3.0.0)
 License: MIT

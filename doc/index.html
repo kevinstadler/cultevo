@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>Index. mantel 0.2.1</title>
+<title>Index. cultevo 1.0.0</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="">
 
@@ -20,7 +20,7 @@
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">mantel 0.2.1</a>
+      <a class="brand" href="#">cultevo 1.0.0</a>
       <div class="nav">
         <ul class="nav">
           <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
@@ -37,29 +37,29 @@
       
       <div class="row">
   <div class="span8">
-    <h2>Simple Mantel tests for R</h2>
+    <h2>Cultural evolution tests for R</h2>
 
-<p>This package provides functions for computing distance matrices and performing Mantel tests on them.</p>
+<p>This package provides functions for computing distance matrices and performing Mantel tests on them, as well as a robust implementation of Page&#39;s L test for monotonicity.</p>
 
 <h2>Installation</h2>
 
-<pre><code>devtools::install_github(&quot;kevinstadler/mantel&quot;)
+<pre><code>devtools::install_github(&quot;kevinstadler/cultevo&quot;)
 </code></pre>
 
 <p>If this doesn&#39;t work you probably need to install the <a href="http://cran.r-project.org/web/packages/devtools/index.html">devtools</a> package first: <code>install.packages(&quot;devtools&quot;)</code></p>
 
-<h2>Usage</h2>
+<h2>Running Mantel tests</h2>
 
 <p>Call</p>
 
-<pre><code>library(mantel)
+<pre><code>library(cultevo)
 </code></pre>
 
-<p>and then fire away some Mantel tests! A nice HTML documentation is available at <a href="https://rawgit.com/kevinstadler/mantel/master/doc/index.html">https://rawgit.com/kevinstadler/mantel/master/doc/index.html</a></p>
+<p>and then fire away some Mantel tests! A nice HTML documentation is available at <a href="https://rawgit.com/kevinstadler/cultevo/master/doc/index.html">https://rawgit.com/kevinstadler/cultevo/master/doc/index.html</a></p>
 
-<p>See <a href="https://rawgit.com/kevinstadler/mantel/master/doc/mantel.file.html">mantel.file()</a> for straightforward computation of Mantel tests from an input file. While the command is highly customisable, if you don&#39;t want to mess about with all its parameters it is simplest if you have <em>tab</em>-separated <code>.csv</code> files with the strings in the first column, followed by meaning specifications in the remaining columns.</p>
+<p>See <a href="https://rawgit.com/kevinstadler/cultevo/master/doc/mantel.file.html">mantel.file()</a> for straightforward computation of Mantel tests from an input file. While the command is highly customisable, if you don&#39;t want to mess about with all its parameters it is simplest if you have <em>tab</em>-separated <code>.csv</code> files with the strings in the first column, followed by meaning specifications in the remaining columns.</p>
 
-<p>If you already have the distance matrices computed and you just want to run the actual tests, have a look at <a href="https://rawgit.com/kevinstadler/mantel/master/doc/mantel.test.html">mantel.test()</a>. To visualise the outcome of one or more tests, simply call <a href="https://rawgit.com/kevinstadler/mantel/master/doc/plot.mantel.html">plot()</a> on the object returned by the tests. If you want to inspect the raw data returned by the test more closely, have a look at the <a href="http://rawgit.com/kevinstadler/mantel/master/doc/mantel.html">mantel class</a>.</p>
+<p>If you already have the distance matrices computed and you just want to run the actual tests, have a look at <a href="https://rawgit.com/kevinstadler/cultevo/master/doc/mantel.test.html">mantel.test()</a>. To visualise the outcome of one or more tests, simply call <a href="https://rawgit.com/kevinstadler/cultevo/master/doc/plot.mantel.html">plot()</a> on the object returned by the tests. If you want to inspect the raw data returned by the test more closely, have a look at the <a href="http://rawgit.com/kevinstadler/cultevo/master/doc/mantel.html">mantel class</a>.</p>
 
 <h2>Links</h2>
 
@@ -105,10 +105,31 @@
         <code><a href="mantel.test.html">mantel.test</a></code><br />Perform a Mantel test.</li>
             
       <li>
+        <code><a href="mcombn.html">mcombn</a></code><br />Calculate the multinomial coefficient (number of permutations of a multiset)</li>
+            
+      <li>
         <code><a href="meaningspace.optionalarguments.html">meaningspace.optionalarguments</a></code><br />Construct the meaning space matrix for the 'optional arguments' experiment.</li>
             
       <li>
+        <code><a href="multichoose.html">multichoose</a></code><br />Calculate the multiset coefficient.</li>
+            
+      <li>
         <code><a href="normalisedlevenshteindists.html">normalisedlevenshteindists</a></code><br />Compute the normalised Levenshtein distances between strings.</li>
+            
+      <li>
+        <code><a href="pagesL.html">pagesL</a></code><br />Calculate Page's L statistic for the given dataset.</li>
+            
+      <li>
+        <code><a href="pages.test.html">pages.test</a></code><br />Perform Page's test on the given data set, providing exact p values whre possible.</li>
+            
+      <li>
+        <code><a href="pages.test.exact.html">pages.test.exact</a></code><br />Calculate exact significance levels for Page's L.</li>
+            
+      <li>
+        <code><a href="pages.test.exact.values.html">pages.test.exact.values</a></code><br />Display the range of exact p values for Page's test provided by this package.</li>
+            
+      <li>
+        <code><a href="pages.test.normal.approx.goodness.html">pages.test.normal.approx.goodness</a></code><br />Plot the goodness of the normal approximation</li>
             
       <li>
         <code><a href="plot.mantel.html">plot.mantel</a></code><br />Plot a Mantel test result.</li>
@@ -131,7 +152,7 @@
     <ul>
       <li><strong>Depends</strong>: </li>
       <li><strong>Imports</strong>: </li>
-      <li><strong>Suggests</strong>: combinat, gputools, Hmisc</li>
+      <li><strong>Suggests</strong>: combinat, Hmisc</li>
       <li><strong>Extends</strong>: </li>
     </ul>
      

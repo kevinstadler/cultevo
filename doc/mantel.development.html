@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>mantel.development. mantel 0.2.1</title>
+<title>mantel.development. cultevo 1.0.0</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="">
 
@@ -20,7 +20,7 @@
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">mantel 0.2.1</a>
+      <a class="brand" href="#">cultevo 1.0.0</a>
       <div class="nav">
         <ul class="nav">
           <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
@@ -52,7 +52,8 @@ generation, organised along rows. The result of <code>read.table</code> can be
 passed directly (or <code>t(read.table("..."))</code> if strings from the same
 generation are organised in the same column rather than the same row).</dd>
       <dt>test.args</dt>
-      <dd>a list of named arguments passed on to <a href='mantel.test.html'>mantel.test</a></dd>
+      <dd>a list of named arguments passed on to
+<a href='mantel.test.html'>mantel.test</a>, e.g. <code>list(method="kendall", maxtrials=100)</code></dd>
       <dt>...</dt>
       <dd>extra arguments passed on to the plotting function - here you
 might want to specify parameters like <code>ylim</code>..</dd>
@@ -89,10 +90,10 @@ of internally.</p>
 </div>
 <strong class='message'>Permutation space is small, enumerating all 24 possible permutations.</strong>
 <p><img src='mantel.development-3.png' alt='' width='400' height='400' /></p>
-<div class='output'>   method veridical         mean        sd        z p.value   ks.level
-0 pearson 0.4264014 1.387779e-17 0.4074407 1.046536    0.36 0.06065343
-  p.smoothed is.unique.max sample.size      msample
-0  0.1476568         FALSE          24 0.426401....
+<div class='output'>   method veridical mean        sd        z p.value   ks.level p.smoothed
+0 pearson 0.4264014    0 0.4074407 1.046536    0.36 0.06065343  0.1476568
+  is.unique.max sample.size      msample
+0         FALSE          24 0.426401....
 </div>
 <div class='input'>m &lt;- matrix(c(&quot;sadasd&quot;, &quot;iuerwh&quot;, &quot;sdfgkj&quot;, &quot;uofidsgf&quot;, &quot;asd&quot;, &quot;asdf&quot;, &quot;&quot;, &quot;f&quot;), nrow=2, byrow=T)
 mantel.development(allmeaningcombinations(c(2,2)), m, plot=&quot;r&quot;)
@@ -102,12 +103,12 @@ mantel.development(allmeaningcombinations(c(2,2)), m, plot=&quot;r&quot;)
 The sample of randomised r&#39;s does not look normally distributed, use that z score with a grain of salt</strong>
 <strong class='message'>Permutation space is small, enumerating all 24 possible permutations.</strong>
 <p><img src='mantel.development-9.png' alt='' width='400' height='400' /></p>
-<div class='output'>   method  veridical         mean        sd         z p.value     ks.level
-0 pearson 0.06933752 0.000000e+00 0.1001671 0.6922187    0.68 0.0003836841
-1 pearson 0.42640143 1.387779e-17 0.4074407 1.0465362    0.36 0.0606534261
-  p.smoothed is.unique.max sample.size      msample
-0         NA         FALSE          24 0.069337....
-1  0.1476568         FALSE          24 0.426401....
+<div class='output'>   method  veridical mean        sd         z p.value     ks.level p.smoothed
+0 pearson 0.06933752    0 0.1001671 0.6922187    0.68 0.0003836841         NA
+1 pearson 0.42640143    0 0.4074407 1.0465362    0.36 0.0606534261  0.1476568
+  is.unique.max sample.size      msample
+0         FALSE          24 0.069337....
+1         FALSE          24 0.426401....
 </div>
 <div class='input'>mantel.development(allmeaningcombinations(c(2,2)), m, plot=&quot;z&quot;)
 </div>
@@ -116,12 +117,12 @@ The sample of randomised r&#39;s does not look normally distributed, use that z 
 The sample of randomised r&#39;s does not look normally distributed, use that z score with a grain of salt</strong>
 <strong class='message'>Permutation space is small, enumerating all 24 possible permutations.</strong>
 <p><img src='mantel.development-15.png' alt='' width='400' height='400' /></p>
-<div class='output'>   method  veridical         mean        sd         z p.value     ks.level
-0 pearson 0.06933752 0.000000e+00 0.1001671 0.6922187    0.68 0.0003836841
-1 pearson 0.42640143 1.387779e-17 0.4074407 1.0465362    0.36 0.0606534261
-  p.smoothed is.unique.max sample.size      msample
-0         NA         FALSE          24 0.069337....
-1  0.1476568         FALSE          24 0.426401....
+<div class='output'>   method  veridical mean        sd         z p.value     ks.level p.smoothed
+0 pearson 0.06933752    0 0.1001671 0.6922187    0.68 0.0003836841         NA
+1 pearson 0.42640143    0 0.4074407 1.0465362    0.36 0.0606534261  0.1476568
+  is.unique.max sample.size      msample
+0         FALSE          24 0.069337....
+1         FALSE          24 0.426401....
 </div>
 <div class='input'>mantel.development(allmeaningcombinations(c(2,2)), read.table(system.file(&quot;stringsonlyexample.csv&quot;, package=&quot;mantel&quot;)), plot=&quot;r&quot;)
 </div>
