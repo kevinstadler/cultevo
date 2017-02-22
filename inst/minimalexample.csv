@@ -1,9 +1,0 @@
-# example csv file to use with the mantel.file() function.
-# the first column specifies the string, the remaining columns specify the
-# meanings along the different dimensions, with one row for every possible
-# meaning combination.
-# evaluate+plot by calling mantel.file("minimalexample.csv", plot="r")
-a string	round	big
-b string	round	small
-a strong	square	big
-b strong	square	small
