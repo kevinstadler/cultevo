@@ -1,17 +1,25 @@
 Package: cultevo
-Title: A library of statistical tests for cultural evolution
+Title: Measures and Statistical Tests for Cultural Evolution
 Version: 1.0.0
-Date: 2015-10-29
-Authors@R: "Kevin Stadler <kevin.stadler@ed.ac.uk> [aut, cre]"
+Date: 2017-03-24
+Authors@R: person("Kevin Stadler", role=c("aut", "cre"), email="kevin.stadler@ed.ac.uk")
 Description: This package provides implementations of functions and statistical
     tests often used in the study of cultural evolution. It provides functions
     for computing distance matrices, performing Mantel tests on them,
     visualising the results of those tests, as well as a robust implementation
     of Page's L test for monotonicity.
-URL: https://rawgit.com/kevinstadler/cultevo/master/doc/index.html
-Depends:
-    R (>= 3.0.0)
-License: MIT
-Suggests:
+URL: https://github.com/kevinstadler/cultevo
+BugReports: https://github.com/kevinstadler/cultevo/issues
+Encoding: UTF-8
+License: MIT + file LICENSE
+Imports:
     combinat,
-    Hmisc
+    grDevices,
+    graphics,
+    Hmisc,
+    pspearman,
+    stats,
+    utils
+Suggests:
+    memoise
+RoxygenNote: 6.0.1

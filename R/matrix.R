@@ -1,17 +1,21 @@
 # General functions for generating and manipulating matrices
 
-#' Repeat the entries in the matrix along both dimensions.
+#' Extend a matrix by repetition of elements.
+#' 
+#' Returns a new matrix, where the entries of the original matrix are
+#' repeated along both dimensions.
 #' 
 #' The resulting matrix will have \code{times*each} times more rows and columns
 #' than the original matrix.
 #' 
-#' @param m a matrix
+#' @param x a matrix
 #' @param times how often the matrix should be replicated next to itself
 #' @param each how often individual cells should be replicated next to themselves
 #' @param times.row number of vertical repetitions of the matrix, overrides \code{times}
 #' @param times.col number of horizontal repetitions of the matrix, overrides \code{times}
 #' @param each.row number of vertical repetitions of individual elements, overrides \code{each}
 #' @param each.col number of horizontal repetitions of individual elements, overrides \code{each}
+#' @param ... not used
 #' @return a matrix
 #' @examples
 #' rep.matrix(diag(4))
@@ -20,14 +24,14 @@
 #' rep.matrix(diag(3), times=2, each=2)
 #' rep.matrix(diag(4), each.row=2)
 #' rep.matrix(diag(4), times.row=2)
-#' @seealso \code{\link{rep}}
+#' @seealso \code{\link[base]{rep}}
 #' @export
-rep.matrix <- function(m, times=1, each=1, times.row=times, times.col=times, each.row=each, each.col=each) {
+rep.matrix <- function(x, times=1, each=1, times.row=times, times.col=times, each.row=each, each.col=each, ...) {
   # replicate individual elements
-  m <- matrix(rep(m, each=each.row), ncol=each.row*dim(m)[1], byrow=TRUE)
-  m <- matrix(rep(m, each=each.col), ncol=each.col*dim(m)[1], byrow=TRUE)
+  x <- matrix(rep(x, each=each.row), ncol=each.row*nrow(x), byrow=TRUE)
+  x <- matrix(rep(x, each=each.col), ncol=each.col*nrow(x), byrow=TRUE)
   # replicate entire matrix
-  do.call(cbind, replicate(times.col, do.call(rbind, replicate(times.row, m, simplify=FALSE)), simplify=FALSE))
+  do.call(cbind, replicate(times.col, do.call(rbind, replicate(times.row, x, simplify=FALSE)), simplify=FALSE))
 }
 
 #' Enumerate meaning combinations.
@@ -47,18 +51,18 @@ rep.matrix <- function(m, times=1, each=1, times.row=times, times.col=times, eac
 #'   meaning values
 #' @param offset a constant that is added to all meaning specifiers. Ignored
 #'   when \code{dimensionality} specifies the meaning values
-#' @return a matrix that has as many columns as there are dimensions, with every
-#'   row specifying one of the possible meaning combinations, and the first
-#'   dimension cycling slowest.
+#' @return a matrix that has as many columns as there are dimensions, with
+#'   every row specifying one of the possible meaning combinations, and the
+#'   first dimension cycling slowest.
 #' @examples
-#' allmeaningcombinations(c(2,2))
-#' allmeaningcombinations(c(3,4))
-#' allmeaningcombinations(c(2,2,2,2))
-#' allmeaningcombinations(8) # trivial
-#' allmeaningcombinations(list(shape=c("square", "circle"), color=c("red", "blue")))
+#' enumerate.meaningcombinations(c(2, 2))
+#' enumerate.meaningcombinations(c(3, 4))
+#' enumerate.meaningcombinations(c(2, 2, 2, 2))
+#' enumerate.meaningcombinations(8) # trivial
+#' enumerate.meaningcombinations(list(shape=c("square", "circle"), color=c("red", "blue")))
 #' @seealso \code{\link{hammingdists}}
 #' @export
-allmeaningcombinations <- function(dimensionality, uniquelabels=TRUE, offset=0) {
+enumerate.meaningcombinations <- function(dimensionality, uniquelabels=TRUE, offset=0) {
   if (is.list(dimensionality)) {
     # argument is a list or other 2-dimensional data structure
     # specifying the possible meanings per dimension

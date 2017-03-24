@@ -1,0 +1,9 @@
+citHeader("This package can be cited as:")
+
+citEntry(entry = "manual",
+  author = "Stadler, Kevin",
+  title = "cultevo: easures and statistical tests for cultural evolution",
+  year = "2017",
+  url = "https://github.com/kevinstadler/cultevo",
+  textVersion = "Stadle, Kevin (2017). cultevo: easures and statistical tests for cultural evolution. https://kevinstadler.github.io/cultevo/"
+)

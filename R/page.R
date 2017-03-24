@@ -1,41 +1,103 @@
-#' Pre-computed lookup table for p values of Page's test for monotonicity.
-#'
-#' Functions for computing and assembling the table can be found in the file
-#' \code{page.compute.table.R}
-#' @seealso \code{\link{page.test}}
-"Ltable"
-
 #' Calculate Page's L statistic for the given dataset.
 #'
 #' @param data a matrix or dataframe 
-#' @param ties how to resolve tied ranks. Passed on to \code{\link{rank}}, so
+#' @param ties.method how to resolve tied ranks. Passed on to \code{\link{rank}}, so
 #'   can be one of "average" (the default), "first", "last", "random", "max",
 #'   "min"
 #' @param verbose print the final rankings based on which the L statistic is
 #'   computed? default: \code{TRUE}
-#' @seealso \code{\link{rank}}
+#' @seealso \code{\link[base]{rank}}
 #' @export
-pages.L <- function(data, ties.method="average", verbose=TRUE) {
+page.L <- function(data, ties.method="average", verbose=TRUE) {
   # perform row-wise rankings
   ranks <- apply(data, 1, function(r) rank(r, na.last="keep", ties.method=ties.method))
   if (verbose) {
-    print("Ranking used:")
-    print(ranks)
+    writeLines("Ranking used:")
+    print(structure(t(ranks), dimnames=list(paste("N=", 1:ncol(ranks), sep=""))))
   }
-  sum(1:ncol(data) * rowSums(ranks))
+  sum(seq(ncol(data)) * rowSums(ranks))
 }
 
 # mean L for which p(x<=L) == 0.5 (as is the case when all ranks are tied)
-pages.L.mean <- function(k, N=1)
-  N*k*((k+1)/2)^2
+#page.L.mean <- function(k, N=1)
+#  N*k*((k+1)/2)^2
 
-page.test.normal.approx <- function(L, k, N) {
-  # Hollander & Wolfe (1999) formulation
-  zs <- (L - (N*k*(k+1)^2)/4) / sqrt(N * k^2 * (k+1) * (k^2-1) / 144)
-  sapply(zs, function(z) pnorm(z, lower.tail=FALSE))
+# possible row-wise ls (equivalent to Spearman's Rho)
+rho.null.distribution <- function(k) {
+  ls <- sum((1:k)^2) : sum(1:k * k:1)
+  nd <- pspearman:::spearman.list[[k]]
+  # mirror the symmetric null distribution
+  if (length(ls) %% 2 == 0)
+    c(nd, rev(nd))
+  else
+    c(nd, rev(nd)[-1])
+  # sanity check: sum(rho.null.distribution(k)) == factorial(k)
 }
 
-#' Perform the Page test of monotonicity on the given data set.
+L.null.distribution <- function(k, N) {
+  # possible row-wise ls
+  ls <- sum((1:k)^2) : sum(1:k * k:1)
+  convolutions <- list(rho.null.distribution(k))
+  names(convolutions[[1]]) <- ls
+
+  currentls <- ls
+  i <- 1
+  while (i < N) {
+    currentls <- (currentls[1] + ls[1]) : (currentls[length(currentls)] + ls[length(ls)])
+    # calculate all joint probabilities
+    jointp <- outer(convolutions[[i]], convolutions[[1]])
+    # pad matrix so that equal sums of L are aligned in rows
+    # (resulting matrix will have nrow(jointp)+ncol(jointp)-1 rows)
+    jointp <- sapply(1:ncol(jointp), function (col) {
+      c(rep(0, col-1), jointp[,col], rep(0, max(0, ncol(jointp)-col)))
+    })
+    # it's that easy
+    newconvolution <- rowSums(jointp)
+    names(newconvolution) <- currentls
+
+    i <- i+1
+    convolutions[[i]] <- newconvolution
+  }
+  return(convolutions[[N]] / sum(convolutions[[N]]))
+}
+# don't recompute
+if (requireNamespace("memoise", quietly = TRUE))
+  L.null.distribution <- memoise::memoise(L.null.distribution)
+
+#' Calculate exact significance levels of the Page L statistic.
+#'
+#' Returns the null probability that the Page statistic with the given k, N is >= L.
+#'
+#' @param k number of conditions/generations
+#' @param N number of replications/chains
+#' @param L value of the Page L statistic
+#' @return the significance level of L for the given k, N
+#' @examples
+#' page.compute.exact(6, 4, 322)
+#' @seealso \code{\link{page.test}}
+#' @export
+page.compute.exact <- function(k, N, L) {
+  nd <- L.null.distribution(k, N)
+  sum(nd[1:match(L, names(nd))])
+}
+
+page.compute.normal.approx <- function(k, N, L) {
+  # Hollander & Wolfe (1999) formulation
+  zs <- (L - (N*k*(k+1)^2)/4) / sqrt(N * k^2 * (k+1) * (k^2-1) / 144)
+  sapply(zs, function(z) stats::pnorm(z, lower.tail=FALSE))
+}
+# the Normal approximation of crank::page.trend.test is demonstrably off
+# ps <- replicate(50, {
+#   k <- 12
+#   N <- 4
+#   d <- t(replicate(N, sample(k)))
+#   c(cultevo=page.compute.normal.approx(k, N, page.L(d, verbose=FALSE)),
+#     crank=crank::page.trend.test(d)$pZ)
+# })
+#hist(ps[2,], col="red")
+#hist(ps[1,], col="blue", add=TRUE)
+
+#' Perform the Page test of monotonicity.
 #'
 #' The Page test tests the given matrix for monotonically increasing ranks
 #' across \code{k} linearly ordered conditions (along columns) based on
@@ -43,15 +105,22 @@ page.test.normal.approx <- function(L, k, N) {
 #' \emph{decreasing} trends you can either reverse the order of columns, or
 #' simply invert the ranks (i.e. by prepending the dataset with a \code{-}).
 #'
-#' Exact p values taken from a precalculated table are provided where possible,
-#' for combinations of large \code{k} and \code{N} p values are computed based
-#' on a Normal distribution approximation.
+#' Exact p values are computed for \code{k} up to 22, using the pre-computed
+#' null distributions from the \code{pspearman} package. For larger \code{k}, p
+#' values are computed based on a Normal distribution approximation.
 #'
 #' @param data a matrix or dataframe with the different conditions along
 #'   columns and the replications along rows. Conversion of the data to ranks
-#'   is taken care of internally.
-#' @param ... extra parameters which are passed on to \code{\link{pages.L}}
-#' @return a list of class \code{pagetest}
+#'   is taken care of internally (see \code{\link{page.L}})
+#' @param ... extra parameters which are passed on to \code{\link{page.L}}
+#' @return a list of class \code{pagetest} (and \code{htest}) containing the following fields:
+#' \describe{
+#'    \item{\code{L}}{Value of the \code{L} statistic for the given data set}
+#'    \item{\code{k}}{Number of conditions (columns of the data set)}
+#'    \item{\code{N}}{Number of replications (rows of the data set)}
+#'    \item{\code{p.value}}{Significance level}
+#'    \item{\code{p.type}}{Whether the computed p value is "exact" or "approx"}
+#' }
 #' @examples
 #' page.test(t(replicate(4, sample(4))))
 #' page.test(t(replicate(4, sample(10))))
@@ -61,105 +130,100 @@ page.test <- function(data, ...) {
   N <- nrow(data) # 'm' in Page (1963)
   if (N < 2)
     stop("Not enough chains/replications, for individual samples use the Mann-Kendall test instead")
+    # http://finzi.psych.upenn.edu/R/library/EnvStats/html/kendallSeasonalTrendTest.html
   if (k < 3)
     stop("Need at least 3 conditions/rank levels")
   # ranking is happening in here
-  L <- pages.L(data, ...)
+  L <- page.L(data, ...)
 
-  p <- NA
-  p.str <- NULL
-  # table lookup
-  if (all(dim(Ltable) >= c(N,k)) && !is.null(Ltable[N,k])) {
-    p <- match(TRUE, L == Ltable[N,k][[1]])
-    if (is.na(p)) {
-      # no exact p value available
-      p.str <- ifelse(L <= pages.L.mean(k, N), " >= .5", " > .05")
-    } else {
-      p <- sum(Ltable[N,k][[1]]$p.ind[1:p])
-    }
-  } else if (k == 3) {
-    # do exact calculation for k=3 (this is generally tractable)
-    p <- page.combinations.bruteforce(3, N)
-    p <- sum(p[1:match(TRUE, L == names(p))])
-  }
-  if (!is.na(p)) {
-    p.str <- paste("=", format(p, scientific=TRUE), sep="")
+  # if exact null distribution is known: compute exact
+  if (k <= length(pspearman:::spearman.list)) {
+    p <- page.compute.exact(k, N, L)
+    p.type <- "exact"
   } else {
-    warning("Exact p value is not available for given k, N, using Normal approximation which is unreliable for small N")
-    approx <- page.test.normal.approx(L, k, N)
+    warning("Exact p value is not available for given k, using Normal approximation which is unreliable for small N")
+    p <- page.compute.normal.approx(k, N, L)
+    p.type <- "approx"
   }
-  result <- list(L=L, k=k, N=N, p.exact=p, p.formatted=p.str, p.approx=approx)
-  class(result) <- "pagetest"
-  return(result)
+  structure(list(statistic=L, k=k, N=N, p.value=p, p.type=p.type,
+      alternative="", method="Page test of monotonicity"),
+    class=c("htest", "pagetest"))
 }
 
 #' @export
-print.pagetest <- function(x, ...) {
-  cat("Page test of monotonicity: L=", x$L, ", k=", x$k, ", N=", x$N, ", p", sep="")
-  approx <- format(p$p.approx, scientific=TRUE)
-  if (is.null(x$p.formatted)) {
-    cat(" (approx) = ", approx, sep="")
-  } else {
-    cat(x$p.formatted)
-    if (is.na(x$p.exact))
-      cat(", p (approx) =", approx)
-    else
-      cat(" (exact)")
-  }
-  cat("\n")
-  invisible(NULL)
-}
+print.pagetest <- function(x, ...)
+  invisible(cat("Page test of monotonicity: L=", x$statistic, ", k=", x$k,
+    ", N=", x$N, "\np = ",
+    format(x$p.value, digits=4), " (", x$p.type, ")\n", sep=""))
 
-#' Look up critical L values for the given significance levels from the
-#' precomputed table
-criticalLs <- function(Lcell, p.lvls)
-  unlist(lapply(p.lvls, function(p.lvl) Lcell$L[which(cumsum(Lcell$p.ind) > p.lvl)[1]-1]))
+# =============================================================================
+# Below here are functions used to pre-compute the exact distribution of the
+# Page L statistic for individual rows (rankings). This is currently tractable
+# for k up to 14
+# =============================================================================
 
-#' Plot the goodness of the normal approximation of Page's test.
-#'
-#' Plots the goodness of the normal approximation of Page's test for the given
-#' critical levels against the exactly computed critical Ls, where available.
-#'
-#' Red cells mean that the normal approximation is too liberal for the given
-#' combination of \code{k}, \code{N}, blue cells mean the normal approximation
-#' is too conservative. In general, we find that for low values of N the
-#' approximation is slightly too \emph{liberal} at the .05 level, but too
-#' \emph{conservative} for lower p-levels.
-#'
-#' @param p.lvls the significance levels for which the normal approximation
-#'   should be compared to the exact values.
-#' @example
-#'par(mfrow=c(1, 2))
-#'page.test.normal.approx.goodness(.05)
-#'page.test.normal.approx.goodness(.01)
-page.test.normal.approx.goodness <- function(p.lvls=c(0.05, 0.01, 0.001)) {
-  goodness <- array(NA, c(length(p.lvls), dim(Ltable)))
-  for (k in 3:ncol(Ltable)) {
-    for (N in 2:nrow(Ltable)) {
-      if (is.null(Ltable[N,k][[1]]))
-        next
-      # there might be NAs here
-      critlvls <- criticalLs(Ltable[N,k][[1]], p.lvls)
-      if (length(critlvls) > 0)
-        # calculate difference: approximated critical L - true critical L
-        suppressWarnings(goodness[,N,k] <- ceiling(qnorm(p.lvls, lower.tail=FALSE)*sqrt(N*k^2*(k+1)*(k^2-1)/144) + (N*k*(k+1)^2)/4)
-          - critlvls)
+# calculate the multinomial coefficient (number of permutations of a multiset,
+# i.e. the number of possible orders in which n elements can be drawn when some
+# of the individual elements are identical. might overflow for large n/k.
+
+# ks == vector of positive integers specifying the multiplicities of the
+# individual elements. 1 elements can be omitted.
+mcombn <- function(n, ks)
+#  if (!all.equal(c(n, ks), as.integer(c(n, ks))) || sum(ks) > n)
+#    stop("All arguments must be integer with sum(ks) == n")
+  factorial(n) / prod(sapply(ks, factorial))
+
+# Calculates the probabilities of one replication (row) producing a certain L
+# under the null hypothesis. Loops through all factorial(k) possible rankings,
+# calculates their row-wise Ls and returns a table of frequencies (ordered by
+# descending L)
+rowwise.ls <- function(k) {
+  ncombinations <- factorial(k)
+#  ls <- numeric(ncombinations)
+  comb <- 1:k
+  maxl <- sum(comb * comb)
+  minl <- sum(comb * rev(comb))
+  ls <- numeric(1+maxl-minl)
+  ls[1] <- 1
+
+  # helper variables to detect opportunity for half-way interruption
+  meanl <- (minl+maxl)/2
+  highls <- 1
+  meanls <- 0
+  # Heap's non-recursive algorithm for enumerating all rank permutations
+  # cf. http://www.cs.princeton.edu/~rs/talks/perms.pdf
+  cs <- rep(1, k)
+  n <- 1
+  while (n <= k) {
+    if (cs[n] < n) {
+      if (n %% 2) {
+        comb[c(1,n)] <- comb[c(n,1)] # odd recursion level
+      } else {
+        comb[c(cs[n],n)] <- comb[c(n,cs[n])] # even recursion level
+      }
+      cs[n] <- cs[n]+1
+      n <- 1
+      l <- sum(1:k * comb)
+      ls[1+maxl-l] <- ls[1+maxl-l] + 1
+
+      # probability space is symmetric, so can fold around half-way point
+      if (l > meanl) {
+        highls <- highls + 1
+      } else if (l == meanl) {
+        meanls <- meanls + 1
+      }
+      if (2*highls+meanls == ncombinations) {
+        halfpoint <- length(ls)/2
+        ls[length(ls):ceiling(halfpoint+1)] <- ls[1:floor(halfpoint)]
+        break
+      }
+    } else {
+      cs[n] <- 1
+      n <- n+1
     }
   }
-  par(bg="lightgrey")
-  image(x=1:ncol(Ltable), y=(1:(length(p.lvls)*nrow(Ltable))) / length(p.lvls),
-    z=t(apply(goodness, 3, c)), xlab="k", ylab="N", main=paste("Goodness of fit of Normal approximation for p-level =", paste(p.lvls, collapse=", ")),
-    xlim=c(2.5, ncol(Ltable)+0.5), ylim=c(nrow(Ltable)+0.5, 1),
-    breaks=c(-10, -2, -1, 0, 1, 10), # [-Inf, -2] (-2 -1] (-1 0] (0 1] (1 Inf]
-    col=rev(temperature.colors(5)))
-  legend("bottomright", fill=temperature.colors(5), title="critical L derived from Normal approximation is:",
-    legend=c("too conservative by >1", "too conservative by 1", "correct", "too liberal by 1", "too liberal by >1"))
+  # sanity check that Heap's worked: sum(ls) == factorial(k)
+  # divide by total count to get probabilities
+  names(ls) <- maxl:minl
+  ls/ncombinations
 }
-#page.test.normal.approx.goodness(.05)
-
-page.test.normal.approx <- function(N, k) {
-  plot(Ltable[[N, k]][[1]], cumsum(Ltable[[N, k]][[2]]), type="p", pch=4,
-    col="red", xlab="L", ylab="P(X>=L)", ylim=0:1, yaxs="i")
-  curve(pnorm((x - (N*k*(k+1)^2)/4) / sqrt(N * k^2 * (k+1) * (k^2-1) / 144), lower.tail=FALSE), add=TRUE)
-}
-#page.test.normal.approx(5, 5)

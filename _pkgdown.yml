@@ -1,0 +1,34 @@
+template:
+  params:
+    bootswatch: cerulean
+reference:
+  - title: Page test of ordered monotonicity
+    contents:
+    - page.test
+    - page.L
+    - page.compute.exact
+  - title: Tests for compositionality of a communication system
+    contents:
+    - compositionality
+    - mantel.test
+    - mantel
+  - title: Distance measures
+    desc:  Functions for computing meaning and string similarities
+    contents:
+    - hammingdists
+    - normalisedlevenshteindists
+    - orderinsensitivedists
+    - segment.string
+    - segment.counts
+    - enumerate.meaningcombinations
+    - enumerate.substrings
+  - title: Distance matrices
+    desc:  Functions for creating and manipulating distance matrices
+    contents:
+    - check.dist
+    - read.dist
+  - title: Misc functions
+    contents:
+    - rep.matrix
+    - shuffle.locations
+    - temperature.colors
