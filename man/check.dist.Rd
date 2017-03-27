@@ -23,11 +23,11 @@ check.dist(x)
 }
 \value{
 a symmetric \code{matrix} object (or list of such objects) of the
-  same dimension as \code{d}
+  same dimension as \code{x}
 }
 \description{
-Checks or fixes the given distance matrix specification and, if possible,
-returns an equivalent symmetric \code{matrix} object with 0s in the diagonal.
+Checks or fixes the given distance matrix specification and returns an
+equivalent, symmetric \code{matrix} object with 0s in the diagonal.
 }
 \details{
 If the argument is a matrix, check whether it is a valid specification of a
@@ -36,8 +36,8 @@ distance matrix and return it, making it symmetric if it isn't already.
 If the argument is a list, calls \code{check.dist} on every of its elements
 and returns a list of the results.
 
-For all other object types, attempts to coerce \code{m} to a \code{dist}
-object and return the corresponding distance matrix.
+For all other object types, attempts to coerce the argument to a \code{dist}
+object and return the corresponding distance matrix (see above).
 }
 \seealso{
 \code{\link[stats]{dist}}

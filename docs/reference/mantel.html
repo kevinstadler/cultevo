@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Object class for storing the results of one or more Mantel tests — mantel • cultevo</title>
+<title>Object class for storing Mantel test results. — mantel • cultevo</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -51,7 +51,13 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">Overview</a>
+</li>
+<li>
+  <a href="../reference/index.html">Function reference</a>
+</li>
+<li>
+  <a href="../articles/page.test.html">Page test tutorial</a>
 </li>
       </ul>
       
@@ -73,14 +79,33 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Object class for storing the results of one or more Mantel tests</h1>
+    <h1>Object class for storing Mantel test results.</h1>
     </div>
 
     
-    <p>A data frame storing the results of one or more Mantel tests, one test per
-row. Multiple <code>mantel</code> objects can easily be combined by calling
-<code>rbind(test1, test2, ...)</code></p>
-<p>Plots the result of one or more Mantel permutation tests.</p>
+    <p>A <code>mantel</code> object is a data frame storing the results of one or more
+Mantel permutation tests, one test per row. Multiple <code>mantel</code> objects
+can easily be combined by calling <code>rbind(test1, test2, ...)</code>. The data
+frame contains the following columns:</p><dl class='dl-horizontal'>
+   <dt><code>method</code></dt><dd><p>Character string specifying the type of correlation
+         coefficient used ("pearson", "kendall" or "spearman")</p></dd>
+   <dt><code>statistic</code></dt><dd><p>The veridical correlation coefficient between
+         the entries in the two distance matrices</p></dd>
+   <dt><code>rsample</code></dt><dd><p>A list of correlation coefficients calculated
+         from the permutations of the input matrices</p></dd>
+   <dt><code>mean</code></dt><dd><p>Average correlation coefficient produced by the permutations</p></dd>
+   <dt><code>sd</code></dt><dd><p>Standard deviation of the sampled correlation coefficients</p></dd>
+   <dt><code>p.value</code></dt><dd><p>Empirical p-value computed from the Mantel
+         test: let <code>ngreater</code> be the number of correlation coefficients
+         in <code>rsample</code> greater than or equal to <code>statistic</code>, then
+         <code>p.value</code> is <code>(ngreater+1)/(length(rsample)+1</code></p></dd>
+   <dt><code>p.approx</code></dt><dd><p>The theoretical p-value that would correspond
+         to the standard <code>z</code> score as calculated above.</p></dd>
+   <dt><code>is.unique.max</code></dt><dd><p>Logical, <code>TRUE</code> iff the veridical
+         correlation coefficient is greater than any of the coefficients
+         calculated for the permutations. If this is true, then
+         <code>p.value == 1 / (length(rsample)+1)</code></p></dd>
+ </dl>
     
 
     <pre><span class='co'># S3 method for mantel</span>
@@ -91,43 +116,25 @@ row. Multiple <code>mantel</code> objects can easily be combined by calling
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a Mantel test result (a data frame of class <code>mantel</code>)</p></td>
+      <td><p>a data frame of class <code>mantel</code></p></td>
     </tr>
     <tr>
       <th>xlab</th>
-      <td><p>x axis label when plotting the result of several tests</p></td>
+      <td><p>x axis label used when plotting the result of several tests next
+to each other</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>additional parameters to be passed on to <code>plot</code></p></td>
+      <td><p>additional parameters to be passed on to
+<code><a href='http://www.rdocumentation.org/packages/graphics/topics/plot.default'>plot.default</a></code></p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The data frame contains the following columns:</p><dl class='dl-horizontal'>
-   <dt><code>method</code></dt><dd><p>Character string specifying the type of correlation
-         coefficient used ("pearson", "kendall" or "spearman")</p></dd>
-   <dt><code>statistic</code></dt><dd><p>The veridical correlation coefficient between
-         the entries in the two distance matrices</p></dd>
-   <dt><code>sample.size</code></dt><dd><p>The number of permutations carried out</p></dd>
-   <dt><code>rsample</code></dt><dd><p>A list of correlation coefficients calculated from
-         the <code>sample.size</code> permutations of the input matrices</p></dd>
-   <dt><code>mean</code></dt><dd><p>Average correlation coefficient produced by the permutations</p></dd>
-   <dt><code>sd</code></dt><dd><p>Standard deviation of the sampled correlation coefficients</p></dd>
-   <dt><code>p.value</code></dt><dd><p>Empirical p-value computed from the Mantel
-         test: let <code>ngreater</code> be the number of correlation coefficients
-         in <code>rsample</code> greater than or equal to <code>statistic</code>, then
-         <code>p.value</code> is <code>(ngreater+1)/(sample.size+1</code></p></dd>
-   <dt><code>p.approx</code></dt><dd><p>The theoretical p-value that would correspond
-         to the standard <code>z</code> score as calculated above.</p></dd>
-   <dt><code>is.unique.max</code></dt><dd><p>Logical, <code>TRUE</code> iff the veridical
-         correlation coefficient is greater than any of the coefficients
-         calculated for the permutations. If this is true, then
-         <code>p.value == 1/(sample.size+1)</code></p></dd>
- </dl>
-    <p>If the veridical r is plotted in blue it means that it was higher than all
-other r's generated by the permutation test.</p>
+    <p>Plot the result of one or more Mantel permutation tests. If the veridical
+correlation coefficient is plotted in blue it means that it was higher than
+all other coefficients generated by random permutations of the data.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -135,9 +142,9 @@ other r's generated by the permutation test.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>plot</span>(<span class='fu'><a href='mantel.test.html'>mantel.test</a></span>(<span class='fu'><a href='hammingdists.html'>hammingdists</a></span>(<span class='fu'><a href='enumerate.meaningcombinations.html'>enumerate.meaningcombinations</a></span>(<span class='fu'>c</span>(<span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>))),
-  <span class='fu'>dist</span>(<span class='fl'>1</span>:<span class='fl'>16</span>)))</div><img src='mantel-2.png' alt='' width='540' height='400' /><div class='input'><span class='fu'>plot</span>(<span class='fu'><a href='mantel.test.html'>mantel.test</a></span>(<span class='fu'><a href='hammingdists.html'>hammingdists</a></span>(<span class='fu'><a href='enumerate.meaningcombinations.html'>enumerate.meaningcombinations</a></span>(<span class='fu'>c</span>(<span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>))),
-  <span class='fu'>dist</span>(<span class='fl'>1</span>:<span class='fl'>16</span>)), <span class='kw'>plot</span><span class='kw'>=</span><span class='st'>"sample"</span>)</div><img src='mantel-4.png' alt='' width='540' height='400' /></pre>
+    <pre class="examples"><div class='input'><span class='fu'>plot</span>(<span class='fu'><a href='mantel.test.html'>mantel.test</a></span>(<span class='fu'><a href='hammingdists.html'>hammingdists</a></span>(<span class='fu'><a href='enumerate.meaningcombinations.html'>enumerate.meaningcombinations</a></span>(<span class='fu'>c</span>(<span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>))),
+  <span class='fu'>dist</span>(<span class='fl'>1</span>:<span class='fl'>8</span>)))</div><img src='mantel-2.png' alt='' width='540' height='400' /><div class='input'><span class='fu'>plot</span>(<span class='fu'><a href='mantel.test.html'>mantel.test</a></span>(<span class='fu'><a href='hammingdists.html'>hammingdists</a></span>(<span class='fu'><a href='enumerate.meaningcombinations.html'>enumerate.meaningcombinations</a></span>(<span class='fu'>c</span>(<span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>))),
+  <span class='fu'>dist</span>(<span class='fl'>1</span>:<span class='fl'>16</span>)))</div><img src='mantel-4.png' alt='' width='540' height='400' /></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

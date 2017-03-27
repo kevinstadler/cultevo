@@ -25,15 +25,12 @@
 \item{...}{not used}
 }
 \value{
-a matrix
+A matrix, which will have \code{times*each} times more rows and
+columns than the original matrix.
 }
 \description{
 Returns a new matrix, where the entries of the original matrix are
 repeated along both dimensions.
-}
-\details{
-The resulting matrix will have \code{times*each} times more rows and columns
-than the original matrix.
 }
 \examples{
 rep.matrix(diag(4))

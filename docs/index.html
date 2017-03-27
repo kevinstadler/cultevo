@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Measures and Statistical Tests for Cultural Evolution • cultevo</title>
+<title>Tools, Measures and Statistical Tests for Cultural Evolution • cultevo</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
@@ -15,7 +15,7 @@
 <![endif]-->
 </head>
 <body>
-    <div class="container template-home">
+    <div class="container template-vignette">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -29,7 +29,13 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="reference/index.html">Reference</a>
+  <a href="index.html">Overview</a>
+</li>
+<li>
+  <a href="reference/index.html">Function reference</a>
+</li>
+<li>
+  <a href="articles/page.test.html">Page test tutorial</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
@@ -49,32 +55,41 @@
 
       
       </header><div class="row">
-  <div class="contents col-md-9">
-    <div id="cultural-evolution-tests-for-r" class="section level1">
+  <div class="col-md-9">
+    
+
+    
+    
+<div class="contents">
+<div id="cultevo-tools-and-tests-for-cultural-evolution-in-r" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#cultural-evolution-tests-for-r" class="anchor"></a>Cultural evolution tests for R</h1></div>
-<p>This package provides implementations of functions and statistical tests often used in the study of cultural evolution. It provides tools for:</p>
-<ul>
-<li>computing edit distances for strings and atrices (providing convenient wrappers around R’s efficient <code>dist</code> functions)</li>
-<li>performing Mantel tests on them and visualising the results of those tests</li>
-<li>an improved implementation of Page’s L test for monotonicity (with exact p values up to k=22)</li>
-</ul>
-<p>Full function documentation is available at <a href="http://kevinstadler.github.io/cultevo/reference/" class="uri">http://kevinstadler.github.io/cultevo/reference/</a></p>
+<a href="#cultevo-tools-and-tests-for-cultural-evolution-in-r" class="anchor"></a>cultevo: tools and tests for cultural evolution in R</h1></div>
+
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>In order to install the latest version you first need the <a href="https://CRAN.R-project.org/package=devtools">devtools</a> package</p>
-<div class="sourceCode"><pre class="sourceCode R"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">"devtools"</span>)</code></pre></div>
+<pre><code>install.packages("devtools")</code></pre>
 <p>then install the latest code from the github repository via</p>
-<div class="sourceCode"><pre class="sourceCode R"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">"kevinstadler/cultevo"</span>)</code></pre></div>
+<pre><code>devtools::install_github("kevinstadler/cultevo")</code></pre>
 </div>
-<div id="links" class="section level2">
+<div id="citation" class="section level2">
 <h2 class="hasAnchor">
-<a href="#links" class="anchor"></a>Links</h2>
-<ul>
-<li><a href="http://www.jonwcarr.net/blog/2014/9/19/a-guide-to-the-mantel-test-for-linguists">A guide to the Mantel test for linguists</a></li>
-<li><a href="http://cancerres.aacrjournals.org/content/27/2_Part_1/209.short">Mantel (1967) The Detection of Disease Clustering and a Generalized Regression Approach</a></li>
-</ul>
+<a href="#citation" class="anchor"></a>Citation</h2>
+<pre><code>
+  Stadler, Kevin (2017) cultevo: Tools, Measures and Statistical
+  Tests for Cultural Evolution.
+  https://kevinstadler.github.io/cultevo/
+
+A BibTeX entry for LaTeX users is
+
+  @Manual{,
+    author = {Kevin Stadler},
+    title = {cultevo: Tools, Measures and Statistical Tests for Cultural Evolution},
+    type = {R package},
+    year = {2017},
+    url = {https://kevinstadler.github.io/cultevo/},
+  }</code></pre>
 </div>
 <div id="license" class="section level2">
 <h2 class="hasAnchor">
@@ -82,9 +97,10 @@
 <p>This project is licensed under the terms of the <a href="http://opensource.org/licenses/MIT">MIT license</a>, Copyright (c) 2014-2017 Kevin Stadler.</p>
 </div>
 </div>
+</div>
   </div>
 
-  <div class="col-md-3" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Links</h2>
 <ul class="list-unstyled">
 <li>Browse source code at <br><a href="https://github.com/kevinstadler/cultevo">https://​github.com/​kevinstadler/​cultevo</a>
@@ -98,7 +114,14 @@
 <ul class="list-unstyled">
 <li>Kevin Stadler <br><small class="roles"> Author, maintainer </small> </li>
 </ul>
+<div>
+<h2>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="reference/index.html">Function reference</a></li>
+</ul>
 </div>
+</div>
+
 </div>
 
 

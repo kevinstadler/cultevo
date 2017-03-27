@@ -2,7 +2,7 @@
 % Please edit documentation in R/dists.R
 \name{hammingdists}
 \alias{hammingdists}
-\title{Compute all pairwise hamming distances between matrix rows.}
+\title{Pairwise Hamming distances between matrix rows.}
 \usage{
 hammingdists(meanings)
 }
@@ -10,33 +10,52 @@ hammingdists(meanings)
 \item{meanings}{a matrix with the different dimensions encoded along
 columns, and all combinations of meanings specified along rows. The data
 type of the cells does not matter since distance is simply based on
-equality - in fact specifying a meaning component as NA allows you to
-ignore that dimension for the given row/meaning combinations (see
-examples). Vectors are treated as matrices with a single row, so the
-resulting distances can only be 0 or 1.}
+equality (with the exception of \code{NA} values, see below.}
 }
 \value{
-a distance matrix of type \code{\link{dist}} with \code{n*(n-1)/2}
+A distance matrix of type \code{\link{dist}} with \code{n*(n-1)/2}
   rows/columns, where n is the number of rows in \code{meanings}.
 }
 \description{
-Returns a distance matrix of all meanings. The meanings argument should be
+Returns a distance matrix giving all pairwise Hamming distances between the
+rows of its argument \code{meanings}, which can be a matrix, data frame or
+vector. Vectors are treated as matrices with a single column, so the
+distances in its return value can only be 0 or 1.
+}
+\details{
+This function behaves differently from calling
+\code{\link[stats]{dist}(meanings, method="manhattan")} in how \code{NA}
+values are treated: specifying a meaning component as \code{NA} allows you
+to \emph{ignore} that dimension for the given row/meaning combinations,
+(instead of counting a difference between \code{NA} and another value as a
+distance of 1).
 }
 \examples{
-# example #1: a 2x2 design using strings (the character redundantly
-# specifies the dimension for clarity)
-hammingdists(matrix(c("a1", "b1", "a1", "b2", "a2", "b1", "a2", "b2"), ncol=2, byrow=TRUE))
-# example #2: a 2x3 design using integers for encoding
-hammingdists(matrix(c(0,0,0,1,0,2,1,0,1,1,1,2), ncol=2, byrow=TRUE))
-# example #3: a 2x2x2 design using factors (ncol is always the number of dimensions)
-hammingdists(matrix(c(0,0,0,0,0,1,0,1,0,0,1,1,1,0,0,1,0,1,1,1,0,1,1,1), ncol=3, byrow=TRUE))
-# example #4: if some meaning dimension is not relevant for some
-# combinations of meanings (e.g. optional arguments), specifying them as NA
-# in the matrix will make them not be counted towards the hamming distance!
-# in this example the value of the second dimension does not matter (and
-# does not count towards the distance) when the the first dimension has
-# value '1'
-hammingdists(matrix(c(0,0,0,1,1,NA), ncol=2, byrow=TRUE))
+# a 2x2 design using strings
+print(strings <- matrix(c("a1", "b1", "a1", "b2", "a2", "b1", "a2", "b2"),
+  ncol=2, byrow=TRUE))
+hammingdists(strings)
+
+# a 2x3 design using integers
+print(integers <- matrix(c(0, 0, 0, 1, 0, 2, 1, 0, 1, 1, 1, 2), ncol=2, byrow=TRUE))
+hammingdists(integers)
+
+# a 3x2 design using factors (ncol is always the number of dimensions)
+print(factors <- data.frame(colour=c("red", "red", "green", "blue"),
+                            animal=c("dog", "cat", "dog", "cat")))
+hammingdists(factors)
+
+# if some meaning dimension is not relevant for some combinations of
+# meanings (e.g. optional arguments), specifying them as NA in the matrix
+# will make them not be counted towards the hamming distance! in this
+# example the value of the second dimension does not matter (and does not
+# count towards the distance) when the the first dimension has value '1'
+print(ignoredimension <- matrix(c(0, 0, 0, 1, 1, NA), ncol=2, byrow=TRUE))
+hammingdists(ignoredimension)
+
+# trivial case of a vector: first and last two elements are identical,
+# otherwise a difference of one
+hammingdists(c(0, 0, 1, 1))
 }
 \seealso{
 \code{\link[stats]{dist}}

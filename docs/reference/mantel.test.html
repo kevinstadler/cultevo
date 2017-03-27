@@ -51,7 +51,13 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">Overview</a>
+</li>
+<li>
+  <a href="../reference/index.html">Function reference</a>
+</li>
+<li>
+  <a href="../articles/page.test.html">Page test tutorial</a>
 </li>
       </ul>
       
@@ -85,42 +91,49 @@ in one of the matrices and calculating the resulting correlations to
 generate an empirical null distribution for the given data set.</p>
     
 
-    <pre><span class='fu'>mantel.test</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+    <pre><span class='fu'>mantel.test</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>mantel.test</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"pearson"</span>,
-  <span class='kw'>trials</span> <span class='kw'>=</span> <span class='fl'>5000</span>, <span class='kw'>shuffle</span> <span class='kw'>=</span> <span class='no'>shuffle.locations</span>, <span class='no'>...</span>)
+<span class='fu'>mantel.test</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"pearson"</span>,
+  <span class='kw'>trials</span> <span class='kw'>=</span> <span class='fl'>9999</span>, <span class='kw'>shuffle</span> <span class='kw'>=</span> <span class='no'>shuffle.locations</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for formula</span>
-<span class='fu'>mantel.test</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>stringdistfun</span> <span class='kw'>=</span> <span class='no'>normalisedlevenshteindists</span>, <span class='kw'>meaningdistfun</span> <span class='kw'>=</span> <span class='no'>hammingdists</span>,
-  <span class='no'>...</span>)
+<span class='fu'>mantel.test</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>groups</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>stringdistfun</span> <span class='kw'>=</span> <span class='kw'>utils</span><span class='kw'>::</span><span class='no'>adist</span>, <span class='kw'>meaningdistfun</span> <span class='kw'>=</span> <span class='no'>hammingdists</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for list</span>
-<span class='fu'>mantel.test</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>mantel.test</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for mantel</span>
+<span class='fu'>print</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for mantel</span>
+<span class='fu'>plot</span>(<span class='no'>x</span>, <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='st'>"generation"</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a formula, distance matrix, or list of distance matrices</p></td>
+      <td><p>a formula, distance matrix, or list of distance matrices (see below)</p></td>
     </tr>
     <tr>
       <th>y</th>
       <td><p>a data frame, distance matrix, or list of matrices of the same length as <code>x</code></p></td>
     </tr>
     <tr>
-      <th>plot</th>
-      <td><p>logical: immediately produce a plot of the test results</p></td>
+      <th>...</th>
+      <td><p>further arguments passed to or from other methods.</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>extra arguments passed on to the default method</p></td>
+      <th>plot</th>
+      <td><p>logical: immediately produce a plot of the test results (using
+<code>plot.mantel</code>)</p></td>
     </tr>
     <tr>
       <th>method</th>
-      <td><p>correlation coefficient to be computed (default: "pearson")</p></td>
+      <td><p>correlation coefficient to be computed (passed on to
+<code><a href='http://www.rdocumentation.org/packages/stats/topics/cor'>cor</a></code>, default: "pearson")</p></td>
     </tr>
     <tr>
       <th>trials</th>
@@ -133,32 +146,80 @@ matrix and an optional permutation specification as its arguments - you
 shouldn't normally have to change this</p></td>
     </tr>
     <tr>
+      <th>groups</th>
+      <td><p>when <code>x</code> is a formula: column name by which the data in
+<code>y</code> is split into separate data sets to run several Mantel tests on</p></td>
+    </tr>
+    <tr>
       <th>stringdistfun</th>
       <td><p>when <code>x</code> is a formula: edit distance function used
-to compute the distance matrix from the specified string column</p></td>
+to compute the distance matrix from the specified string column. Supports
+any edit distance function that returns a distance matrix from a vector or
+list of character strings. Default is Levenshtein distance (function
+<code><a href='http://www.rdocumentation.org/packages/utils/topics/adist'>adist</a></code>), other options from this package include
+<code><a href='normalisedlevenshteindists.html'>normalisedlevenshteindists</a></code> and
+<code><a href='orderinsensitivedists.html'>orderinsensitivedists</a></code>.</p></td>
     </tr>
     <tr>
       <th>meaningdistfun</th>
       <td><p>when <code>x</code> is a formula: meaning distance function
-used to compute the distance matrix from the specified meaning columns</p></td>
+used to compute the distance matrix from the specified meaning columns.
+Defaults to Hamming distances between meanings (function
+<code><a href='hammingdists.html'>hammingdists</a></code>), custom meaning functions can be created
+easily using <code><a href='wrap.meaningdistfunction.html'>wrap.meaningdistfunction</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>xlab</th>
+      <td><p>the x axis label used when plotting the result of several Mantel
+tests next to each other</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a dataframe of class <code><a href='mantel.html'>mantel</a></code> specifying the results of
-  the Mantel test(s)</p>
+    <p>A dataframe of class <code>mantel</code>, with one row per Mantel
+test carried out, containing the following columns:</p><dl class='dl-horizontal'>
+   <dt><code>method</code></dt><dd><p>Character string specifying the type of correlation
+         coefficient used ("pearson", "kendall" or "spearman")</p></dd>
+   <dt><code>statistic</code></dt><dd><p>The veridical correlation coefficient between
+         the entries in the two distance matrices</p></dd>
+   <dt><code>rsample</code></dt><dd><p>A list of correlation coefficients calculated
+         from the permutations of the input matrices</p></dd>
+   <dt><code>mean</code></dt><dd><p>Average correlation coefficient produced by the permutations</p></dd>
+   <dt><code>sd</code></dt><dd><p>Standard deviation of the sampled correlation coefficients</p></dd>
+   <dt><code>p.value</code></dt><dd><p>Empirical p-value computed from the Mantel
+         test: let <code>ngreater</code> be the number of correlation coefficients
+         in <code>rsample</code> greater than or equal to <code>statistic</code>, then
+         <code>p.value</code> is <code>(ngreater+1)/(length(rsample)+1</code></p></dd>
+   <dt><code>p.approx</code></dt><dd><p>The theoretical p-value that would correspond
+         to the standard <code>z</code> score as calculated above.</p></dd>
+   <dt><code>is.unique.max</code></dt><dd><p>Logical, <code>TRUE</code> iff the veridical
+         correlation coefficient is greater than any of the coefficients
+         calculated for the permutations. If this is true, then
+         <code>p.value == 1 / (length(rsample)+1)</code></p></dd>
+ </dl><p>Multiple <code>mantel</code> objects can easily be combined by calling
+<code>rbind(test1, test2, ...)</code>.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>If the number of possible permutations is reasonably close to
-<code>trials</code>, a deterministic enumeration of all the permutations will be
-carried out instead of random sampling.</p>
+    <p>If the number of possible permutations of the matrices is reasonably close
+to the number of permutations specified by the <code>trials</code> parameter, a
+deterministic enumeration of all the permutations will be carried out
+instead of random sampling.
+    <code>plot()</code> called on a data frame of class <code>mantel</code> plots a
+visualisation of the test results (in particular, the distribution of
+the permutated samples against the veridical correlation coefficient). If
+the veridical correlation coefficient is plotted in blue it means
+that it was higher than all other coefficients generated by random
+permutations of the data. When the argument contains the result of more than
+two Mantel tests, a side-by-side boxplot visualisation of the samples is
+produced (see examples). Additional parameters <code>...</code> to <code>plot()</code>
+are passed on to <code><a href='http://www.rdocumentation.org/packages/graphics/topics/plot.default'>plot.default</a></code>.</p>
     
     <h2 class="hasAnchor" id="methods-by-class-"><a class="anchor" href="#methods-by-class-"></a>Methods (by class)</h2>
 
     <ul>
-<li><p><code>default</code>: perform Mantel correlation test on two distance
+<li><p><code>default</code>: Perform Mantel correlation test on two distance
 matrices. The distance matrices can either be of type
 <code><a href='http://www.rdocumentation.org/packages/stats/topics/dist'>dist</a></code>, plain R matrices or any object that can be
 interpreted by <code><a href='check.dist.html'>check.dist</a></code>.</p></li>
@@ -170,44 +231,45 @@ while <code>m1</code> etc. are columns specifying the different meaning
 dimensions. To calculate the respective distances, the function
 <code>stringdistfun</code> is applied to the strings, <code>meaningdistfun</code> to the
 meaning columns.</p></li>
-<li><p><code>list</code>: when <code>x</code> is a list of distance matrices, and
+<li><p><code>list</code>: When <code>x</code> is a list of distance matrices, and
 <code>y</code> is either a single distance matrix or a list of distance matrices
-the same length as <code>x</code>. Runs a Mantel test for every pairwise
+the same length as <code>x</code>: runs a Mantel test for every pairwise
 combination of distance matrices in <code>x</code> and <code>y</code> and returns a
-<code><a href='mantel.html'>mantel</a></code> object with as many rows.</p></li>
+<code>mantel</code> object with as many rows.</p></li>
 </ul>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='mantel.html'>plot.mantel</a></code>, <code><a href='http://www.rdocumentation.org/packages/stats/topics/cor'>cor</a></code>,
-  <code><a href='hammingdists.html'>hammingdists</a></code>, <code><a href='normalisedlevenshteindists.html'>normalisedlevenshteindists</a></code>,
+    <p><code><a href='http://www.rdocumentation.org/packages/stats/topics/cor'>cor</a></code>,
+  <code><a href='http://www.rdocumentation.org/packages/utils/topics/adist'>adist</a></code>, <code><a href='hammingdists.html'>hammingdists</a></code>,
+  <code><a href='normalisedlevenshteindists.html'>normalisedlevenshteindists</a></code>,
   <code><a href='orderinsensitivedists.html'>orderinsensitivedists</a></code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># small distance matrix, Mantel test run deterministically</span>
-<span class='fu'>mantel.test</span>(<span class='fu'>dist</span>(<span class='fl'>1</span>:<span class='fl'>7</span>), <span class='fu'>dist</span>(<span class='fl'>1</span>:<span class='fl'>7</span>))</div><div class='output co'>#&gt; <span class='message'>Permutation space is small, enumerating all 5040 possible permutations.</span></div><img src='mantel.test-3.png' alt='' width='540' height='400' /><div class='output co'>#&gt; Mantel permutation test (method: pearson)
-#&gt; r = 1, 1 permutations, mean = 3.03e-18, sd = 0.2255377
+<span class='fu'>mantel.test</span>(<span class='fu'>dist</span>(<span class='fl'>1</span>:<span class='fl'>7</span>), <span class='fu'>dist</span>(<span class='fl'>1</span>:<span class='fl'>7</span>))</div><div class='output co'>#&gt; <span class='message'>Permutation space is small, enumerating all 5040 possible permutations.</span></div><div class='output co'>#&gt; Mantel permutation test (method: pearson)
+#&gt; r = 1, N = 21
+#&gt; 5040 permutations, mean = 3.03e-18, sd = 0.226
 #&gt; p (exact) = 0.000595
 #&gt; </div><div class='input'>
-<span class='co'># smallest distance matrix using random permutations (based on default trials=5000)</span>
-<span class='fu'>mantel.test</span>(<span class='fu'>dist</span>(<span class='fl'>1</span>:<span class='fl'>8</span>), <span class='fu'>dist</span>(<span class='fl'>1</span>:<span class='fl'>8</span>))</div><img src='mantel.test-6.png' alt='' width='540' height='400' /><div class='output co'>#&gt; Mantel permutation test (method: pearson)
-#&gt; r = 1, 1 permutations, mean = 0.00505, sd = 0.1983759
-#&gt; p (empirical) = 4e-04
-#&gt; </div><div class='input'><span class='fu'>mantel.test</span>(<span class='no'>word</span> ~ <span class='no'>Var1</span> + <span class='no'>Var2</span>, <span class='fu'>cbind</span>(<span class='kw'>word</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='st'>"aa"</span>, <span class='st'>"ab"</span>, <span class='st'>"ba"</span>, <span class='st'>"bb"</span>),
-  <span class='fu'><a href='enumerate.meaningcombinations.html'>enumerate.meaningcombinations</a></span>(<span class='fu'>c</span>(<span class='fl'>2</span>, <span class='fl'>2</span>))))</div><div class='output co'>#&gt; <span class='message'>Permutation space is small, enumerating all 24 possible permutations.</span></div><img src='mantel.test-10.png' alt='' width='540' height='400' /><div class='output co'>#&gt; Mantel permutation test (method: pearson)
-#&gt; r = 1, 1 permutations, mean = 0, sd = 0.7223151
+<span class='co'># smallest distance matrix using random permutations (based on default trials=9999)</span>
+<span class='fu'>plot</span>(<span class='fu'>mantel.test</span>(<span class='fu'>dist</span>(<span class='fl'>1</span>:<span class='fl'>8</span>), <span class='fu'>dist</span>(<span class='fl'>1</span>:<span class='fl'>8</span>), <span class='kw'>method</span><span class='kw'>=</span><span class='st'>"kendall"</span>))</div><img src='mantel.test-5.png' alt='' width='540' height='400' /><div class='input'>
+<span class='fu'>mantel.test</span>(<span class='fu'><a href='hammingdists.html'>hammingdists</a></span>(<span class='fu'><a href='enumerate.meaningcombinations.html'>enumerate.meaningcombinations</a></span>(<span class='fu'>c</span>(<span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>))),
+  <span class='fu'>dist</span>(<span class='fl'>1</span>:<span class='fl'>16</span>), <span class='kw'>plot</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><img src='mantel.test-7.png' alt='' width='540' height='400' /><div class='output co'>#&gt; Mantel permutation test (method: pearson)
+#&gt; r = 0.366, N = 120
+#&gt; 9999 permutations, mean = 0.000161, sd = 0.0852
+#&gt; p (empirical) = 1e-04 (veridical correlation is highest found)
+#&gt; </div><div class='input'><span class='co'># using the formula interface in combination with a data frame</span>
+<span class='fu'>mantel.test</span>(<span class='no'>word</span> ~ <span class='no'>Var1</span> + <span class='no'>Var2</span>, <span class='fu'>cbind</span>(<span class='kw'>word</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='st'>"aa"</span>, <span class='st'>"ab"</span>, <span class='st'>"ba"</span>, <span class='st'>"bb"</span>),
+  <span class='fu'><a href='enumerate.meaningcombinations.html'>enumerate.meaningcombinations</a></span>(<span class='fu'>c</span>(<span class='fl'>2</span>, <span class='fl'>2</span>))))</div><div class='output co'>#&gt; <span class='message'>Permutation space is small, enumerating all 24 possible permutations.</span></div><div class='output co'>#&gt; Mantel permutation test (method: pearson)
+#&gt; r = 1, N = 6
+#&gt; 24 permutations, mean = 0, sd = 0.722
 #&gt; p (exact) = 0.36
 #&gt; </div><div class='input'>
-<span class='co'># running tests on a list of distance matrices</span>
-<span class='fu'>mantel.test</span>(<span class='fu'>list</span>(<span class='fu'>dist</span>(<span class='fl'>1</span>:<span class='fl'>16</span>), <span class='fu'>dist</span>(<span class='fu'>sample</span>(<span class='fl'>16</span>:<span class='fl'>1</span>))),
-  <span class='fu'><a href='hammingdists.html'>hammingdists</a></span>(<span class='fu'><a href='enumerate.meaningcombinations.html'>enumerate.meaningcombinations</a></span>(<span class='fu'>c</span>(<span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>))))</div><img src='mantel.test-13.png' alt='' width='540' height='400' /><div class='output co'>#&gt; <span class='warning'>Warning: the condition has length &gt; 1 and only the first element will be used</span></div><div class='output co'>#&gt; Mantel permutation test (method: pearson)
-#&gt; r = 0.366, 1 permutations, mean = -0.000317, sd = 0.0838737
-#&gt; p (empirical) = 2e-04 (veridical correlation is highest found)
-#&gt; </div><div class='output co'>#&gt; <span class='warning'>Warning: the condition has length &gt; 1 and only the first element will be used</span></div><div class='output co'>#&gt; Mantel permutation test (method: pearson)
-#&gt; r = -0.0276, 1 permutations, mean = 0.000366, sd = 0.08487016
-#&gt; p (empirical) = 0.581
-#&gt; </div></pre>
+<span class='co'># running tests on a list of distance matrices and plotting them</span>
+<span class='fu'>plot</span>(<span class='fu'>mantel.test</span>(<span class='fu'>list</span>(<span class='fu'>dist</span>(<span class='fl'>1</span>:<span class='fl'>8</span>), <span class='fu'>dist</span>(<span class='fu'>sample</span>(<span class='fl'>8</span>:<span class='fl'>1</span>)), <span class='fu'>dist</span>(<span class='fu'>runif</span>(<span class='fl'>8</span>))),
+  <span class='fu'><a href='hammingdists.html'>hammingdists</a></span>(<span class='fu'><a href='enumerate.meaningcombinations.html'>enumerate.meaningcombinations</a></span>(<span class='fu'>c</span>(<span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span>)))), <span class='kw'>xlab</span><span class='kw'>=</span><span class='st'>"group"</span>)</div><img src='mantel.test-13.png' alt='' width='540' height='400' /></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

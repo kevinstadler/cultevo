@@ -10,7 +10,7 @@ enumerate.substrings(string)
 \item{string}{a character string}
 }
 \value{
-a vector of containing all substrings of the string (including duplicates)
+a vector containing all substrings of the string (including duplicates)
 }
 \description{
 Enumerate all substrings of a string.

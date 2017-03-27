@@ -1,8 +1,8 @@
 Package: cultevo
-Title: Measures and Statistical Tests for Cultural Evolution
+Title: Tools, Measures and Statistical Tests for Cultural Evolution
 Version: 1.0.0
-Date: 2017-03-24
-Authors@R: person("Kevin Stadler", role=c("aut", "cre"), email="kevin.stadler@ed.ac.uk")
+Date: 2017-03-28
+Authors@R: person("Kevin Stadler", role=c("aut", "cre"), email="kevin.stadler@mpi.nl")
 Description: This package provides implementations of functions and statistical
     tests often used in the study of cultural evolution. It provides functions
     for computing distance matrices, performing Mantel tests on them,
@@ -21,5 +21,5 @@ Imports:
     stats,
     utils
 Suggests:
-    memoise
+    memoise,
 RoxygenNote: 6.0.1

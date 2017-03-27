@@ -2,12 +2,12 @@
 % Please edit documentation in R/dists.R
 \name{read.dist}
 \alias{read.dist}
-\title{Construct a distance matrix by reading distances from a file or dataframe}
+\title{Read a distance matrix from a file or data frame.}
 \usage{
 read.dist(data, el1.column = 1, el2.column = 2, dist.columns = 3)
 }
 \arguments{
-\item{data}{a filename, dataframe or matrix}
+\item{data}{a filename, data frame or matrix}
 
 \item{el1.column}{the column name or id specifying the first element}
 
@@ -21,7 +21,7 @@ a distance matrix (or list of distance matrixes when there is more
   than one \code{dist.columns}) of type \code{matrix}
 }
 \description{
-Construct a distance matrix by reading distances from a file or dataframe
+Read a distance matrix from a file or data frame.
 }
 \examples{
 read.dist(cbind(c(1,1,1,2,2,3), c(2,3,4,3,4,4), 1:6, 6:1), dist.columns=c(3,4))

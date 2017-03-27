@@ -2,18 +2,34 @@
 % Please edit documentation in R/dists.R
 \name{segment.string}
 \alias{segment.string}
-\title{Split one or more strings into their constituent segments.}
+\alias{segment.counts}
+\title{Split strings into their constituent segments.}
 \usage{
 segment.string(x, split = NULL)
+
+segment.counts(x, split = NULL)
 }
 \arguments{
-\item{x}{one or more strings to be split}
+\item{x}{one or more strings to be split (and, optionally, counted)}
 
-\item{split}{the boundary character or sequence at which to segment the strings}
-}
-\value{
-a list (of the same length as \code{x}) containing character vectors
+\item{split}{the boundary character or sequence at which to segment the
+string(s)}
 }
 \description{
-Vectorisable.
+Split strings into their constituent segments (and count them).
+}
+\section{Functions}{
+\itemize{
+\item \code{segment.string}: Returns a list (of the same length as \code{x}), each item a vector of
+character vectors.
+
+\item \code{segment.counts}: Calculate the frequency of individual characters in one or more strings.
+Returns a matrix with one row for every string in \code{x}.
+}}
+
+\examples{
+segment.string(c("asd", "fghj"))
+
+segment.string(c("la-dee-da", "lala-la"), "-")
+segment.counts(c("asd", "aasd", "asdf"))
 }

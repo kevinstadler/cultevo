@@ -1,14 +1,80 @@
-#' Calculate Page's L statistic for the given dataset.
+#' Page test for monotonicity of ranks.
 #'
-#' @param data a matrix or dataframe 
-#' @param ties.method how to resolve tied ranks. Passed on to \code{\link{rank}}, so
-#'   can be one of "average" (the default), "first", "last", "random", "max",
-#'   "min"
-#' @param verbose print the final rankings based on which the L statistic is
-#'   computed? default: \code{TRUE}
+#' Given \code{N} replications of \code{k} different treatments/conditions,
+#' tests whether the \emph{median ordinal ranks} \eqn{m_i} of the treatments
+#' are identical \deqn{m_1 = m_2 = \ldots = m_k} against the alternative
+#' hypothesis \deqn{m_1 \leq m_2 \leq \ldots \leq m_k} where \emph{at least
+#' one} of the inequalities is a strict inequality (Siegel and Castellan
+#' 1988, p.184). Given that even a single point change in the distribution of
+#' ranks across conditions represents evidence against the null hypothesis,
+#' the Page test is simply a test for \emph{some ordered differences in
+#' ranks}, but not a 'trend test' in any meaningful way.
+#'
+#' Tests the given matrix for monotonically increasing ranks across \code{k}
+#' linearly ordered conditions (along columns) based on \code{N} replications
+#' (along rows). To test for monotonically \emph{decreasing} ranks you can
+#' either reverse the order of columns, or simply invert the ranks by
+#' prepending the dataset with a \code{-}.
+#'
+#' Exact p values are computed for \code{k} up to 22, using the pre-computed
+#' null distributions from the \code{pspearman} package. For larger \code{k}, p
+#' values are computed based on a Normal distribution approximation.
+#'
+#' @param data a matrix with the different conditions along its \code{k}
+#'   columns and the \code{N} replications along rows. Conversion of the data
+#'   to ordinal ranks is taken care of internally.
+#' @param verbose whether to print the final rankings based on which the L
+#'   statistic is computed
+#' @return \code{page.test} returns a list of class \code{pagetest} (and
+#'   \code{htest}) containing the following fields:
+#' \describe{
+#'    \item{\code{statistic}}{value of the \code{L} statistic for the given
+#'      data set}
+#'    \item{\code{parameter}}{the number of conditions (k) and replications (N)
+#'      of the data set (the columns and rows of the data set, respectively)}
+#'    \item{\code{p.value}}{significance level}
+#'    \item{\code{p.type}}{whether the computed p value is "exact" or "approximate"}
+#' }
+#' @examples
+#' page.test(t(replicate(4, sample(4))))
+#' page.test(t(replicate(4, sample(10))))
+#' @references Siegel, S., and N. J. Castellan, Jr. (1988). Nonparametric
+#' Statistics for the Behavioral Sciences. McGraw-Hill.
+#' @describeIn page.test See above.
+#' @export
+page.test <- function(data, verbose=TRUE) {
+  k <- ncol(data) # 'n' in Page (1963)
+  N <- nrow(data) # 'm' in Page (1963)
+  if (N < 2)
+    stop("Not enough chains/replications, for individual samples use the Mann-Kendall test instead")
+    # http://finzi.psych.upenn.edu/R/library/EnvStats/html/kendallSeasonalTrendTest.html
+  # ranking is happening in here
+  L <- page.L(data, verbose=verbose)
+
+  # if exact null distribution is known: compute exact
+  if (k <= length(pspearman:::spearman.list)) {
+    p <- page.compute.exact(k, N, L)
+    p.type <- "exact"
+  } else {
+    warning("Exact p value is not available for given k, using Normal approximation which is unreliable for small N")
+    p <- page.compute.normal.approx(k, N, L)
+    p.type <- "approximate"
+  }
+  structure(list(statistic=c(L=L), parameter=c(k=k, N=N), p.value=p,
+      p.type=p.type, data.name=paste(deparse(substitute(data))),
+      method="Page test of monotonicity of ranks",
+      alternative="at least one difference in ranks"),
+    class=c("htest", "pagetest"))
+}
+
+#' @describeIn page.test
+#' Calculate Page's L statistic for the given dataset. Returns a numeric.
+#'
+#' @param ties.method how to resolve tied ranks. Passed on to
+#' \code{\link[base]{rank}}, should be left on "average" (the default).
 #' @seealso \code{\link[base]{rank}}
 #' @export
-page.L <- function(data, ties.method="average", verbose=TRUE) {
+page.L <- function(data, verbose=TRUE, ties.method="average") {
   # perform row-wise rankings
   ranks <- apply(data, 1, function(r) rank(r, na.last="keep", ties.method=ties.method))
   if (verbose) {
@@ -19,8 +85,8 @@ page.L <- function(data, ties.method="average", verbose=TRUE) {
 }
 
 # mean L for which p(x<=L) == 0.5 (as is the case when all ranks are tied)
-#page.L.mean <- function(k, N=1)
-#  N*k*((k+1)/2)^2
+page.L.mean <- function(k, N)
+  N*k*((k+1)/2)^2
 
 # possible row-wise ls (equivalent to Spearman's Rho)
 rho.null.distribution <- function(k) {
@@ -64,19 +130,25 @@ L.null.distribution <- function(k, N) {
 if (requireNamespace("memoise", quietly = TRUE))
   L.null.distribution <- memoise::memoise(L.null.distribution)
 
-#' Calculate exact significance levels of the Page L statistic.
-#'
-#' Returns the null probability that the Page statistic with the given k, N is >= L.
+#' @describeIn page.test Calculate exact significance levels of the Page L
+#' statistic. Returns a single numeric indicating the null probability that
+#' the Page statistic with the given \code{k}, \code{N} is greater or equal
+#' the given \code{L}.
 #'
 #' @param k number of conditions/generations
 #' @param N number of replications/chains
 #' @param L value of the Page L statistic
-#' @return the significance level of L for the given k, N
 #' @examples
+#' # raw calculation of the significance levels
 #' page.compute.exact(6, 4, 322)
-#' @seealso \code{\link{page.test}}
 #' @export
 page.compute.exact <- function(k, N, L) {
+  if (k < 2)
+    stop("Need at least 2 conditions/rank levels")
+  range <- c(sum(seq(k) * N*k:1), sum(seq(k) * N*1:k))
+  if (L < range[1] || L > range[2])
+    stop("Valid range of L for k=", k, ", N=", N, ": [",
+      paste(range, collapse=", "), "]")
   nd <- L.null.distribution(k, N)
   sum(nd[1:match(L, names(nd))])
 }
@@ -96,59 +168,6 @@ page.compute.normal.approx <- function(k, N, L) {
 # })
 #hist(ps[2,], col="red")
 #hist(ps[1,], col="blue", add=TRUE)
-
-#' Perform the Page test of monotonicity.
-#'
-#' The Page test tests the given matrix for monotonically increasing ranks
-#' across \code{k} linearly ordered conditions (along columns) based on
-#' \code{N} replications (along rows). To test for monotonically
-#' \emph{decreasing} trends you can either reverse the order of columns, or
-#' simply invert the ranks (i.e. by prepending the dataset with a \code{-}).
-#'
-#' Exact p values are computed for \code{k} up to 22, using the pre-computed
-#' null distributions from the \code{pspearman} package. For larger \code{k}, p
-#' values are computed based on a Normal distribution approximation.
-#'
-#' @param data a matrix or dataframe with the different conditions along
-#'   columns and the replications along rows. Conversion of the data to ranks
-#'   is taken care of internally (see \code{\link{page.L}})
-#' @param ... extra parameters which are passed on to \code{\link{page.L}}
-#' @return a list of class \code{pagetest} (and \code{htest}) containing the following fields:
-#' \describe{
-#'    \item{\code{L}}{Value of the \code{L} statistic for the given data set}
-#'    \item{\code{k}}{Number of conditions (columns of the data set)}
-#'    \item{\code{N}}{Number of replications (rows of the data set)}
-#'    \item{\code{p.value}}{Significance level}
-#'    \item{\code{p.type}}{Whether the computed p value is "exact" or "approx"}
-#' }
-#' @examples
-#' page.test(t(replicate(4, sample(4))))
-#' page.test(t(replicate(4, sample(10))))
-#' @export
-page.test <- function(data, ...) {
-  k <- ncol(data) # 'n' in Page (1963)
-  N <- nrow(data) # 'm' in Page (1963)
-  if (N < 2)
-    stop("Not enough chains/replications, for individual samples use the Mann-Kendall test instead")
-    # http://finzi.psych.upenn.edu/R/library/EnvStats/html/kendallSeasonalTrendTest.html
-  if (k < 3)
-    stop("Need at least 3 conditions/rank levels")
-  # ranking is happening in here
-  L <- page.L(data, ...)
-
-  # if exact null distribution is known: compute exact
-  if (k <= length(pspearman:::spearman.list)) {
-    p <- page.compute.exact(k, N, L)
-    p.type <- "exact"
-  } else {
-    warning("Exact p value is not available for given k, using Normal approximation which is unreliable for small N")
-    p <- page.compute.normal.approx(k, N, L)
-    p.type <- "approx"
-  }
-  structure(list(statistic=L, k=k, N=N, p.value=p, p.type=p.type,
-      alternative="", method="Page test of monotonicity"),
-    class=c("htest", "pagetest"))
-}
 
 #' @export
 print.pagetest <- function(x, ...)

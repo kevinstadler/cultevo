@@ -2,40 +2,89 @@
 % Please edit documentation in R/page.R
 \name{page.test}
 \alias{page.test}
-\title{Perform the Page test of monotonicity.}
+\alias{page.L}
+\alias{page.compute.exact}
+\title{Page test for monotonicity of ranks.}
 \usage{
-page.test(data, ...)
+page.test(data, verbose = TRUE)
+
+page.L(data, verbose = TRUE, ties.method = "average")
+
+page.compute.exact(k, N, L)
 }
 \arguments{
-\item{data}{a matrix or dataframe with the different conditions along
-columns and the replications along rows. Conversion of the data to ranks
-is taken care of internally (see \code{\link{page.L}})}
+\item{data}{a matrix with the different conditions along its \code{k}
+columns and the \code{N} replications along rows. Conversion of the data
+to ordinal ranks is taken care of internally.}
 
-\item{...}{extra parameters which are passed on to \code{\link{page.L}}}
+\item{verbose}{whether to print the final rankings based on which the L
+statistic is computed}
+
+\item{ties.method}{how to resolve tied ranks. Passed on to
+\code{\link[base]{rank}}, should be left on "average" (the default).}
+
+\item{k}{number of conditions/generations}
+
+\item{N}{number of replications/chains}
+
+\item{L}{value of the Page L statistic}
 }
 \value{
-a list of class \code{pagetest} (and \code{htest}) containing the following fields:
+\code{page.test} returns a list of class \code{pagetest} (and
+  \code{htest}) containing the following fields:
 \describe{
-   \item{\code{L}}{Value of the \code{L} statistic for the given data set}
-   \item{\code{k}}{Number of conditions (columns of the data set)}
-   \item{\code{N}}{Number of replications (rows of the data set)}
-   \item{\code{p.value}}{Significance level}
-   \item{\code{p.type}}{Whether the computed p value is "exact" or "approx"}
+   \item{\code{statistic}}{value of the \code{L} statistic for the given
+     data set}
+   \item{\code{parameter}}{the number of conditions (k) and replications (N)
+     of the data set (the columns and rows of the data set, respectively)}
+   \item{\code{p.value}}{significance level}
+   \item{\code{p.type}}{whether the computed p value is "exact" or "approximate"}
 }
 }
 \description{
-The Page test tests the given matrix for monotonically increasing ranks
-across \code{k} linearly ordered conditions (along columns) based on
-\code{N} replications (along rows). To test for monotonically
-\emph{decreasing} trends you can either reverse the order of columns, or
-simply invert the ranks (i.e. by prepending the dataset with a \code{-}).
+Given \code{N} replications of \code{k} different treatments/conditions,
+tests whether the \emph{median ordinal ranks} \eqn{m_i} of the treatments
+are identical \deqn{m_1 = m_2 = \ldots = m_k} against the alternative
+hypothesis \deqn{m_1 \leq m_2 \leq \ldots \leq m_k} where \emph{at least
+one} of the inequalities is a strict inequality (Siegel and Castellan
+1988, p.184). Given that even a single point change in the distribution of
+ranks across conditions represents evidence against the null hypothesis,
+the Page test is simply a test for \emph{some ordered differences in
+ranks}, but not a 'trend test' in any meaningful way.
 }
 \details{
+Tests the given matrix for monotonically increasing ranks across \code{k}
+linearly ordered conditions (along columns) based on \code{N} replications
+(along rows). To test for monotonically \emph{decreasing} ranks you can
+either reverse the order of columns, or simply invert the ranks by
+prepending the dataset with a \code{-}.
+
 Exact p values are computed for \code{k} up to 22, using the pre-computed
 null distributions from the \code{pspearman} package. For larger \code{k}, p
 values are computed based on a Normal distribution approximation.
 }
+\section{Functions}{
+\itemize{
+\item \code{page.test}: See above.
+
+\item \code{page.L}: Calculate Page's L statistic for the given dataset. Returns a numeric.
+
+\item \code{page.compute.exact}: Calculate exact significance levels of the Page L
+statistic. Returns a single numeric indicating the null probability that
+the Page statistic with the given \code{k}, \code{N} is greater or equal
+the given \code{L}.
+}}
+
 \examples{
 page.test(t(replicate(4, sample(4))))
 page.test(t(replicate(4, sample(10))))
+# raw calculation of the significance levels
+page.compute.exact(6, 4, 322)
+}
+\references{
+Siegel, S., and N. J. Castellan, Jr. (1988). Nonparametric
+Statistics for the Behavioral Sciences. McGraw-Hill.
+}
+\seealso{
+\code{\link[base]{rank}}
 }

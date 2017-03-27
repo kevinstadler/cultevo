@@ -1,0 +1,102 @@
+---
+title: "Page test is not a trend test"
+author: "Kevin Stadler"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+bibliography: /home/kevin/library.bib
+vignette: >
+  %\VignetteIndexEntry{Page test is not a trend test}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Definition
+
+Page's "test for linear ranks" tests whether there is a linear ordering between $k$ conditions of a between-subjects design with $N$ replications. The predicted ordering of the conditions (or generations) has to be specified a-priori.
+
+Let $m_i$ be the median rank of a score in condition or generation $i$, then the null hypothesis of the test (which is identical to the one of Friedman's test) is
+$$ m_1 = m_2 = \ldots = m_k $$
+i.e. there is no difference between the expected ranks for the $k$ conditions. For some reason, @Page1963's original formulation of the *alternative* hypothesis being tested is given as
+$$m_1 > m_2 > \ldots > m_k.$$
+
+Later papers and textbook entries correctly point out that the alternative hypothesis considered is actually
+$$m_1 \le m_2 \le \ldots \le m_k$$
+where *at least one* of the inequalities has to be a true inequality [@Siegel1988;@Hollander1999, p.284; @VanDeWiel2001, p.143]. <!-- @Sheshkin2004, IX., one that is actually wrong using '<' is @Rayner2000 also: "The scores will be different and will increase as the treatment levels change" - but not ALL are different -->
+
+What this means is that even if there is only a single step-wise change in the mean rank, e.g.
+$$m_1 < m_2 = \ldots = m_k$$
+this is sufficient evidence *against* the null hypothesis.
+
+## What the Page test is not
+
+The Page test is a 'trend' test in the same sense as a linear trend test would be, since it does not test for successive improvement or cumulative increase. It also cannot show whether an increase in the data is significant, since it is a non-parametric test that only considers *ranks*, not increases, and can merely check for the consistency of rank orderings.
+
+## Mock dataset demonstration
+
+To test the sensitivity of the test to single step-wise changes we can take a typical sample set of $N=4$ replications with $k=10$ levels each and fix the very first position to always be ranked top (or bottom), with all successive ranks being randomly shuffled, e.g.:
+
+```{r}
+pseudorandomranks <- function(...)
+  unlist(lapply(list(...), function(p) if (length(p) > 1) sample(p) else p))
+
+lowestthenrandom <- function()
+  pseudorandomranks(1, 2:10)
+
+t(replicate(4, lowestthenrandom()))
+```
+
+```{r}
+library(cultevo)
+
+# given a semi-random data generation function, create nrepetitions data sets
+# and compute their significance levels according to the Page test
+sampleLs <- function(datafun, nrepetitions) {
+  ps <- list("0.001" = 0, "0.01" = 0, "0.05" = 0, "NS" = 0)
+  for (i in seq(nrepetitions)) {
+    p <- page.test(datafun(), verbose=FALSE)$p.value
+    if (p <= 0.001) {
+      p <- "0.001"
+    } else if (p <= 0.01) {
+      p <- "0.01"
+    } else if (p <= 0.05) {
+      p <- "0.05"
+    } else {
+      p <- "NS"
+    }
+    ps[[p]] <- ps[[p]] + 1
+  }
+  unlist(ps) / nrepetitions
+}
+
+sampleps <- function(testfun, N, datafun, nrepetitions=1000)
+  testfun(function() t(replicate(N, datafun())), nrepetitions)
+```
+
+Generating 1000 datasets like the one above which really only exhibit a single point change in the distribution of median ranks, we get a significant result about half of the time:
+```{r}
+sampleps(sampleLs, 4, lowestthenrandom)
+```
+Increasing the number of replications to 10, still only assuming that the first generation fares worse than all the later ones (which do not exhibit consistent ordering in themselves):
+```{r}
+sampleps(sampleLs, 10, lowestthenrandom)
+```
+The influence is even stronger when the single change point gets closer to the middle of the ordered conditions. When we generate 1000 datasets where the first two ranks are always shuffled in the first two positions, followed by ranks 3-10 also shuffled randomly, we obtain the following distribution of p values:
+```{r}
+sampleps(sampleLs, 4, function() pseudorandomranks(1:2, 3:10))
+```
+
+The test is so sensitive to evidence for a change in the suspected direction (even if it is just a single point-wise change) that even evidence for a consistent trend in the opposite direction will not make it change its mind, as can be seen in this data set where more than half of the pairwise differences between ranks indicate downwardness:
+```{r}
+# upwards jump from the first three observations to the remaining 7, but the
+# remaining 7 exhibit a consistent downwards trend
+upwardsjumpdownardstrend <- function() pseudorandomranks(1:3, 10, 9, 8, 7, 6, 5, 4)
+sampleps(sampleLs, 10, upwardsjumpdownardstrend)
+updownup <- function() pseudorandomranks(3:4, 5:6, 1:2, 7:8)
+sampleps(sampleLs, 10, updownup)
+```
+
+## Alternatives to the Page test
+
+The seasonal Kendall test [@Hirsch1982;@Gilbert1987;@Gibbons2009] takes seasonal effects on environmental measurements into account by computing the Mann Kendall test on each of $k$ seasons/months separately, and then combining the individual test results. Since the order of the individual seasons is not actually taken into account (it only is in a later version of the test, @Hirsch1984), the test is essentially a within-subject version that combines the results of $k$ independent Mann-Kendall tests into one to increase the statistical power [@Gibbons2009, p.211]. The test was in fact already transferred to test for trends in different geographic sample locations rather than seasons (see @Helsel2006). The seasonal's test alternative hypothesis is "a monotone trend in one or more seasons" [@Hirsch1984, p.728].
+
+## References

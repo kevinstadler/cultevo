@@ -2,26 +2,26 @@ template:
   params:
     bootswatch: cerulean
 reference:
-  - title: Page test of ordered monotonicity
+  - title: Page test for monotonicity of ordered ranks
     contents:
     - page.test
-    - page.L
-    - page.compute.exact
-  - title: Tests for compositionality of a communication system
+  - title: Tests for compositionality of signalling systems
     contents:
-    - compositionality
+    - sm.compositionality
     - mantel.test
-    - mantel
-  - title: Distance measures
-    desc:  Functions for computing meaning and string similarities
+  - title: Edit distances and string manipulation
     contents:
-    - hammingdists
     - normalisedlevenshteindists
     - orderinsensitivedists
     - segment.string
-    - segment.counts
-    - enumerate.meaningcombinations
     - enumerate.substrings
+    - count.substring.occurrences
+  - title: Meaning distances and meaning matrix manipulation
+    contents:
+    - binaryfeaturematrix
+    - enumerate.meaningcombinations
+    - hammingdists
+    - wrap.meaningdistfunction
   - title: Distance matrices
     desc:  Functions for creating and manipulating distance matrices
     contents:
@@ -32,3 +32,11 @@ reference:
     - rep.matrix
     - shuffle.locations
     - temperature.colors
+navbar:
+  left:
+    - text: "Overview"
+      href: index.html
+    - text: "Function reference"
+      href: "reference/index.html"
+    - text: "Page test tutorial"
+      href: articles/page.test.html

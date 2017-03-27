@@ -2,7 +2,7 @@
 % Please edit documentation in R/dists.R
 \name{orderinsensitivedists}
 \alias{orderinsensitivedists}
-\title{Calculate the bag-of-characters similarity between the given strings.}
+\title{Calculate the bag-of-characters similarity between strings.}
 \usage{
 orderinsensitivedists(strings = NULL, split = NULL,
   segmentcounts = segment.counts(strings, split))
@@ -20,7 +20,7 @@ strings can be passed as this argument (which is a list of lists)}
 a distance matrix
 }
 \description{
-Calculate the bag-of-characters similarity between the given strings.
+Calculate the bag-of-characters similarity between strings.
 }
 \examples{
 orderinsensitivedists(c("xxxx", "asdf", "asd", "dsa"))

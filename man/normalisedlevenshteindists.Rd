@@ -10,7 +10,8 @@ normalisedlevenshteindists(strings)
 \item{strings}{a vector or list of strings}
 }
 \value{
-a distance matrix of normalised Levenshtein distances between the strings
+A distance matrix specifying all pairwise normalised Levenshtein
+  distances between the strings.
 }
 \description{
 Compute the normalised Levenshtein distances between strings.

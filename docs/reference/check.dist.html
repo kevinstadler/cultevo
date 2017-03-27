@@ -51,7 +51,13 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">Overview</a>
+</li>
+<li>
+  <a href="../reference/index.html">Function reference</a>
+</li>
+<li>
+  <a href="../articles/page.test.html">Page test tutorial</a>
 </li>
       </ul>
       
@@ -77,8 +83,8 @@
     </div>
 
     
-    <p>Checks or fixes the given distance matrix specification and, if possible,
-returns an equivalent symmetric <code>matrix</code> object with 0s in the diagonal.</p>
+    <p>Checks or fixes the given distance matrix specification and returns an
+equivalent, symmetric <code>matrix</code> object with 0s in the diagonal.</p>
     
 
     <pre><span class='fu'>check.dist</span>(<span class='no'>x</span>)
@@ -107,7 +113,7 @@ returns an equivalent symmetric <code>matrix</code> object with 0s in the diagon
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>a symmetric <code>matrix</code> object (or list of such objects) of the
-  same dimension as <code>d</code></p>
+  same dimension as <code>x</code></p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
@@ -115,8 +121,8 @@ returns an equivalent symmetric <code>matrix</code> object with 0s in the diagon
 distance matrix and return it, making it symmetric if it isn't already.</p>
 <p>If the argument is a list, calls <code>check.dist</code> on every of its elements
 and returns a list of the results.</p>
-<p>For all other object types, attempts to coerce <code>m</code> to a <code>dist</code>
-object and return the corresponding distance matrix.</p>
+<p>For all other object types, attempts to coerce the argument to a <code>dist</code>
+object and return the corresponding distance matrix (see above).</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 

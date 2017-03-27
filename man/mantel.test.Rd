@@ -5,29 +5,36 @@
 \alias{mantel.test.default}
 \alias{mantel.test.formula}
 \alias{mantel.test.list}
+\alias{print.mantel}
+\alias{plot.mantel}
 \title{Perform a Mantel permutation test.}
 \usage{
-mantel.test(x, y, plot = TRUE, ...)
+mantel.test(x, y, ...)
 
-\method{mantel.test}{default}(x, y, plot = TRUE, method = "pearson",
-  trials = 5000, shuffle = shuffle.locations, ...)
+\method{mantel.test}{default}(x, y, plot = FALSE, method = "pearson",
+  trials = 9999, shuffle = shuffle.locations, ...)
 
-\method{mantel.test}{formula}(x, y, plot = TRUE,
-  stringdistfun = normalisedlevenshteindists, meaningdistfun = hammingdists,
-  ...)
+\method{mantel.test}{formula}(x, y, groups = NULL,
+  stringdistfun = utils::adist, meaningdistfun = hammingdists, ...)
 
-\method{mantel.test}{list}(x, y, plot = TRUE, ...)
+\method{mantel.test}{list}(x, y, plot = FALSE, ...)
+
+\method{print}{mantel}(x, ...)
+
+\method{plot}{mantel}(x, xlab = "generation", ...)
 }
 \arguments{
-\item{x}{a formula, distance matrix, or list of distance matrices}
+\item{x}{a formula, distance matrix, or list of distance matrices (see below)}
 
 \item{y}{a data frame, distance matrix, or list of matrices of the same length as \code{x}}
 
-\item{plot}{logical: immediately produce a plot of the test results}
+\item{...}{further arguments passed to or from other methods.}
 
-\item{...}{extra arguments passed on to the default method}
+\item{plot}{logical: immediately produce a plot of the test results (using
+\code{plot.mantel})}
 
-\item{method}{correlation coefficient to be computed (default: "pearson")}
+\item{method}{correlation coefficient to be computed (passed on to
+\code{\link[stats]{cor}}, default: "pearson")}
 
 \item{trials}{maximum number of permutations to be tested}
 
@@ -35,15 +42,51 @@ mantel.test(x, y, plot = TRUE, ...)
 matrix and an optional permutation specification as its arguments - you
 shouldn't normally have to change this}
 
+\item{groups}{when \code{x} is a formula: column name by which the data in
+\code{y} is split into separate data sets to run several Mantel tests on}
+
 \item{stringdistfun}{when \code{x} is a formula: edit distance function used
-to compute the distance matrix from the specified string column}
+to compute the distance matrix from the specified string column. Supports
+any edit distance function that returns a distance matrix from a vector or
+list of character strings. Default is Levenshtein distance (function
+\code{\link[utils]{adist}}), other options from this package include
+\code{\link{normalisedlevenshteindists}} and
+\code{\link{orderinsensitivedists}}.}
 
 \item{meaningdistfun}{when \code{x} is a formula: meaning distance function
-used to compute the distance matrix from the specified meaning columns}
+used to compute the distance matrix from the specified meaning columns.
+Defaults to Hamming distances between meanings (function
+\code{\link{hammingdists}}), custom meaning functions can be created
+easily using \code{\link{wrap.meaningdistfunction}}.}
+
+\item{xlab}{the x axis label used when plotting the result of several Mantel
+tests next to each other}
 }
 \value{
-a dataframe of class \code{\link{mantel}} specifying the results of
-  the Mantel test(s)
+A dataframe of class \code{mantel}, with one row per Mantel
+test carried out, containing the following columns:
+\describe{
+   \item{\code{method}}{Character string specifying the type of correlation
+         coefficient used ("pearson", "kendall" or "spearman")}
+   \item{\code{statistic}}{The veridical correlation coefficient between
+         the entries in the two distance matrices}
+   \item{\code{rsample}}{A list of correlation coefficients calculated
+         from the permutations of the input matrices}
+   \item{\code{mean}}{Average correlation coefficient produced by the permutations}
+   \item{\code{sd}}{Standard deviation of the sampled correlation coefficients}
+   \item{\code{p.value}}{Empirical p-value computed from the Mantel
+         test: let \code{ngreater} be the number of correlation coefficients
+         in \code{rsample} greater than or equal to \code{statistic}, then
+         \code{p.value} is \code{(ngreater+1)/(length(rsample)+1}}
+   \item{\code{p.approx}}{The theoretical p-value that would correspond
+         to the standard \code{z} score as calculated above.}
+   \item{\code{is.unique.max}}{Logical, \code{TRUE} iff the veridical
+         correlation coefficient is greater than any of the coefficients
+         calculated for the permutations. If this is true, then
+         \code{p.value == 1 / (length(rsample)+1)}}
+ }
+Multiple \code{mantel} objects can easily be combined by calling
+\code{rbind(test1, test2, ...)}.
 }
 \description{
 Perform a correlation test between two matrices. The Mantel test is
@@ -54,13 +97,24 @@ in one of the matrices and calculating the resulting correlations to
 generate an empirical null distribution for the given data set.
 }
 \details{
-If the number of possible permutations is reasonably close to
-\code{trials}, a deterministic enumeration of all the permutations will be
-carried out instead of random sampling.
+If the number of possible permutations of the matrices is reasonably close
+to the number of permutations specified by the \code{trials} parameter, a
+deterministic enumeration of all the permutations will be carried out
+instead of random sampling.
+
+\cr\code{plot()} called on a data frame of class \code{mantel} plots a
+visualisation of the test results (in particular, the distribution of
+the permutated samples against the veridical correlation coefficient). If
+the veridical correlation coefficient is plotted in blue it means
+that it was higher than all other coefficients generated by random
+permutations of the data. When the argument contains the result of more than
+two Mantel tests, a side-by-side boxplot visualisation of the samples is
+produced (see examples). Additional parameters \code{...} to \code{plot()}
+are passed on to \code{\link[graphics]{plot.default}}.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: perform Mantel correlation test on two distance
+\item \code{default}: Perform Mantel correlation test on two distance
 matrices. The distance matrices can either be of type
 \code{\link[stats]{dist}}, plain R matrices or any object that can be
 interpreted by \code{\link{check.dist}}.
@@ -74,28 +128,33 @@ dimensions. To calculate the respective distances, the function
 \code{stringdistfun} is applied to the strings, \code{meaningdistfun} to the
 meaning columns.
 
-\item \code{list}: when \code{x} is a list of distance matrices, and
+\item \code{list}: When \code{x} is a list of distance matrices, and
 \code{y} is either a single distance matrix or a list of distance matrices
-the same length as \code{x}. Runs a Mantel test for every pairwise
+the same length as \code{x}: runs a Mantel test for every pairwise
 combination of distance matrices in \code{x} and \code{y} and returns a
-\code{\link{mantel}} object with as many rows.
+\code{mantel} object with as many rows.
 }}
 
 \examples{
 # small distance matrix, Mantel test run deterministically
 mantel.test(dist(1:7), dist(1:7))
 
-# smallest distance matrix using random permutations (based on default trials=5000)
-mantel.test(dist(1:8), dist(1:8))
+# smallest distance matrix using random permutations (based on default trials=9999)
+plot(mantel.test(dist(1:8), dist(1:8), method="kendall"))
+
+mantel.test(hammingdists(enumerate.meaningcombinations(c(2, 2, 2, 2))),
+  dist(1:16), plot=TRUE)
+# using the formula interface in combination with a data frame
 mantel.test(word ~ Var1 + Var2, cbind(word=c("aa", "ab", "ba", "bb"),
   enumerate.meaningcombinations(c(2, 2))))
 
-# running tests on a list of distance matrices
-mantel.test(list(dist(1:16), dist(sample(16:1))),
-  hammingdists(enumerate.meaningcombinations(c(2, 2, 2, 2))))
+# running tests on a list of distance matrices and plotting them
+plot(mantel.test(list(dist(1:8), dist(sample(8:1)), dist(runif(8))),
+  hammingdists(enumerate.meaningcombinations(c(2, 2, 2)))), xlab="group")
 }
 \seealso{
-\code{\link{plot.mantel}}, \code{\link[stats]{cor}},
-  \code{\link{hammingdists}}, \code{\link{normalisedlevenshteindists}},
+\code{\link[stats]{cor}},
+  \code{\link[utils]{adist}}, \code{\link{hammingdists}},
+  \code{\link{normalisedlevenshteindists}},
   \code{\link{orderinsensitivedists}}
 }

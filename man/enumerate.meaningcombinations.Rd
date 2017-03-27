@@ -23,15 +23,18 @@ meaning values}
 when \code{dimensionality} specifies the meaning values}
 }
 \value{
-a matrix that has as many columns as there are dimensions, with
-  every row specifying one of the possible meaning combinations, and the
-  first dimension cycling slowest.
+A matrix that has as many columns as there are dimensions, with
+  every row specifying one of the possible meaning combinations. The entries
+  of the first dimension cycle slowest (see examples).
 }
 \description{
-Enumerates all possible combinations of meanings for a meaning space of the given dimensionality.
+Enumerates all possible combinations of meanings for a meaning space of the
+given dimensionality.
 }
 \details{
-The resulting matrix can be passed straight on to \code{\link{hammingdists}}.
+The resulting matrix can be passed straight on to
+\code{\link{hammingdists}} and other meaning distance functions created by
+\code{\link{wrap.meaningdistfunction}}.
 }
 \examples{
 enumerate.meaningcombinations(c(2, 2))

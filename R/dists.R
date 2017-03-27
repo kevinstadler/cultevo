@@ -1,53 +1,114 @@
-# Functions for creating and manipulating distance matrices
-
-#' Compute all pairwise hamming distances between matrix rows.
+#' Make a meaning distance function vectorisable.
 #'
-#' Returns a distance matrix of all meanings. The meanings argument should be
+#' This function takes as its only argument a function \code{f(m1, m2)} which
+#' returns a single numeric indicating the distance between two 'meanings'
+#' \code{m1, m2} (which are themselves most likely vectors or lists). Based
+#' on \code{f}, this function returns a function \code{g(mm)} which takes as
+#' its only argument a matrix or data frame \code{mm} with the meaning
+#' elements (equivalent to the ones in \code{m1, m2}) along columns and
+#' different meaning combinations (like \code{m1, m2, ...}) along rows. This
+#' function returns a distance matrix of class \code{\link[stats]{dist}}
+#' containing all pairwise distances between the rows of \code{mm}. The
+#' resulting function \code{g} can be passed to other functions in this
+#' package, in particular \code{\link{mantel.test}}.
+#'
+#' The meaning distance function should be commutative, i.e.
+#' \code{f(a,b) = f(b,a)}, and meanings should have a distance of zero to
+#' themselves, i.e. \code{f(a,a) = 0}.
+#' @param pairwisemeaningdistfun a function of two arguments returning a
+#'   single numeric indicating the semantic distance between its arguments
+#' @return A function that takes a meaning matrix and returns a corresponding
+#'   distance matrix of class \code{\link[stats]{dist}}.
+#' @examples
+#' trivialdistance <- function(a, b) return(a - b)
+#'
+#' trivialmeanings <- as.matrix(3:1)
+#' trivialdistance(trivialmeanings[1], trivialmeanings[2])
+#' trivialdistance(trivialmeanings[1], trivialmeanings[3])
+#' trivialdistance(trivialmeanings[2], trivialmeanings[3])
+#'
+#' distmatrixfunction <- wrap.meaningdistfunction(trivialdistance)
+#' distmatrixfunction(trivialmeanings)
+#' @export
+wrap.meaningdistfunction <- function(pairwisemeaningdistfun) {
+  f <- function(meanings) {
+    if (is.vector(meanings))
+      meanings <- as.matrix(meanings)
+    nmeanings <- dim(meanings)[1]
+    stats::as.dist(cbind(sapply(1:(nmeanings-1), function(i) {
+      c(rep(0, i),
+        sapply((i+1):nmeanings, function(j)
+          pairwisemeaningdistfun(meanings[i,], meanings[j,])))
+    }), 0))
+#    matrix <- matrix(nrow=nmeanings, ncol=nmeanings)
+#    combs <- utils::combn(1:nmeanings, 2)
+    # fill only the lower half to pass to as.dist
+#    matrix[cbind(combs[2,], combs[1,])] <- apply(combs, 2,
+#      function(i) pairwisemeaningdistfun(meanings[i[1],], meanings[i[2],]))
+  }
+  # cache distance matrix computations
+  if (requireNamespace("memoise", quietly = TRUE))
+    f <- memoise::memoise(f)
+  invisible(f)
+}
+
+#' Pairwise Hamming distances between matrix rows.
+#'
+#' Returns a distance matrix giving all pairwise Hamming distances between the
+#' rows of its argument \code{meanings}, which can be a matrix, data frame or
+#' vector. Vectors are treated as matrices with a single column, so the
+#' distances in its return value can only be 0 or 1.
+#'
+#' This function behaves differently from calling
+#' \code{\link[stats]{dist}(meanings, method="manhattan")} in how \code{NA}
+#' values are treated: specifying a meaning component as \code{NA} allows you
+#' to \emph{ignore} that dimension for the given row/meaning combinations,
+#' (instead of counting a difference between \code{NA} and another value as a
+#' distance of 1).
 #'
 #' @param meanings a matrix with the different dimensions encoded along
 #'   columns, and all combinations of meanings specified along rows. The data
 #'   type of the cells does not matter since distance is simply based on
-#'   equality - in fact specifying a meaning component as NA allows you to
-#'   ignore that dimension for the given row/meaning combinations (see
-#'   examples). Vectors are treated as matrices with a single row, so the
-#'   resulting distances can only be 0 or 1.
-#' @return a distance matrix of type \code{\link{dist}} with \code{n*(n-1)/2}
+#'   equality (with the exception of \code{NA} values, see below.
+#' @return A distance matrix of type \code{\link{dist}} with \code{n*(n-1)/2}
 #'   rows/columns, where n is the number of rows in \code{meanings}.
 #'
 #' @examples
-#' # example #1: a 2x2 design using strings (the character redundantly
-#' # specifies the dimension for clarity)
-#' hammingdists(matrix(c("a1", "b1", "a1", "b2", "a2", "b1", "a2", "b2"), ncol=2, byrow=TRUE))
-#' # example #2: a 2x3 design using integers for encoding
-#' hammingdists(matrix(c(0,0,0,1,0,2,1,0,1,1,1,2), ncol=2, byrow=TRUE))
-#' # example #3: a 2x2x2 design using factors (ncol is always the number of dimensions)
-#' hammingdists(matrix(c(0,0,0,0,0,1,0,1,0,0,1,1,1,0,0,1,0,1,1,1,0,1,1,1), ncol=3, byrow=TRUE))
-#' # example #4: if some meaning dimension is not relevant for some
-#' # combinations of meanings (e.g. optional arguments), specifying them as NA
-#' # in the matrix will make them not be counted towards the hamming distance!
-#' # in this example the value of the second dimension does not matter (and
-#' # does not count towards the distance) when the the first dimension has
-#' # value '1'
-#' hammingdists(matrix(c(0,0,0,1,1,NA), ncol=2, byrow=TRUE))
+#' # a 2x2 design using strings
+#' print(strings <- matrix(c("a1", "b1", "a1", "b2", "a2", "b1", "a2", "b2"),
+#'   ncol=2, byrow=TRUE))
+#' hammingdists(strings)
+#'
+#' # a 2x3 design using integers
+#' print(integers <- matrix(c(0, 0, 0, 1, 0, 2, 1, 0, 1, 1, 1, 2), ncol=2, byrow=TRUE))
+#' hammingdists(integers)
+#'
+#' # a 3x2 design using factors (ncol is always the number of dimensions)
+#' print(factors <- data.frame(colour=c("red", "red", "green", "blue"),
+#'                             animal=c("dog", "cat", "dog", "cat")))
+#' hammingdists(factors)
+#'
+#' # if some meaning dimension is not relevant for some combinations of
+#' # meanings (e.g. optional arguments), specifying them as NA in the matrix
+#' # will make them not be counted towards the hamming distance! in this
+#' # example the value of the second dimension does not matter (and does not
+#' # count towards the distance) when the the first dimension has value '1'
+#' print(ignoredimension <- matrix(c(0, 0, 0, 1, 1, NA), ncol=2, byrow=TRUE))
+#' hammingdists(ignoredimension)
+#'
+#' # trivial case of a vector: first and last two elements are identical,
+#' # otherwise a difference of one
+#' hammingdists(c(0, 0, 1, 1))
 #' @seealso \code{\link[stats]{dist}}
 #' @export
-hammingdists <- function(meanings) {
-  if (is.vector(meanings))
-    meanings <- as.matrix(meanings)
-  nmeanings <- dim(meanings)[1]
-  matrix <- matrix(nrow=nmeanings, ncol=nmeanings)
-  combs <- utils::combn(1:nmeanings, 2)
-  # fill only the lower half to pass to as.dist
-  matrix[cbind(combs[2,], combs[1,])] <- apply(combs, 2, function(x) sum(meanings[x[1],] != meanings[x[2],], na.rm=TRUE))
-  # TODO if the meaning dimensions are named then unlist(meanings[x[1],])
-  # might have to be used internally
-  stats::as.dist(matrix)
-}
+hammingdists <-
+  wrap.meaningdistfunction(function(m1, m2) sum(m1 != m2, na.rm=TRUE))
 
 #' Compute the normalised Levenshtein distances between strings.
 #' 
 #' @param strings a vector or list of strings
-#' @return a distance matrix of normalised Levenshtein distances between the strings
+#' @return A distance matrix specifying all pairwise normalised Levenshtein
+#'   distances between the strings.
 #' @examples normalisedlevenshteindists(c("abd", "absolute", "asdasd", "casd"))
 #' @seealso \code{\link[stats]{dist}}
 #' @export
@@ -57,21 +118,29 @@ normalisedlevenshteindists <- function(strings) {
   stats::as.dist(levs / outer(lens, lens, pmax))
 }
 
-#' Split one or more strings into their constituent segments.
+#' Split strings into their constituent segments.
 #'
-#' Vectorisable.
-#' @param x one or more strings to be split
-#' @param split the boundary character or sequence at which to segment the strings
-#' @return a list (of the same length as \code{x}) containing character vectors
+#' Split strings into their constituent segments (and count them).
+#'
+#' @describeIn segment.string
+#' Returns a list (of the same length as \code{x}), each item a vector of
+#'   character vectors.
+#' @param x one or more strings to be split (and, optionally, counted)
+#' @param split the boundary character or sequence at which to segment the
+#'   string(s)
+#' @examples
+#' segment.string(c("asd", "fghj"))
+#'
+#' segment.string(c("la-dee-da", "lala-la"), "-")
 #' @export
 segment.string <- function(x, split=NULL)
   strsplit(x, split, fixed=TRUE)
 
+#' @describeIn segment.string
 #' Calculate the frequency of individual characters in one or more strings.
-#'
-#' @param x one or more strings for which segments should be counted
-#' @param split the boundary character or sequence at which to segment the strings
-#' @return a matrix with one row for every string in \code{x}
+#' Returns a matrix with one row for every string in \code{x}.
+#' @examples
+#' segment.counts(c("asd", "aasd", "asdf"))
 #' @export
 segment.counts <- function(x, split=NULL) {
   chars <- segment.string(x, split)
@@ -81,7 +150,7 @@ segment.counts <- function(x, split=NULL) {
   })), dimnames=list(x, set))
 }
 
-#' Calculate the bag-of-characters similarity between the given strings.
+#' Calculate the bag-of-characters similarity between strings.
 #'
 #' @param strings a vector or list of strings
 #' @param split boundary sequency at which to segment the strings (default
@@ -134,8 +203,8 @@ read.dist <- function(data, el1.column=1, el2.column=2, dist.columns=3) {
 
 #' Check or fix a distance matrix.
 #' 
-#' Checks or fixes the given distance matrix specification and, if possible,
-#' returns an equivalent symmetric \code{matrix} object with 0s in the diagonal.
+#' Checks or fixes the given distance matrix specification and returns an
+#' equivalent, symmetric \code{matrix} object with 0s in the diagonal.
 #' 
 #' If the argument is a matrix, check whether it is a valid specification of a
 #' distance matrix and return it, making it symmetric if it isn't already.
@@ -143,12 +212,12 @@ read.dist <- function(data, el1.column=1, el2.column=2, dist.columns=3) {
 #' If the argument is a list, calls \code{check.dist} on every of its elements
 #' and returns a list of the results.
 #' 
-#' For all other object types, attempts to coerce \code{m} to a \code{dist}
-#' object and return the corresponding distance matrix.
+#' For all other object types, attempts to coerce the argument to a \code{dist}
+#' object and return the corresponding distance matrix (see above).
 #' 
 #' @param x an object (or list of objects) specifying a distance matrix
 #' @return a symmetric \code{matrix} object (or list of such objects) of the
-#'   same dimension as \code{d}
+#'   same dimension as \code{x}
 #' @seealso \code{\link[stats]{dist}}
 #' @export
 check.dist <- function(x)
@@ -181,12 +250,8 @@ check.dist.matrix <- function(x) {
 
 #' @rdname check.dist
 #' @export
-check.dist.list <- function(x) {
-  x <- lapply(x, check.dist)
-  # TODO check if all elements have the same dimension?
-  attr(x, "dim") <- dim(x[1])
-  return(x)
-}
+check.dist.list <- function(x)
+  lapply(x, check.dist)
 
 #' Permute the rows and columns of a square matrix.
 #'

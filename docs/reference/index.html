@@ -51,7 +51,13 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">Overview</a>
+</li>
+<li>
+  <a href="../reference/index.html">Function reference</a>
+</li>
+<li>
+  <a href="../articles/page.test.html">Page test tutorial</a>
 </li>
       </ul>
       
@@ -88,69 +94,45 @@
       <tbody>
         <tr>
           <th colspan="2">
-            <h2 id="section-page-test-of-ordered-monotonicity" class="hasAnchor"><a href="#section-page-test-of-ordered-monotonicity" class="anchor"></a>Page test of ordered monotonicity</h2>
+            <h2 id="section-page-test-for-monotonicity-of-ordered-ranks" class="hasAnchor"><a href="#section-page-test-for-monotonicity-of-ordered-ranks" class="anchor"></a>Page test for monotonicity of ordered ranks</h2>
             <p class="section-desc"></p>
           </th>
         </tr>
         <tr>
           <!--  -->
           <td>
-            <p><code><a href="page.test.html">page.test</a></code> </p>
+            <p><code><a href="page.test.html">page.test</a></code> <code><a href="page.test.html">page.L</a></code> <code><a href="page.test.html">page.compute.exact</a></code> </p>
           </td>
-          <td><p>Perform the Page test of monotonicity.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="page.L.html">page.L</a></code> </p>
-          </td>
-          <td><p>Calculate Page's L statistic for the given dataset.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="page.compute.exact.html">page.compute.exact</a></code> </p>
-          </td>
-          <td><p>Calculate exact significance levels of the Page L statistic.</p></td>
+          <td><p>Page test for monotonicity of ranks.</p></td>
         </tr>
       </tbody><tbody>
         <tr>
           <th colspan="2">
-            <h2 id="section-tests-for-compositionality-of-a-communication-system" class="hasAnchor"><a href="#section-tests-for-compositionality-of-a-communication-system" class="anchor"></a>Tests for compositionality of a communication system</h2>
+            <h2 id="section-tests-for-compositionality-of-signalling-systems" class="hasAnchor"><a href="#section-tests-for-compositionality-of-signalling-systems" class="anchor"></a>Tests for compositionality of signalling systems</h2>
             <p class="section-desc"></p>
           </th>
         </tr>
         <tr>
           <!--  -->
           <td>
-            <p><code><a href="compositionality.html">compositionality</a></code> </p>
+            <p><code><a href="sm.compositionality.html">sm.compositionality</a></code> <code><a href="sm.compositionality.html">sm.segmentation</a></code> </p>
           </td>
-          <td><p>An implementation of Spike's measure of compositionality.</p></td>
+          <td><p>Spike's measure of additive compositionality.</p></td>
         </tr><tr>
           <!--  -->
           <td>
-            <p><code><a href="mantel.test.html">mantel.test</a></code> <code><a href="mantel.test.html">mantel.test.default</a></code> <code><a href="mantel.test.html">mantel.test.formula</a></code> <code><a href="mantel.test.html">mantel.test.list</a></code> </p>
+            <p><code><a href="mantel.test.html">mantel.test</a></code> <code><a href="mantel.test.html">mantel.test.default</a></code> <code><a href="mantel.test.html">mantel.test.formula</a></code> <code><a href="mantel.test.html">mantel.test.list</a></code> <code><a href="mantel.test.html">print.mantel</a></code> <code><a href="mantel.test.html">plot.mantel</a></code> </p>
           </td>
           <td><p>Perform a Mantel permutation test.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="mantel.html">mantel</a></code> <code><a href="mantel.html">plot.mantel</a></code> </p>
-          </td>
-          <td><p>Object class for storing the results of one or more Mantel tests</p></td>
         </tr>
       </tbody><tbody>
         <tr>
           <th colspan="2">
-            <h2 id="section-distance-measures" class="hasAnchor"><a href="#section-distance-measures" class="anchor"></a>Distance measures</h2>
-            <p class="section-desc"><p>Functions for computing meaning and string similarities</p></p>
+            <h2 id="section-edit-distances-and-string-manipulation" class="hasAnchor"><a href="#section-edit-distances-and-string-manipulation" class="anchor"></a>Edit distances and string manipulation</h2>
+            <p class="section-desc"></p>
           </th>
         </tr>
         <tr>
-          <!--  -->
-          <td>
-            <p><code><a href="hammingdists.html">hammingdists</a></code> </p>
-          </td>
-          <td><p>Compute all pairwise hamming distances between matrix rows.</p></td>
-        </tr><tr>
           <!--  -->
           <td>
             <p><code><a href="normalisedlevenshteindists.html">normalisedlevenshteindists</a></code> </p>
@@ -161,19 +143,39 @@
           <td>
             <p><code><a href="orderinsensitivedists.html">orderinsensitivedists</a></code> </p>
           </td>
-          <td><p>Calculate the bag-of-characters similarity between the given strings.</p></td>
+          <td><p>Calculate the bag-of-characters similarity between strings.</p></td>
         </tr><tr>
           <!--  -->
           <td>
-            <p><code><a href="segment.string.html">segment.string</a></code> </p>
+            <p><code><a href="segment.string.html">segment.string</a></code> <code><a href="segment.string.html">segment.counts</a></code> </p>
           </td>
-          <td><p>Split one or more strings into their constituent segments.</p></td>
+          <td><p>Split strings into their constituent segments.</p></td>
         </tr><tr>
           <!--  -->
           <td>
-            <p><code><a href="segment.counts.html">segment.counts</a></code> </p>
+            <p><code><a href="enumerate.substrings.html">enumerate.substrings</a></code> </p>
           </td>
-          <td><p>Calculate the frequency of individual characters in one or more strings.</p></td>
+          <td><p>Enumerate all substrings of a string.</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="count.substring.occurrences.html">count.substring.occurrences</a></code> </p>
+          </td>
+          <td><p>Count occurence of all substrings in a string.</p></td>
+        </tr>
+      </tbody><tbody>
+        <tr>
+          <th colspan="2">
+            <h2 id="section-meaning-distances-and-meaning-matrix-manipulation" class="hasAnchor"><a href="#section-meaning-distances-and-meaning-matrix-manipulation" class="anchor"></a>Meaning distances and meaning matrix manipulation</h2>
+            <p class="section-desc"></p>
+          </th>
+        </tr>
+        <tr>
+          <!--  -->
+          <td>
+            <p><code><a href="binaryfeaturematrix.html">binaryfeaturematrix</a></code> </p>
+          </td>
+          <td><p>Convert a categorical meaning matrix to a binary feature matrix.</p></td>
         </tr><tr>
           <!--  -->
           <td>
@@ -183,9 +185,15 @@
         </tr><tr>
           <!--  -->
           <td>
-            <p><code><a href="enumerate.substrings.html">enumerate.substrings</a></code> </p>
+            <p><code><a href="hammingdists.html">hammingdists</a></code> </p>
           </td>
-          <td><p>Enumerate all substrings of a string.</p></td>
+          <td><p>Pairwise Hamming distances between matrix rows.</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="wrap.meaningdistfunction.html">wrap.meaningdistfunction</a></code> </p>
+          </td>
+          <td><p>Make a meaning distance function vectorisable.</p></td>
         </tr>
       </tbody><tbody>
         <tr>
@@ -205,7 +213,7 @@
           <td>
             <p><code><a href="read.dist.html">read.dist</a></code> </p>
           </td>
-          <td><p>Construct a distance matrix by reading distances from a file or dataframe</p></td>
+          <td><p>Read a distance matrix from a file or data frame.</p></td>
         </tr>
       </tbody><tbody>
         <tr>
@@ -241,9 +249,10 @@
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-page-test-of-ordered-monotonicity">Page test of ordered monotonicity</a></li>
-      <li><a href="#section-tests-for-compositionality-of-a-communication-system">Tests for compositionality of a communication system</a></li>
-      <li><a href="#section-distance-measures">Distance measures</a></li>
+      <li><a href="#section-page-test-for-monotonicity-of-ordered-ranks">Page test for monotonicity of ordered ranks</a></li>
+      <li><a href="#section-tests-for-compositionality-of-signalling-systems">Tests for compositionality of signalling systems</a></li>
+      <li><a href="#section-edit-distances-and-string-manipulation">Edit distances and string manipulation</a></li>
+      <li><a href="#section-meaning-distances-and-meaning-matrix-manipulation">Meaning distances and meaning matrix manipulation</a></li>
       <li><a href="#section-distance-matrices">Distance matrices</a></li>
       <li><a href="#section-misc-functions">Misc functions</a></li>
     </ul>

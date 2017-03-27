@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Compute all pairwise hamming distances between matrix rows. — hammingdists • cultevo</title>
+<title>Pairwise Hamming distances between matrix rows. — hammingdists • cultevo</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -51,7 +51,13 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">Overview</a>
+</li>
+<li>
+  <a href="../reference/index.html">Function reference</a>
+</li>
+<li>
+  <a href="../articles/page.test.html">Page test tutorial</a>
 </li>
       </ul>
       
@@ -73,11 +79,14 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Compute all pairwise hamming distances between matrix rows.</h1>
+    <h1>Pairwise Hamming distances between matrix rows.</h1>
     </div>
 
     
-    <p>Returns a distance matrix of all meanings. The meanings argument should be</p>
+    <p>Returns a distance matrix giving all pairwise Hamming distances between the
+rows of its argument <code>meanings</code>, which can be a matrix, data frame or
+vector. Vectors are treated as matrices with a single column, so the
+distances in its return value can only be 0 or 1.</p>
     
 
     <pre><span class='fu'>hammingdists</span>(<span class='no'>meanings</span>)</pre>
@@ -90,17 +99,23 @@
       <td><p>a matrix with the different dimensions encoded along
 columns, and all combinations of meanings specified along rows. The data
 type of the cells does not matter since distance is simply based on
-equality - in fact specifying a meaning component as NA allows you to
-ignore that dimension for the given row/meaning combinations (see
-examples). Vectors are treated as matrices with a single row, so the
-resulting distances can only be 0 or 1.</p></td>
+equality (with the exception of <code>NA</code> values, see below.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a distance matrix of type <code>dist</code> with <code>n*(n-1)/2</code>
+    <p>A distance matrix of type <code>dist</code> with <code>n*(n-1)/2</code>
   rows/columns, where n is the number of rows in <code>meanings</code>.</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>This function behaves differently from calling
+<code><a href='http://www.rdocumentation.org/packages/stats/topics/dist'>dist</a>(meanings, method="manhattan")</code> in how <code>NA</code>
+values are treated: specifying a meaning component as <code>NA</code> allows you
+to <em>ignore</em> that dimension for the given row/meaning combinations,
+(instead of counting a difference between <code>NA</code> and another value as a
+distance of 1).</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -108,34 +123,56 @@ resulting distances can only be 0 or 1.</p></td>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># example #1: a 2x2 design using strings (the character redundantly</span>
-<span class='co'># specifies the dimension for clarity)</span>
-<span class='fu'>hammingdists</span>(<span class='fu'>matrix</span>(<span class='fu'>c</span>(<span class='st'>"a1"</span>, <span class='st'>"b1"</span>, <span class='st'>"a1"</span>, <span class='st'>"b2"</span>, <span class='st'>"a2"</span>, <span class='st'>"b1"</span>, <span class='st'>"a2"</span>, <span class='st'>"b2"</span>), <span class='kw'>ncol</span><span class='kw'>=</span><span class='fl'>2</span>, <span class='kw'>byrow</span><span class='kw'>=</span><span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;   1 2 3
+    <pre class="examples"><div class='input'><span class='co'># a 2x2 design using strings</span>
+<span class='fu'>print</span>(<span class='no'>strings</span> <span class='kw'>&lt;-</span> <span class='fu'>matrix</span>(<span class='fu'>c</span>(<span class='st'>"a1"</span>, <span class='st'>"b1"</span>, <span class='st'>"a1"</span>, <span class='st'>"b2"</span>, <span class='st'>"a2"</span>, <span class='st'>"b1"</span>, <span class='st'>"a2"</span>, <span class='st'>"b2"</span>),
+  <span class='kw'>ncol</span><span class='kw'>=</span><span class='fl'>2</span>, <span class='kw'>byrow</span><span class='kw'>=</span><span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;      [,1] [,2]
+#&gt; [1,] "a1" "b1"
+#&gt; [2,] "a1" "b2"
+#&gt; [3,] "a2" "b1"
+#&gt; [4,] "a2" "b2"</div><div class='input'><span class='fu'>hammingdists</span>(<span class='no'>strings</span>)</div><div class='output co'>#&gt;   1 2 3
 #&gt; 2 1    
 #&gt; 3 1 2  
-#&gt; 4 2 1 1</div><div class='input'><span class='co'># example #2: a 2x3 design using integers for encoding</span>
-<span class='fu'>hammingdists</span>(<span class='fu'>matrix</span>(<span class='fu'>c</span>(<span class='fl'>0</span>,<span class='fl'>0</span>,<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='fl'>0</span>,<span class='fl'>2</span>,<span class='fl'>1</span>,<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>2</span>), <span class='kw'>ncol</span><span class='kw'>=</span><span class='fl'>2</span>, <span class='kw'>byrow</span><span class='kw'>=</span><span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;   1 2 3 4 5
+#&gt; 4 2 1 1</div><div class='input'>
+<span class='co'># a 2x3 design using integers</span>
+<span class='fu'>print</span>(<span class='no'>integers</span> <span class='kw'>&lt;-</span> <span class='fu'>matrix</span>(<span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>0</span>, <span class='fl'>0</span>, <span class='fl'>1</span>, <span class='fl'>0</span>, <span class='fl'>2</span>, <span class='fl'>1</span>, <span class='fl'>0</span>, <span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>2</span>), <span class='kw'>ncol</span><span class='kw'>=</span><span class='fl'>2</span>, <span class='kw'>byrow</span><span class='kw'>=</span><span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;      [,1] [,2]
+#&gt; [1,]    0    0
+#&gt; [2,]    0    1
+#&gt; [3,]    0    2
+#&gt; [4,]    1    0
+#&gt; [5,]    1    1
+#&gt; [6,]    1    2</div><div class='input'><span class='fu'>hammingdists</span>(<span class='no'>integers</span>)</div><div class='output co'>#&gt;   1 2 3 4 5
 #&gt; 2 1        
 #&gt; 3 1 1      
 #&gt; 4 1 2 2    
 #&gt; 5 2 1 2 1  
-#&gt; 6 2 2 1 1 1</div><div class='input'><span class='co'># example #3: a 2x2x2 design using factors (ncol is always the number of dimensions)</span>
-<span class='fu'>hammingdists</span>(<span class='fu'>matrix</span>(<span class='fu'>c</span>(<span class='fl'>0</span>,<span class='fl'>0</span>,<span class='fl'>0</span>,<span class='fl'>0</span>,<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='fl'>0</span>,<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>0</span>,<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>1</span>), <span class='kw'>ncol</span><span class='kw'>=</span><span class='fl'>3</span>, <span class='kw'>byrow</span><span class='kw'>=</span><span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;   1 2 3 4 5 6 7
-#&gt; 2 1            
-#&gt; 3 1 2          
-#&gt; 4 2 1 1        
-#&gt; 5 1 2 2 3      
-#&gt; 6 2 1 3 2 1    
-#&gt; 7 2 3 1 2 1 2  
-#&gt; 8 3 2 2 1 2 1 1</div><div class='input'><span class='co'># example #4: if some meaning dimension is not relevant for some</span>
-<span class='co'># combinations of meanings (e.g. optional arguments), specifying them as NA</span>
-<span class='co'># in the matrix will make them not be counted towards the hamming distance!</span>
-<span class='co'># in this example the value of the second dimension does not matter (and</span>
-<span class='co'># does not count towards the distance) when the the first dimension has</span>
-<span class='co'># value '1'</span>
-<span class='fu'>hammingdists</span>(<span class='fu'>matrix</span>(<span class='fu'>c</span>(<span class='fl'>0</span>,<span class='fl'>0</span>,<span class='fl'>0</span>,<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>NA</span>), <span class='kw'>ncol</span><span class='kw'>=</span><span class='fl'>2</span>, <span class='kw'>byrow</span><span class='kw'>=</span><span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;   1 2
+#&gt; 6 2 2 1 1 1</div><div class='input'>
+<span class='co'># a 3x2 design using factors (ncol is always the number of dimensions)</span>
+<span class='fu'>print</span>(<span class='no'>factors</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='kw'>colour</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='st'>"red"</span>, <span class='st'>"red"</span>, <span class='st'>"green"</span>, <span class='st'>"blue"</span>),
+                            <span class='kw'>animal</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='st'>"dog"</span>, <span class='st'>"cat"</span>, <span class='st'>"dog"</span>, <span class='st'>"cat"</span>)))</div><div class='output co'>#&gt;   colour animal
+#&gt; 1    red    dog
+#&gt; 2    red    cat
+#&gt; 3  green    dog
+#&gt; 4   blue    cat</div><div class='input'><span class='fu'>hammingdists</span>(<span class='no'>factors</span>)</div><div class='output co'>#&gt;   1 2 3
+#&gt; 2 1    
+#&gt; 3 1 2  
+#&gt; 4 2 1 2</div><div class='input'>
+<span class='co'># if some meaning dimension is not relevant for some combinations of</span>
+<span class='co'># meanings (e.g. optional arguments), specifying them as NA in the matrix</span>
+<span class='co'># will make them not be counted towards the hamming distance! in this</span>
+<span class='co'># example the value of the second dimension does not matter (and does not</span>
+<span class='co'># count towards the distance) when the the first dimension has value '1'</span>
+<span class='fu'>print</span>(<span class='no'>ignoredimension</span> <span class='kw'>&lt;-</span> <span class='fu'>matrix</span>(<span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>0</span>, <span class='fl'>0</span>, <span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>NA</span>), <span class='kw'>ncol</span><span class='kw'>=</span><span class='fl'>2</span>, <span class='kw'>byrow</span><span class='kw'>=</span><span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;      [,1] [,2]
+#&gt; [1,]    0    0
+#&gt; [2,]    0    1
+#&gt; [3,]    1   NA</div><div class='input'><span class='fu'>hammingdists</span>(<span class='no'>ignoredimension</span>)</div><div class='output co'>#&gt;   1 2
 #&gt; 2 1  
-#&gt; 3 1 1</div></pre>
+#&gt; 3 1 1</div><div class='input'>
+<span class='co'># trivial case of a vector: first and last two elements are identical,</span>
+<span class='co'># otherwise a difference of one</span>
+<span class='fu'>hammingdists</span>(<span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>0</span>, <span class='fl'>1</span>, <span class='fl'>1</span>))</div><div class='output co'>#&gt;   1 2 3
+#&gt; 2 0    
+#&gt; 3 1 1  
+#&gt; 4 1 1 0</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -143,6 +180,8 @@ resulting distances can only be 0 or 1.</p></td>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
 
       <li><a href="#see-also">See also</a></li>
       

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Perform the Page test of monotonicity. — page.test • cultevo</title>
+<title>Page test for monotonicity of ranks. — page.test • cultevo</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -51,7 +51,13 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">Overview</a>
+</li>
+<li>
+  <a href="../reference/index.html">Function reference</a>
+</li>
+<li>
+  <a href="../articles/page.test.html">Page test tutorial</a>
 </li>
       </ul>
       
@@ -73,76 +79,130 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Perform the Page test of monotonicity.</h1>
+    <h1>Page test for monotonicity of ranks.</h1>
     </div>
 
     
-    <p>The Page test tests the given matrix for monotonically increasing ranks
-across <code>k</code> linearly ordered conditions (along columns) based on
-<code>N</code> replications (along rows). To test for monotonically
-<em>decreasing</em> trends you can either reverse the order of columns, or
-simply invert the ranks (i.e. by prepending the dataset with a <code>-</code>).</p>
+    <p>Given <code>N</code> replications of <code>k</code> different treatments/conditions,
+tests whether the <em>median ordinal ranks</em> \(m_i\) of the treatments
+are identical $$m_1 = m_2 = \ldots = m_k$$ against the alternative
+hypothesis $$m_1 \leq m_2 \leq \ldots \leq m_k$$ where <em>at least
+one</em> of the inequalities is a strict inequality (Siegel and Castellan
+1988, p.184). Given that even a single point change in the distribution of
+ranks across conditions represents evidence against the null hypothesis,
+the Page test is simply a test for <em>some ordered differences in
+ranks</em>, but not a 'trend test' in any meaningful way.</p>
     
 
-    <pre><span class='fu'>page.test</span>(<span class='no'>data</span>, <span class='no'>...</span>)</pre>
+    <pre><span class='fu'>page.test</span>(<span class='no'>data</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+
+<span class='fu'>page.L</span>(<span class='no'>data</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>ties.method</span> <span class='kw'>=</span> <span class='st'>"average"</span>)
+
+<span class='fu'>page.compute.exact</span>(<span class='no'>k</span>, <span class='no'>N</span>, <span class='no'>L</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>a matrix or dataframe with the different conditions along
-columns and the replications along rows. Conversion of the data to ranks
-is taken care of internally (see <code><a href='page.L.html'>page.L</a></code>)</p></td>
+      <td><p>a matrix with the different conditions along its <code>k</code>
+columns and the <code>N</code> replications along rows. Conversion of the data
+to ordinal ranks is taken care of internally.</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>extra parameters which are passed on to <code><a href='page.L.html'>page.L</a></code></p></td>
+      <th>verbose</th>
+      <td><p>whether to print the final rankings based on which the L
+statistic is computed</p></td>
+    </tr>
+    <tr>
+      <th>ties.method</th>
+      <td><p>how to resolve tied ranks. Passed on to
+<code><a href='http://www.rdocumentation.org/packages/base/topics/rank'>rank</a></code>, should be left on "average" (the default).</p></td>
+    </tr>
+    <tr>
+      <th>k</th>
+      <td><p>number of conditions/generations</p></td>
+    </tr>
+    <tr>
+      <th>N</th>
+      <td><p>number of replications/chains</p></td>
+    </tr>
+    <tr>
+      <th>L</th>
+      <td><p>value of the Page L statistic</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list of class <code>pagetest</code> (and <code>htest</code>) containing the following fields:</p><dl class='dl-horizontal'>
-   <dt><code>L</code></dt><dd><p>Value of the <code>L</code> statistic for the given data set</p></dd>
-   <dt><code>k</code></dt><dd><p>Number of conditions (columns of the data set)</p></dd>
-   <dt><code>N</code></dt><dd><p>Number of replications (rows of the data set)</p></dd>
-   <dt><code>p.value</code></dt><dd><p>Significance level</p></dd>
-   <dt><code>p.type</code></dt><dd><p>Whether the computed p value is "exact" or "approx"</p></dd>
+    <p><code>page.test</code> returns a list of class <code>pagetest</code> (and
+  <code>htest</code>) containing the following fields:</p><dl class='dl-horizontal'>
+   <dt><code>statistic</code></dt><dd><p>value of the <code>L</code> statistic for the given
+     data set</p></dd>
+   <dt><code>parameter</code></dt><dd><p>the number of conditions (k) and replications (N)
+     of the data set (the columns and rows of the data set, respectively)</p></dd>
+   <dt><code>p.value</code></dt><dd><p>significance level</p></dd>
+   <dt><code>p.type</code></dt><dd><p>whether the computed p value is "exact" or "approximate"</p></dd>
 </dl>
 
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Exact p values are computed for <code>k</code> up to 22, using the pre-computed
+    <p>Tests the given matrix for monotonically increasing ranks across <code>k</code>
+linearly ordered conditions (along columns) based on <code>N</code> replications
+(along rows). To test for monotonically <em>decreasing</em> ranks you can
+either reverse the order of columns, or simply invert the ranks by
+prepending the dataset with a <code>-</code>.</p>
+<p>Exact p values are computed for <code>k</code> up to 22, using the pre-computed
 null distributions from the <code>pspearman</code> package. For larger <code>k</code>, p
 values are computed based on a Normal distribution approximation.</p>
+    
+    <h2 class="hasAnchor" id="functions"><a class="anchor" href="#functions"></a>Functions</h2>
+
+    <ul>
+<li><p><code>page.test</code>: See above.</p></li>
+<li><p><code>page.L</code>: Calculate Page's L statistic for the given dataset. Returns a numeric.</p></li>
+<li><p><code>page.compute.exact</code>: Calculate exact significance levels of the Page L
+statistic. Returns a single numeric indicating the null probability that
+the Page statistic with the given <code>k</code>, <code>N</code> is greater or equal
+the given <code>L</code>.</p></li>
+</ul>
+    
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Siegel, S., and N. J. Castellan, Jr. (1988). Nonparametric
+Statistics for the Behavioral Sciences. McGraw-Hill.</p>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <p><code><a href='http://www.rdocumentation.org/packages/base/topics/rank'>rank</a></code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>page.test</span>(<span class='fu'>t</span>(<span class='fu'>replicate</span>(<span class='fl'>4</span>, <span class='fu'>sample</span>(<span class='fl'>4</span>))))</div><div class='output co'>#&gt; Ranking used:
 #&gt;     [,1] [,2] [,3] [,4]
-#&gt; N=1    4    2    1    3
-#&gt; N=2    1    3    4    2
-#&gt; N=3    2    3    4    1
-#&gt; N=4    1    2    4    3</div><div class='output co'>#&gt; 
-#&gt; 	Page test of monotonicity
+#&gt; N=1    2    4    3    1
+#&gt; N=2    3    4    2    1
+#&gt; N=3    1    4    3    2
+#&gt; N=4    4    2    1    3</div><div class='output co'>#&gt; 
+#&gt; 	Page test of monotonicity of ranks
 #&gt; 
-#&gt; data:  
-#&gt; = 103, p-value = 0.3375
-#&gt; alternative hypothesis: 
+#&gt; data:  t(replicate(4, sample(4)))
+#&gt; L = 93, k = 4, N = 4, p-value = 0.8992
+#&gt; alternative hypothesis: at least one difference in ranks
 #&gt; </div><div class='input'><span class='fu'>page.test</span>(<span class='fu'>t</span>(<span class='fu'>replicate</span>(<span class='fl'>4</span>, <span class='fu'>sample</span>(<span class='fl'>10</span>))))</div><div class='output co'>#&gt; Ranking used:
 #&gt;     [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
-#&gt; N=1    6    1    4    7    9   10    3    2    5     8
-#&gt; N=2   10    7    8    1    2    5    3    6    9     4
-#&gt; N=3    2   10    3    5    4    7    6    8    1     9
-#&gt; N=4    1    6    8    2    3    7   10    5    4     9</div><div class='output co'>#&gt; 
-#&gt; 	Page test of monotonicity
+#&gt; N=1    6    2    1    3   10    7    5    8    4     9
+#&gt; N=2    3    7    8    4    2   10    9    6    1     5
+#&gt; N=3    2    7    1    4    5    6    3    8    9    10
+#&gt; N=4    9   10    8    2    3    1    5    6    7     4</div><div class='output co'>#&gt; 
+#&gt; 	Page test of monotonicity of ranks
 #&gt; 
-#&gt; data:  
-#&gt; = 1253, p-value = 0.2226
-#&gt; alternative hypothesis: 
-#&gt; </div></pre>
+#&gt; data:  t(replicate(4, sample(10)))
+#&gt; L = 1269, k = 10, N = 4, p-value = 0.146
+#&gt; alternative hypothesis: at least one difference in ranks
+#&gt; </div><div class='input'><span class='co'># raw calculation of the significance levels</span>
+<span class='fu'>page.compute.exact</span>(<span class='fl'>6</span>, <span class='fl'>4</span>, <span class='fl'>322</span>)</div><div class='output co'>#&gt; [1] 0.03932265</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -152,6 +212,12 @@ values are computed based on a Normal distribution approximation.</p>
       <li><a href="#value">Value</a></li>
 
       <li><a href="#details">Details</a></li>
+
+      <li><a href="#functions">Functions</a></li>
+
+      <li><a href="#references">References</a></li>
+
+      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>
