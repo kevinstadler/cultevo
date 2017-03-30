@@ -1,6 +1,7 @@
 template:
   params:
     bootswatch: cerulean
+    ganalytics: UA-96480406-1
 reference:
   - title: Page test for monotonicity of ordered ranks
     contents:
