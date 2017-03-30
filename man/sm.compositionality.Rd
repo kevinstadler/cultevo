@@ -30,7 +30,9 @@ means that it does not take the ordering of elements into account, i.e.
 The measure really captures the degree to which a synonymy-free signalling
 system exists at the level of semantic \emph{features}, rather than looking
 for complex meanings per se. The resulting segmentations may therefore
-overlap.
+overlap, which means \emph{holistic} signalling systems can currently still
+get relative high compositionality scores. A modification to account for
+this is under development.
 
 The segmentation algorithm scans through all sub-strings found in
 \code{strings} to find the most bijective mapping onto all the meaning
@@ -38,7 +40,7 @@ features present in \code{meanings}, i.e. the pairings of sub-strings and
 meaning features that are \emph{most predictive of each other}.
 Mathematically, for every meaning feature \eqn{f\in M}, it tries to find
 the sub-string \eqn{s_{ij}} from the set of strings \eqn{S} that maximises
-\deqn{comp(f,S) = \max_{s_{ij}\in S} P(f|s_{ij}) \cdot P(s_{ij}|f)}.
+\deqn{comp(f,S) = \max_{s_{ij}\in S}\ P(f|s_{ij}) \cdot P(s_{ij}|f)}.
 }
 \section{Functions}{
 \itemize{
@@ -87,9 +89,12 @@ sm.segmentation(c("as", "bas", "basf"),
   cbind(a=c(T, F, T), b=c(F, T, T)))
 
 # the function also accepts meaning-dimension based matrix definitions:
-enumerate.meaningcombinations(c(animal=2, colour=2))
-sm.segmentation(c("greendog", "bluedog", "greencat", "bluecat"),
-  enumerate.meaningcombinations(c(animal=2, colour=2)))
+print(twobytwoanimals <- enumerate.meaningcombinations(c(animal=2, colour=2)))
+
+# note how there are many more candidate segments than just the full length
+# ones. given limited data, it is expected that shorter substrings will be
+# just as predictable as the full segments that contain them.
+sm.segmentation(c("greendog", "bluedog", "greencat", "bluecat"), twobytwoanimals)
 }
 \references{
 Spike, M. (2016). Minimal requirements for the cultural

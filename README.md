@@ -1,12 +1,6 @@
-# Cultural evolution tests for R
+# cultevo: tools and tests for cultural evolution in R
 
-This package provides implementations of functions and statistical tests often used in the study of cultural evolution. It provides tools for:
-
-* computing edit distances for strings and atrices (providing convenient wrappers around R's efficient `dist` functions)
-* performing Mantel tests on them and visualising the results of those tests
-* an improved implementation of Page's L test for monotonicity (with exact p values up to k=22)
-
-Full function documentation is available at <http://kevinstadler.github.io/cultevo/reference/>
+This package provides implementations of functions and statistical tests often used in the study of cultural evolution. See the [Function reference](https://kevinstadler.github.io/cultevo/reference/index.html) for a full list of functions.
 
 ## Installation
 
@@ -17,6 +11,26 @@ In order to install the latest version you first need the [devtools](https://CRA
 then install the latest code from the github repository via
 
     devtools::install_github("kevinstadler/cultevo")
+
+## Citation
+
+This package can be cited as:
+
+```
+Stadler, Kevin (2017) cultevo: Tools, Measures and Statistical Tests for Cultural Evolution. R package. https://kevinstadler.github.io/cultevo/
+```
+
+A BibTeX entry for LaTeX users is
+
+```
+  @Manual{cultevo,
+    author = {Kevin Stadler},
+    title = {cultevo: Tools, Measures and Statistical Tests for Cultural Evolution},
+    type = {R package},
+    year = {2017},
+    url = {https://kevinstadler.github.io/cultevo/},
+  }
+```
 
 ## License
 

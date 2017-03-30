@@ -46,7 +46,9 @@ count.substring.occurrences <- function(strings) {
 #' The measure really captures the degree to which a synonymy-free signalling
 #' system exists at the level of semantic \emph{features}, rather than looking
 #' for complex meanings per se. The resulting segmentations may therefore
-#' overlap.
+#' overlap, which means \emph{holistic} signalling systems can currently still
+#' get relative high compositionality scores. A modification to account for
+#' this is under development.
 #'
 #' The segmentation algorithm scans through all sub-strings found in
 #' \code{strings} to find the most bijective mapping onto all the meaning
@@ -101,9 +103,11 @@ count.substring.occurrences <- function(strings) {
 #'   cbind(a=c(T, F, T), b=c(F, T, T)))
 #'
 #' # the function also accepts meaning-dimension based matrix definitions:
-#' enumerate.meaningcombinations(c(animal=2, colour=2))
-#' sm.segmentation(c("greendog", "bluedog", "greencat", "bluecat"),
-#'   enumerate.meaningcombinations(c(animal=2, colour=2)))
+#' print(twobytwoanimals <- enumerate.meaningcombinations(c(animal=2, colour=2)))
+#' # note how there are many more candidate segments than just the full length
+#' # ones. given limited data, it is expected that shorter substrings will be
+#' # just as predictable as the full segments that contain them.
+#' sm.segmentation(c("greendog", "bluedog", "greencat", "bluecat"), twobytwoanimals)
 #' @seealso \code{\link{binaryfeaturematrix}}
 #' @export
 sm.compositionality <- function(strings, meanings, groups=NULL) {

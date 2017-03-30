@@ -33,6 +33,18 @@
 <![endif]-->
 
 
+<!-- Google analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-96480406-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
   </head>
 
   <body>
@@ -119,14 +131,16 @@ compositionality measures are computed separately.</p></td>
     <p>The measure really captures the degree to which a synonymy-free signalling
 system exists at the level of semantic <em>features</em>, rather than looking
 for complex meanings per se. The resulting segmentations may therefore
-overlap.</p>
+overlap, which means <em>holistic</em> signalling systems can currently still
+get relative high compositionality scores. A modification to account for
+this is under development.</p>
 <p>The segmentation algorithm scans through all sub-strings found in
 <code>strings</code> to find the most bijective mapping onto all the meaning
 features present in <code>meanings</code>, i.e. the pairings of sub-strings and
 meaning features that are <em>most predictive of each other</em>.
 Mathematically, for every meaning feature \(f\in M\), it tries to find
 the sub-string \(s_{ij}\) from the set of strings \(S\) that maximises
-$$comp(f,S) = \max_{s_{ij}\in S} P(f|s_{ij}) \cdot P(s_{ij}|f)$$.</p>
+$$comp(f,S) = \max_{s_{ij}\in S}\ P(f|s_{ij}) \cdot P(s_{ij}|f)$$.</p>
     
     <h2 class="hasAnchor" id="functions"><a class="anchor" href="#functions"></a>Functions</h2>
 
@@ -187,12 +201,15 @@ represent them as atomic meaning features.</p>
 #&gt; b 2 1.0000000 bas, ba, b            3
 #&gt; a 2 0.6666667   as, a, s            3</div><div class='input'>
 <span class='co'># the function also accepts meaning-dimension based matrix definitions:</span>
-<span class='fu'><a href='enumerate.meaningcombinations.html'>enumerate.meaningcombinations</a></span>(<span class='fu'>c</span>(<span class='kw'>animal</span><span class='kw'>=</span><span class='fl'>2</span>, <span class='kw'>colour</span><span class='kw'>=</span><span class='fl'>2</span>))</div><div class='output co'>#&gt;      colour animal
+<span class='fu'>print</span>(<span class='no'>twobytwoanimals</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='enumerate.meaningcombinations.html'>enumerate.meaningcombinations</a></span>(<span class='fu'>c</span>(<span class='kw'>animal</span><span class='kw'>=</span><span class='fl'>2</span>, <span class='kw'>colour</span><span class='kw'>=</span><span class='fl'>2</span>)))</div><div class='output co'>#&gt;      colour animal
 #&gt; [1,]      1      3
 #&gt; [2,]      1      4
 #&gt; [3,]      2      3
-#&gt; [4,]      2      4</div><div class='input'><span class='fu'>sm.segmentation</span>(<span class='fu'>c</span>(<span class='st'>"greendog"</span>, <span class='st'>"bluedog"</span>, <span class='st'>"greencat"</span>, <span class='st'>"bluecat"</span>),
-  <span class='fu'><a href='enumerate.meaningcombinations.html'>enumerate.meaningcombinations</a></span>(<span class='fu'>c</span>(<span class='kw'>animal</span><span class='kw'>=</span><span class='fl'>2</span>, <span class='kw'>colour</span><span class='kw'>=</span><span class='fl'>2</span>)))</div><div class='output co'>#&gt;          N p     segments tiedsegments
+#&gt; [4,]      2      4</div><div class='input'>
+<span class='co'># note how there are many more candidate segments than just the full length</span>
+<span class='co'># ones. given limited data, it is expected that shorter substrings will be</span>
+<span class='co'># just as predictable as the full segments that contain them.</span>
+<span class='fu'>sm.segmentation</span>(<span class='fu'>c</span>(<span class='st'>"greendog"</span>, <span class='st'>"bluedog"</span>, <span class='st'>"greencat"</span>, <span class='st'>"bluecat"</span>), <span class='no'>twobytwoanimals</span>)</div><div class='output co'>#&gt;          N p     segments tiedsegments
 #&gt; colour=1 2 1 dog, do,....            5
 #&gt; colour=2 2 1 cat, ca,....            6
 #&gt; animal=3 2 1 green, g....           12
