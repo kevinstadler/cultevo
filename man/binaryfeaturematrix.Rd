@@ -4,12 +4,15 @@
 \alias{binaryfeaturematrix}
 \title{Convert a categorical meaning matrix to a binary feature matrix.}
 \usage{
-binaryfeaturematrix(meanings)
+binaryfeaturematrix(meanings, rownames = NULL)
 }
 \arguments{
 \item{meanings}{a matrix with meaning dimensions along columns and different
 meaning combinations along rows (such as created by
-\code{\link{enumerate.meaningcombinations}})}
+\code{\link{enumerate.meaningcombinations}}).}
+
+\item{rownames}{optional character vector of the same length as the number
+of rows of \code{meanings}.}
 }
 \value{
 A matrix of \code{TRUE}/\code{FALSE} values.

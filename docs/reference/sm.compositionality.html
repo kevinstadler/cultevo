@@ -40,7 +40,7 @@
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-96480406-1', 'auto');
+  ga('create', 'UA-96498670-1', 'auto');
   ga('send', 'pageview');
 
 </script>
@@ -102,21 +102,28 @@ means that it does not take the ordering of elements into account, i.e.
 <code>GREEN DOG = GREEN + DOG = DOG + GREEN</code>.</p>
     
 
-    <pre><span class='fu'>sm.compositionality</span>(<span class='no'>strings</span>, <span class='no'>meanings</span>, <span class='kw'>groups</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+    <pre><span class='fu'>sm.compositionality</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>groups</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>strict</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
-<span class='fu'>sm.segmentation</span>(<span class='no'>strings</span>, <span class='no'>meanings</span>)</pre>
+<span class='fu'>sm.segmentation</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>strict</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>strings</th>
-      <td><p>a list or vector of character sequences</p></td>
+      <th>x</th>
+      <td><p>a list or vector of character sequences specifying the signals to
+be analysed. Alternatively, <code>x</code> can also be a formula of the format
+<code>s ~ m1 + m2 + ...</code>, where <code>s</code> and <code>m*</code> specify the column
+names of the signals and meaning features found in the data frame that's
+passed as the second argument.</p></td>
     </tr>
     <tr>
-      <th>meanings</th>
-      <td><p>a matrix or data frame with as many rows as there are
-strings (see below)</p></td>
+      <th>y</th>
+      <td><p>a matrix or data frame with as many rows as there are signals,
+indicating the presence/value of the different meaning dimensions along
+columns (see section Meaning data format). If <code>x</code> is a formula, the
+second argument can contain any number of columns, only the ones specified
+in the formula will be considered.</p></td>
     </tr>
     <tr>
       <th>groups</th>
@@ -124,7 +131,57 @@ strings (see below)</p></td>
 <code>strings</code> and <code>meanings</code> into data sets for which
 compositionality measures are computed separately.</p></td>
     </tr>
+    <tr>
+      <th>strict</th>
+      <td><p>logical: if <code>TRUE</code>, perform additional filtering of
+candidate segments. In particular, it removes combinations of segments
+(across meanings) which overlap in at least one of the strings where they
+co-occur. For convenience, it also removes segments which are shorter
+substrings of longer candidates (for the same meaning feature).</p></td>
+    </tr>
     </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p><code>sm.compositionality</code> calculates the mean predictability of all
+  meaning features and their most predictably co-occurring strings. Returns
+  a vector of three elements: <code>N</code> is the number of signal-meaning
+  pairings on which the computation was based, <code>comp</code> the mean mutual
+  predictability, and <code>M</code> the number of distinct meaning features over
+  which this average was computed. (When <code>groups</code> is not <code>NULL</code>,
+  returns a matrix with the same elements along columns, with one row for
+  every group.)</p>
+<p><code>sm.segmentation</code> provides detailed information about the most
+  predictably co-occurring segments for every meaning feature. It returns
+  a data frame with one row for every meaning feature, in descending order
+  of their predictability from (and to) their corresponding string
+  segments. The data frame has the following columns:</p><dl class='dl-horizontal'>
+    <dt><code>N</code></dt><dd><p>The number of signal-meaning pairings in which this
+      meaning feature was attested.</p></dd>
+    <dt><code>mp</code></dt><dd><p>The highest mutual predictability between this
+      meaning feature and one (or more) segments that was found.</p></dd>
+    <dt><code>p</code></dt><dd><p>Significance levels of the mutual predictability for the
+      given segment(s). The calculation depends on the frequency of the
+      meaning feature as well as the overall frequency of the segment
+      across all signals and indicates the (null) probability of the given
+      co-occurrence count of the two according to the hypergeometric
+      distribution. If multiple segments are tied for their mutual
+      predictability, the candidate list is filtered to include only those
+      with the highest significance levels (i.e. the lowest p values).</p></dd>
+    <dt><code>ties</code></dt><dd><p>The number of substrings found in <code>strings</code>
+      which have this same level of mutual predictability with the meaning
+      feature.</p></dd>
+    <dt><code>segments</code></dt><dd><p>For <code>strict = FALSE</code>: a list containing the
+      <code>ties</code> substrings in descending order of their length (the
+      ordering is for convenience only and not inherently meaningful). When
+      <code>strict = TRUE</code>, the lists of segments for each meaning feature
+      are all of the same length, with a meaningful relationship of the
+      order of segments across the different rows: every set of segments
+      which are found in the same position for each of the different
+      meaning features constitute a valid segmentation where the segments
+      occurrences in the actual signals do not overlap.</p></dd>
+  </dl>
+
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
@@ -141,22 +198,11 @@ meaning features that are <em>most predictive of each other</em>.
 Mathematically, for every meaning feature \(f\in M\), it tries to find
 the sub-string \(s_{ij}\) from the set of strings \(S\) that maximises
 $$comp(f,S) = \max_{s_{ij}\in S}\ P(f|s_{ij}) \cdot P(s_{ij}|f)$$.</p>
-    
-    <h2 class="hasAnchor" id="functions"><a class="anchor" href="#functions"></a>Functions</h2>
-
-    <ul>
-<li><p><code>sm.compositionality</code>: Calculates the mean predictability of all meaning features,
-\(C = \frac{1}{|M|} \sum_{f\in M} comp(m,S)\). Returns a vector of three
-elements: <code>N</code>, the number of signal-meaning pairings on which the
-computation was based, <code>comp</code>, the compositionality measure, and
-<code>M</code>, the number of distinct meaning features over which the measure
-was computed. (When <code>groups</code> is not <code>NULL</code>, returns a matrix with
-the same elements along columns, with one row for every group.)</p></li>
-<li><p><code>sm.segmentation</code>: Finds the most predictive segment(s) for every meaning feature, i.e. the
-substrings \(s_{ij}\) that maximise \(P(m|s_{ij}) \cdot P(s_{ij}|m)\).
-Returns a matrix with one row for every meaning feature, in descending order
-of their predictability from (and to) their corresponding string segments.</p></li>
-</ul>
+<p>Based on these mappings onto individual meaning features,
+<code>sm.compositionality</code> then computes the average mutual predictability
+over all meaning features \(M\),
+$$comp(M,S) = \frac{1}{|M|} \sum_{f\in M} comp(f,S),$$
+as a measure of the overall compositionality of the signalling system.</p>
     
     <h2 class="hasAnchor" id="meaning-data-format"><a class="anchor" href="#meaning-data-format"></a>Meaning data format</h2>
 
@@ -183,23 +229,35 @@ represent them as atomic meaning features.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='binaryfeaturematrix.html'>binaryfeaturematrix</a></code></p>
+    <p><code><a href='binaryfeaturematrix.html'>binaryfeaturematrix</a></code>, <code><a href='ssm.compositionality.html'>ssm.compositionality</a></code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># perfect communication system</span>
 <span class='fu'>sm.compositionality</span>(<span class='fu'>c</span>(<span class='st'>"a"</span>, <span class='st'>"b"</span>, <span class='st'>"ab"</span>),
-  <span class='fu'>cbind</span>(<span class='kw'>a</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='no'>T</span>, <span class='no'>F</span>, <span class='no'>T</span>), <span class='kw'>b</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='no'>F</span>, <span class='no'>T</span>, <span class='no'>T</span>)))</div><div class='output co'>#&gt;    N comp    M 
-#&gt;    3    1    2 </div><div class='input'><span class='fu'>sm.segmentation</span>(<span class='fu'>c</span>(<span class='st'>"a"</span>, <span class='st'>"b"</span>, <span class='st'>"ab"</span>),
-  <span class='fu'>cbind</span>(<span class='kw'>a</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='no'>T</span>, <span class='no'>F</span>, <span class='no'>T</span>), <span class='kw'>b</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='no'>F</span>, <span class='no'>T</span>, <span class='no'>T</span>)))</div><div class='output co'>#&gt;   N p segments tiedsegments
-#&gt; a 2 1        a            1
-#&gt; b 2 1        b            1</div><div class='input'>
+  <span class='fu'>cbind</span>(<span class='kw'>a</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>TRUE</span>, <span class='fl'>FALSE</span>, <span class='fl'>TRUE</span>), <span class='kw'>b</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>FALSE</span>, <span class='fl'>TRUE</span>, <span class='fl'>TRUE</span>)))</div><div class='output co'>#&gt;   N comp M
+#&gt; 1 3    1 2</div><div class='input'><span class='fu'>sm.segmentation</span>(<span class='fu'>c</span>(<span class='st'>"a"</span>, <span class='st'>"b"</span>, <span class='st'>"ab"</span>),
+  <span class='fu'>cbind</span>(<span class='kw'>a</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>TRUE</span>, <span class='fl'>FALSE</span>, <span class='fl'>TRUE</span>), <span class='kw'>b</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>FALSE</span>, <span class='fl'>TRUE</span>, <span class='fl'>TRUE</span>)))</div><div class='output co'>#&gt;   N mp     p ties segments
+#&gt; a 2  1 0.333    1        a
+#&gt; b 2  1 0.333    1        b
+#&gt; 
+#&gt; Mean feature-wise mutual predictability, weighted by feature frequency: 1 </div><div class='input'>
+<span class='co'># not quite perfect communication system</span>
 <span class='fu'>sm.compositionality</span>(<span class='fu'>c</span>(<span class='st'>"as"</span>, <span class='st'>"bas"</span>, <span class='st'>"basf"</span>),
-  <span class='fu'>cbind</span>(<span class='kw'>a</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='no'>T</span>, <span class='no'>F</span>, <span class='no'>T</span>), <span class='kw'>b</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='no'>F</span>, <span class='no'>T</span>, <span class='no'>T</span>)))</div><div class='output co'>#&gt;         N      comp         M 
-#&gt; 3.0000000 0.8333333 2.0000000 </div><div class='input'><span class='fu'>sm.segmentation</span>(<span class='fu'>c</span>(<span class='st'>"as"</span>, <span class='st'>"bas"</span>, <span class='st'>"basf"</span>),
-  <span class='fu'>cbind</span>(<span class='kw'>a</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='no'>T</span>, <span class='no'>F</span>, <span class='no'>T</span>), <span class='kw'>b</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='no'>F</span>, <span class='no'>T</span>, <span class='no'>T</span>)))</div><div class='output co'>#&gt;   N         p   segments tiedsegments
-#&gt; b 2 1.0000000 bas, ba, b            3
-#&gt; a 2 0.6666667   as, a, s            3</div><div class='input'>
+  <span class='fu'>cbind</span>(<span class='kw'>a</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>TRUE</span>, <span class='fl'>FALSE</span>, <span class='fl'>TRUE</span>), <span class='kw'>b</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>FALSE</span>, <span class='fl'>TRUE</span>, <span class='fl'>TRUE</span>)))</div><div class='output co'>#&gt;   N      comp M
+#&gt; 1 3 0.8333333 2</div><div class='input'><span class='fu'>sm.segmentation</span>(<span class='fu'>c</span>(<span class='st'>"as"</span>, <span class='st'>"bas"</span>, <span class='st'>"basf"</span>),
+  <span class='fu'>cbind</span>(<span class='kw'>a</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>TRUE</span>, <span class='fl'>FALSE</span>, <span class='fl'>TRUE</span>), <span class='kw'>b</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>FALSE</span>, <span class='fl'>TRUE</span>, <span class='fl'>TRUE</span>)))</div><div class='output co'>#&gt;   N    mp     p ties   segments
+#&gt; b 2 1.000 0.333    3 bas, ba, b
+#&gt; a 2 0.667 1.000    3   as, a, s
+#&gt; 
+#&gt; Mean feature-wise mutual predictability, weighted by feature frequency: 0.833 </div><div class='input'>
+<span class='co'># force candidate segments to be non-overlapping via the 'strict' option</span>
+<span class='fu'>sm.segmentation</span>(<span class='fu'>c</span>(<span class='st'>"as"</span>, <span class='st'>"bas"</span>, <span class='st'>"basf"</span>),
+  <span class='fu'>cbind</span>(<span class='kw'>a</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>TRUE</span>, <span class='fl'>FALSE</span>, <span class='fl'>TRUE</span>), <span class='kw'>b</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>FALSE</span>, <span class='fl'>TRUE</span>, <span class='fl'>TRUE</span>)), <span class='kw'>strict</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='message'>Applying strict selection, checking 9 segment combinations for overlap</span></div><div class='output co'>#&gt;   N    mp     p ties segments
+#&gt; b 2 1.000 0.333    2    s, ba
+#&gt; a 2 0.667 1.000    2    as, b
+#&gt; 
+#&gt; Mean feature-wise mutual predictability, weighted by feature frequency: 0.833 </div><div class='input'>
 <span class='co'># the function also accepts meaning-dimension based matrix definitions:</span>
 <span class='fu'>print</span>(<span class='no'>twobytwoanimals</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='enumerate.meaningcombinations.html'>enumerate.meaningcombinations</a></span>(<span class='fu'>c</span>(<span class='kw'>animal</span><span class='kw'>=</span><span class='fl'>2</span>, <span class='kw'>colour</span><span class='kw'>=</span><span class='fl'>2</span>)))</div><div class='output co'>#&gt;      colour animal
 #&gt; [1,]      1      3
@@ -209,20 +267,37 @@ represent them as atomic meaning features.</p>
 <span class='co'># note how there are many more candidate segments than just the full length</span>
 <span class='co'># ones. given limited data, it is expected that shorter substrings will be</span>
 <span class='co'># just as predictable as the full segments that contain them.</span>
-<span class='fu'>sm.segmentation</span>(<span class='fu'>c</span>(<span class='st'>"greendog"</span>, <span class='st'>"bluedog"</span>, <span class='st'>"greencat"</span>, <span class='st'>"bluecat"</span>), <span class='no'>twobytwoanimals</span>)</div><div class='output co'>#&gt;          N p     segments tiedsegments
-#&gt; colour=1 2 1 dog, do,....            5
-#&gt; colour=2 2 1 cat, ca,....            6
-#&gt; animal=3 2 1 green, g....           12
-#&gt; animal=4 2 1 blue, bl....            9</div></pre>
+<span class='fu'>sm.segmentation</span>(<span class='fu'>c</span>(<span class='st'>"greendog"</span>, <span class='st'>"greencat"</span>, <span class='st'>"bluedog"</span>, <span class='st'>"bluecat"</span>), <span class='no'>twobytwoanimals</span>)</div><div class='output co'>#&gt;          N mp     p ties     segments
+#&gt; colour=1 2  1 0.167   12 green, g....
+#&gt; colour=2 2  1 0.167    9 blue, bl....
+#&gt; animal=3 2  1 0.167    5 dog, do,....
+#&gt; animal=4 2  1 0.167    6 cat, ca,....
+#&gt; 
+#&gt; Mean feature-wise mutual predictability, weighted by feature frequency: 1 </div><div class='input'>
+<span class='co'># since there is no overlap in the constituent characters of the identified</span>
+<span class='co'># 'morphemes', they are all tied in their mutual predictiveness with the</span>
+<span class='co'># (shorter) substrings they contain</span>
+
+<span class='co'># to reduce the pool of candidate segments to those which are</span>
+<span class='co'># non-overlapping and of maximal length, again use the 'strict=TRUE' option:</span>
+
+<span class='fu'>sm.segmentation</span>(<span class='fu'>c</span>(<span class='st'>"greendog"</span>, <span class='st'>"greencat"</span>, <span class='st'>"bluedog"</span>, <span class='st'>"bluecat"</span>), <span class='no'>twobytwoanimals</span>,
+  <span class='kw'>strict</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='message'>Applying strict selection, checking 3240 segment combinations for overlap</span></div><div class='output co'>#&gt;          N mp     p ties segments
+#&gt; colour=1 2  1 0.167    1    green
+#&gt; colour=2 2  1 0.167    1     blue
+#&gt; animal=3 2  1 0.167    1      dog
+#&gt; animal=4 2  1 0.167    1      cat
+#&gt; 
+#&gt; Mean feature-wise mutual predictability, weighted by feature frequency: 1 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#details">Details</a></li>
+      <li><a href="#value">Value</a></li>
 
-      <li><a href="#functions">Functions</a></li>
+      <li><a href="#details">Details</a></li>
 
       <li><a href="#meaning-data-format">Meaning data format</a></li>
 

@@ -1,14 +1,15 @@
 template:
   params:
     bootswatch: cerulean
-    ganalytics: UA-96480406-1
+    ganalytics: UA-96498670-1
 reference:
   - title: Page test for monotonicity of ordered ranks
     contents:
     - page.test
   - title: Tests for compositionality of signalling systems
     contents:
-    - sm.compositionality
+    - sm.segmentation
+    - ssm.segmentation
     - mantel.test
   - title: Edit distances and string manipulation
     contents:

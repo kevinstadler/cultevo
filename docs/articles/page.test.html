@@ -18,7 +18,7 @@
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-96480406-1', 'auto');
+  ga('create', 'UA-96498670-1', 'auto');
   ga('send', 'pageview');
 
 </script>
@@ -69,7 +69,7 @@
       <h1>The Page test is not a trend test</h1>
                         <h4 class="author">Kevin Stadler</h4>
             
-            <h4 class="date">2017-03-30</h4>
+            <h4 class="date">2017-05-03</h4>
           </div>
 
     
@@ -101,10 +101,10 @@ lowestthenrandom &lt;-<span class="st"> </span>function()
 <span class="co"># example ordering</span>
 <span class="kw">t</span>(<span class="kw">replicate</span>(<span class="dv">4</span>, <span class="kw">lowestthenrandom</span>()))</code></pre></div>
 <pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
-## [1,]    1    2    3    4    9    8   10    6    7     5
-## [2,]    1    2   10    7    9    3    5    8    4     6
-## [3,]    1    3    5    6    4    7    2    8   10     9
-## [4,]    1    7    2    9    8    4   10    3    6     5</code></pre>
+## [1,]    1    4    6    3    5    2    7    8    9    10
+## [2,]    1    2    4   10    9    6    7    3    8     5
+## [3,]    1    3    6   10    4    5    2    8    9     7
+## [4,]    1    4    3    8    5    2   10    7    9     6</code></pre>
 <p>Given this semi-random data generation function, we can now create a large number of data sets containing a variable number of replications <span class="math inline">\(N\)</span>, and compute their expected distribution of significance levels according to the Page test.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(cultevo)
 
@@ -132,15 +132,15 @@ sampleps &lt;-<span class="st"> </span>function(testfun, N, datafun, <span class
 <p>Generating 1000 datasets like the one above which really only exhibit a single point change in the distribution of median ranks, we get a significant result about half of the time:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sampleps</span>(sampleLs, <span class="dv">4</span>, lowestthenrandom)</code></pre></div>
 <pre><code>## 0.001  0.01  0.05    NS 
-## 0.037 0.160 0.303 0.500</code></pre>
+## 0.042 0.161 0.267 0.530</code></pre>
 <p>Increasing the number of replications to 10, still only assuming that the first generation ranks differently from all the other ones (which do not exhibit consistent ordering in themselves):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sampleps</span>(sampleLs, <span class="dv">10</span>, lowestthenrandom)</code></pre></div>
 <pre><code>## 0.001  0.01  0.05    NS 
-## 0.296 0.354 0.232 0.118</code></pre>
+## 0.280 0.351 0.257 0.112</code></pre>
 <p>The influence is even stronger when the single change point gets closer to the middle of the ordered conditions. When we generate 1000 datasets where the first two ranks are always shuffled in the first two positions, followed by ranks 3-10 also shuffled randomly, we obtain the following distribution of p values:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sampleps</span>(sampleLs, <span class="dv">4</span>, function() <span class="kw">pseudorandomranks</span>(<span class="dv">1</span>:<span class="dv">2</span>, <span class="dv">3</span>:<span class="dv">10</span>))</code></pre></div>
 <pre><code>## 0.001  0.01  0.05    NS 
-## 0.453 0.390 0.143 0.014</code></pre>
+## 0.450 0.393 0.144 0.013</code></pre>
 <p>The test is so sensitive to evidence for a change in the <em>a prior</em> suspected direction (even if it is just a single point-wise change) that it is largely unaffected by evidence for a consistent trend in the opposite direction, as can be seen in this data set where more than half of the pairwise differences between ranks indicate downwardness:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># upwards jump from the first three observations to the remaining 7, but the</span>
 <span class="co"># remaining 7 exhibit a consistent downwards trend</span>
@@ -153,7 +153,7 @@ upwardsjumpdownardstrend &lt;-<span class="st"> </span>function() <span class="k
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">updownup &lt;-<span class="st"> </span>function() <span class="kw">pseudorandomranks</span>(<span class="dv">3</span>:<span class="dv">4</span>, <span class="dv">5</span>:<span class="dv">6</span>, <span class="dv">1</span>:<span class="dv">2</span>, <span class="dv">7</span>:<span class="dv">8</span>)
 <span class="kw">sampleps</span>(sampleLs, <span class="dv">10</span>, updownup)</code></pre></div>
 <pre><code>## 0.001  0.01  0.05    NS 
-## 0.985 0.015 0.000 0.000</code></pre>
+## 0.982 0.018 0.000 0.000</code></pre>
 </div>
 <div id="alternatives-to-the-page-test" class="section level2">
 <h2 class="hasAnchor">

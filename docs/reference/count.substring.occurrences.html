@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Count occurence of all substrings in a string. — count.substring.occurrences • cultevo</title>
+<title>Count occurences of all possible substrings in one more strings. — count.substring.occurrences • cultevo</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -40,7 +40,7 @@
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-96480406-1', 'auto');
+  ga('create', 'UA-96498670-1', 'auto');
   ga('send', 'pageview');
 
 </script>
@@ -91,16 +91,14 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Count occurence of all substrings in a string.</h1>
+    <h1>Count occurences of all possible substrings in one more strings.</h1>
     </div>
 
     
-    <p>Returns a matrix with the original strings along rows and all substrings
-of those strings along columns. The cell values indicate whether (and how
-many times) the substring is contained in each of the strings.</p>
+    <p>Count occurences of all possible substrings in one more strings.</p>
     
 
-    <pre><span class='fu'>count.substring.occurrences</span>(<span class='no'>strings</span>)</pre>
+    <pre><span class='fu'>count.substring.occurrences</span>(<span class='no'>strings</span>, <span class='kw'>sortbylength</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -109,17 +107,27 @@ many times) the substring is contained in each of the strings.</p>
       <th>strings</th>
       <td><p>a list or vector of character sequences</p></td>
     </tr>
+    <tr>
+      <th>sortbylength</th>
+      <td><p>logical indicating whether the substring columns should
+be ordered according to the (decreasing) length of the substrings. Default
+is to leave them in the original order in which they occur in the given
+strings.</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a matrix</p>
+    <p>A matrix with the original strings along rows and all substrings
+  of those strings along columns. The cell values indicate whether (and how
+  many times) the substring is contained in each of the strings.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>count.substring.occurrences</span>(<span class='fu'>c</span>(<span class='st'>"asd"</span>, <span class='st'>"asdd"</span>))</div><div class='output co'>#&gt;      a as asd s sd d asdd sdd dd
-#&gt; asd  1  1   1 1  1 1    0   0  0
-#&gt; asdd 1  1   1 1  1 2    1   1  1</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>count.substring.occurrences</span>(<span class='fu'>c</span>(<span class='st'>"asd"</span>, <span class='st'>"asdd"</span>, <span class='st'>"foo"</span>))</div><div class='output co'>#&gt;      a as asd s sd d asdd sdd dd f fo foo o oo
+#&gt; asd  1  1   1 1  1 1    0   0  0 0  0   0 0  0
+#&gt; asdd 1  1   1 1  1 2    1   1  1 0  0   0 0  0
+#&gt; foo  0  0   0 0  0 0    0   0  0 1  1   1 2  1</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

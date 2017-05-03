@@ -13,7 +13,7 @@ segment.counts(x, split = NULL)
 \item{x}{one or more strings to be split (and, optionally, counted)}
 
 \item{split}{the boundary character or sequence at which to segment the
-string(s)}
+string(s). The default, \code{NULL}, splits the string after every character.}
 }
 \description{
 Split strings into their constituent segments (and count them).

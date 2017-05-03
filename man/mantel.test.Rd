@@ -5,21 +5,18 @@
 \alias{mantel.test.default}
 \alias{mantel.test.formula}
 \alias{mantel.test.list}
-\alias{print.mantel}
 \alias{plot.mantel}
-\title{Perform a Mantel permutation test.}
+\title{Perform one or more Mantel permutation tests.}
 \usage{
 mantel.test(x, y, ...)
 
 \method{mantel.test}{default}(x, y, plot = FALSE, method = "pearson",
-  trials = 9999, shuffle = shuffle.locations, ...)
+  trials = 9999, omitzerodistances = FALSE, ...)
 
 \method{mantel.test}{formula}(x, y, groups = NULL,
   stringdistfun = utils::adist, meaningdistfun = hammingdists, ...)
 
 \method{mantel.test}{list}(x, y, plot = FALSE, ...)
-
-\method{print}{mantel}(x, ...)
 
 \method{plot}{mantel}(x, xlab = "generation", ...)
 }
@@ -28,19 +25,22 @@ mantel.test(x, y, ...)
 
 \item{y}{a data frame, distance matrix, or list of matrices of the same length as \code{x}}
 
-\item{...}{further arguments passed to or from other methods.}
+\item{...}{further arguments which are passed on to the default method (in
+particular \code{plot}, \code{method}, \code{trials} and
+\code{omitzerodistances})}
 
 \item{plot}{logical: immediately produce a plot of the test results (using
-\code{plot.mantel})}
+\code{plot()})}
 
 \item{method}{correlation coefficient to be computed (passed on to
 \code{\link[stats]{cor}}, default: "pearson")}
 
 \item{trials}{maximum number of permutations to be tested}
 
-\item{shuffle}{a function applied to \code{x} to shuffle entries, taking a
-matrix and an optional permutation specification as its arguments - you
-shouldn't normally have to change this}
+\item{omitzerodistances}{logical: if \code{TRUE}, the calculation of the
+correlation coefficient omits pairs of off-diagonal cells which contain a
+0 in the first distance matrix argument. (For the formula interface, this
+is the matrix which specifies the meaning distances.)}
 
 \item{groups}{when \code{x} is a formula: column name by which the data in
 \code{y} is split into separate data sets to run several Mantel tests on}
@@ -67,7 +67,8 @@ A dataframe of class \code{mantel}, with one row per Mantel
 test carried out, containing the following columns:
 \describe{
    \item{\code{method}}{Character string specifying the type of correlation
-         coefficient used ("pearson", "kendall" or "spearman")}
+         coefficient used ("spearman", "kendall", or, inadvisable in the
+         likely case of ties: "pearson")}
    \item{\code{statistic}}{The veridical correlation coefficient between
          the entries in the two distance matrices}
    \item{\code{rsample}}{A list of correlation coefficients calculated
@@ -89,7 +90,7 @@ Multiple \code{mantel} objects can easily be combined by calling
 \code{rbind(test1, test2, ...)}.
 }
 \description{
-Perform a correlation test between two matrices. The Mantel test is
+Perform correlation tests between pairs of matrices. The Mantel test is
 different from classical correlation tests (such as
 \code{\link[stats]{cor.test}}) in that the null distribution of the
 correlation coefficient is determined empirically by shuffling the locations

@@ -1,6 +1,6 @@
-#' Perform a Mantel permutation test.
+#' Perform one or more Mantel permutation tests.
 #' 
-#' Perform a correlation test between two matrices. The Mantel test is
+#' Perform correlation tests between pairs of matrices. The Mantel test is
 #' different from classical correlation tests (such as
 #' \code{\link[stats]{cor.test}}) in that the null distribution of the
 #' correlation coefficient is determined empirically by shuffling the locations
@@ -15,13 +15,14 @@
 #' @param x a formula, distance matrix, or list of distance matrices (see below)
 #' @param y a data frame, distance matrix, or list of matrices of the same length as \code{x}
 #' @param plot logical: immediately produce a plot of the test results (using
-#'   \code{plot.mantel})
+#'   \code{plot()})
 #' @param method correlation coefficient to be computed (passed on to
 #'   \code{\link[stats]{cor}}, default: "pearson")
 #' @param trials maximum number of permutations to be tested
-#' @param shuffle a function applied to \code{x} to shuffle entries, taking a
-#'   matrix and an optional permutation specification as its arguments - you
-#'   shouldn't normally have to change this
+#' @param omitzerodistances logical: if \code{TRUE}, the calculation of the
+#'   correlation coefficient omits pairs of off-diagonal cells which contain a
+#'   0 in the first distance matrix argument. (For the formula interface, this
+#'   is the matrix which specifies the meaning distances.)
 #' @param groups when \code{x} is a formula: column name by which the data in
 #'   \code{y} is split into separate data sets to run several Mantel tests on
 #' @param stringdistfun when \code{x} is a formula: edit distance function used
@@ -36,12 +37,15 @@
 #'   Defaults to Hamming distances between meanings (function
 #'   \code{\link{hammingdists}}), custom meaning functions can be created
 #'   easily using \code{\link{wrap.meaningdistfunction}}.
-#' @param ... further arguments passed to or from other methods.
+#' @param ... further arguments which are passed on to the default method (in
+#'   particular \code{plot}, \code{method}, \code{trials} and
+#'   \code{omitzerodistances})
 #' @return A dataframe of class \code{mantel}, with one row per Mantel
 #' test carried out, containing the following columns:
 #' \describe{
 #'    \item{\code{method}}{Character string specifying the type of correlation
-#'          coefficient used ("pearson", "kendall" or "spearman")}
+#'          coefficient used ("spearman", "kendall", or, inadvisable in the
+#'          likely case of ties: "pearson")}
 #'    \item{\code{statistic}}{The veridical correlation coefficient between
 #'          the entries in the two distance matrices}
 #'    \item{\code{rsample}}{A list of correlation coefficients calculated
@@ -83,17 +87,30 @@ mantel.test <- function(x, y, ...)
 #' \code{\link[stats]{dist}}, plain R matrices or any object that can be
 #' interpreted by \code{\link{check.dist}}.
 #' @importFrom stats cor
-#' @export
-mantel.test.default <- function(x, y, plot=FALSE, method="pearson", trials=9999, shuffle=shuffle.locations, ...) {
+mantel.test.default <- function(x, y, plot=FALSE, method="pearson", trials=9999, omitzerodistances=FALSE, ...) {
   m1 <- check.dist(x)
   m2 <- check.dist(y)
   d <- dim(m1)[1]
   if (dim(m2)[1] != d)
     stop("The two distance matrices have incompatible dimensions")
-  indices <- which(lower.tri(m1))
+
+  # figure out actual complexity by counting *unique* combinations in rows:
+  # check if a row i is equivalent to a row j which has i+j swapped (in which
+  # case the permutation of the two does not lead to different r)
+#  swaps <- combinat::combn(d, 2)
+#  inconsequentialswaps <- apply(swaps, 2, function(i) {
+#    !any(m1[i[1],] != m2[i[2], c(seq_len(i[1]-1), i[2], i[1]+seq_len(i[2]-i[1]-1), i[1], i[2]+seq_len(d-i[2]))])
+#    })
+#  if (any(inconsequentialswaps))
+#    print(swaps[,inconsequentialswaps])
+
   # extract values relevent for correlation computation
+  indices <- which(lower.tri(m1))
+  if (omitzerodistances)
+    indices <- setdiff(indices, which(m1 == 0))
   m1 <- m1[indices]
   duration <- max(0.001, system.time(veridical <- cor(m1, m2[indices], method=method))[[3]])
+
   # determine whether it would be more efficient to enumerate all permutations:
   # assuming we take 'trials' samples, how many of the factorial(d) possible
   # values haven't been selected yet compared to the maximum number of trials?
@@ -104,28 +121,41 @@ mantel.test.default <- function(x, y, plot=FALSE, method="pearson", trials=9999,
   if (duration*trials > 30)
     message("Estimated time to evaluate all ", trials, " permutations is ", duration*trials, "s, go get yourself a biscuit!")
 
-  if (exact)
-    rsample <- sapply(combinat::permn(d), function(perm) cor(m1, shuffle(m2, perm)[indices], method=method))
-  else
-    rsample <- replicate(trials, cor(m1, shuffle(m2)[indices], method=method))
+  if (exact) {
+    rsample <- sapply(combinat::permn(d), function(perm) cor(m1, shuffle.locations(m2, perm)[indices], method=method))
+  } else {
+    rsample <- replicate(trials, cor(m1, shuffle.locations(m2)[indices], method=method))
+    # calculate lower bound by sampling local permutations
+    # all pairwise swaps
+    switches <- combinat::combn(d, 2)
+    localrs <- apply(switches, 2, function(i) {
+      cor(m1,
+        shuffle.locations(m2,
+          c(seq_len(i[1]-1), i[2], i[1]+seq_len(i[2]-i[1]), i[1], i[2]+seq_len(d-i[2])))[indices],
+        method=method)})
+    p.lowerbound <- sum(localrs >= veridical) / factorial(d)
+  }
 
   greater <- sum(rsample >= veridical)
   # http://www.ncbi.nlm.nih.gov/pmc/articles/PMC379178/
   p.empirical <- (greater + 1) / (length(rsample) + 1)
+
   mn <- mean(rsample)
   s <- stats::sd(rsample)
 
-  result <- structure(data.frame(method=method, statistic=c(r=veridical),
+  result <- data.frame(method=method, statistic=c(r=veridical),
     N=length(indices), mean=mn, sd=s, p.value=p.empirical,
     p.approx=ifelse(exact, NA,
       stats::pnorm((veridical - mn) / s, lower.tail=FALSE)),
     is.unique.max=(greater==0), alternative="greater",
-    rsample=I(list(rsample)), stringsAsFactors=FALSE),
-  class=c("mantel", "htest", "data.frame"))
+    rsample=I(list(rsample)), stringsAsFactors=FALSE)
   if (plot)
     plot.mantel(result)
-  return(result)
+  structure(result, class=c("mantel", "htest", "data.frame"))
 }
+
+#' @export
+mantel.test.dist <- mantel.test.default
 
 #' @describeIn mantel.test This function can be called with experimental result
 #' data frames, distance matrix calculation is taken care of internally.
@@ -140,23 +170,23 @@ mantel.test.default <- function(x, y, plot=FALSE, method="pearson", trials=9999,
 #' mantel.test(word ~ Var1 + Var2, cbind(word=c("aa", "ab", "ba", "bb"),
 #'   enumerate.meaningcombinations(c(2, 2))))
 #' @export
-mantel.test.formula <- function(x, y, groups=NULL,
-  stringdistfun=utils::adist, meaningdistfun=hammingdists, ...) {
+mantel.test.formula <- function(x, y, groups=NULL, stringdistfun=utils::adist,
+  meaningdistfun=hammingdists, ...) {
   t <- stats::terms(x)
   fields <- rownames(attr(t, "factors"))
   lhs <- fields[attr(t, "response")]
   rhs <- attr(t, "term.labels")
-  # TODO When the formula contains a grouping variable \code{g}, multiple
-  # tests are performed (one for every group) and combined into one result.
+  # TODO implement grouping/conditioning term parsing for formula interface
   if (is.null(groups)) {
-    mantel.test.default(stringdistfun(y[,lhs]), meaningdistfun(y[,rhs]), ...)
+    # pass meanings first
+    mantel.test.default(meaningdistfun(y[,rhs]), stringdistfun(y[,lhs]), ...)
   } else {
     levels <- sort(unique(y[,groups]))
     mantel.test.list(sapply(levels, function(lvl)
-          stringdistfun(y[which(y[[groups]] == lvl), lhs]),
+          meaningdistfun(y[which(y[[groups]] == lvl), rhs]),
         simplify=FALSE),
       sapply(levels, function(lvl)
-          meaningdistfun(y[which(y[[groups]] == lvl), rhs]),
+          stringdistfun(y[which(y[[groups]] == lvl), lhs]),
         simplify=FALSE), ...)
   }
 }
@@ -177,12 +207,12 @@ mantel.test.list <- function(x, y, plot=FALSE, ...) {
   result <- do.call(rbind, mapply(mantel.test.default, x,
     # save single distance matrices y from being iterated into with list(y)
     if (is.list(y)) y else list(y), plot=FALSE, MoreArgs=..., SIMPLIFY=FALSE))
+  result <- cbind(group=if (is.null(names(x))) seq_along(x) else names(x), result)
   if (plot)
     plot.mantel(result)
-  result
+  structure(result, class=c("mantel", "data.frame"))
 }
 
-#' @rdname mantel.test
 #' @export
 print.mantel <- function(x, ...) {
   for (i in 1:nrow(x))

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Perform a Mantel permutation test. — mantel.test • cultevo</title>
+<title>Perform one or more Mantel permutation tests. — mantel.test • cultevo</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -40,7 +40,7 @@
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-96480406-1', 'auto');
+  ga('create', 'UA-96498670-1', 'auto');
   ga('send', 'pageview');
 
 </script>
@@ -91,11 +91,11 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Perform a Mantel permutation test.</h1>
+    <h1>Perform one or more Mantel permutation tests.</h1>
     </div>
 
     
-    <p>Perform a correlation test between two matrices. The Mantel test is
+    <p>Perform correlation tests between pairs of matrices. The Mantel test is
 different from classical correlation tests (such as
 <code><a href='http://www.rdocumentation.org/packages/stats/topics/cor.test'>cor.test</a></code>) in that the null distribution of the
 correlation coefficient is determined empirically by shuffling the locations
@@ -107,7 +107,7 @@ generate an empirical null distribution for the given data set.</p>
 
 <span class='co'># S3 method for default</span>
 <span class='fu'>mantel.test</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"pearson"</span>,
-  <span class='kw'>trials</span> <span class='kw'>=</span> <span class='fl'>9999</span>, <span class='kw'>shuffle</span> <span class='kw'>=</span> <span class='no'>shuffle.locations</span>, <span class='no'>...</span>)
+  <span class='kw'>trials</span> <span class='kw'>=</span> <span class='fl'>9999</span>, <span class='kw'>omitzerodistances</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for formula</span>
 <span class='fu'>mantel.test</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>groups</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
@@ -115,9 +115,6 @@ generate an empirical null distribution for the given data set.</p>
 
 <span class='co'># S3 method for list</span>
 <span class='fu'>mantel.test</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for mantel</span>
-<span class='fu'>print</span>(<span class='no'>x</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for mantel</span>
 <span class='fu'>plot</span>(<span class='no'>x</span>, <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='st'>"generation"</span>, <span class='no'>...</span>)</pre>
@@ -135,12 +132,14 @@ generate an empirical null distribution for the given data set.</p>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>further arguments passed to or from other methods.</p></td>
+      <td><p>further arguments which are passed on to the default method (in
+particular <code>plot</code>, <code>method</code>, <code>trials</code> and
+<code>omitzerodistances</code>)</p></td>
     </tr>
     <tr>
       <th>plot</th>
       <td><p>logical: immediately produce a plot of the test results (using
-<code>plot.mantel</code>)</p></td>
+<code>plot()</code>)</p></td>
     </tr>
     <tr>
       <th>method</th>
@@ -152,10 +151,11 @@ generate an empirical null distribution for the given data set.</p>
       <td><p>maximum number of permutations to be tested</p></td>
     </tr>
     <tr>
-      <th>shuffle</th>
-      <td><p>a function applied to <code>x</code> to shuffle entries, taking a
-matrix and an optional permutation specification as its arguments - you
-shouldn't normally have to change this</p></td>
+      <th>omitzerodistances</th>
+      <td><p>logical: if <code>TRUE</code>, the calculation of the
+correlation coefficient omits pairs of off-diagonal cells which contain a
+0 in the first distance matrix argument. (For the formula interface, this
+is the matrix which specifies the meaning distances.)</p></td>
     </tr>
     <tr>
       <th>groups</th>
@@ -192,7 +192,8 @@ tests next to each other</p></td>
     <p>A dataframe of class <code>mantel</code>, with one row per Mantel
 test carried out, containing the following columns:</p><dl class='dl-horizontal'>
    <dt><code>method</code></dt><dd><p>Character string specifying the type of correlation
-         coefficient used ("pearson", "kendall" or "spearman")</p></dd>
+         coefficient used ("spearman", "kendall", or, inadvisable in the
+         likely case of ties: "pearson")</p></dd>
    <dt><code>statistic</code></dt><dd><p>The veridical correlation coefficient between
          the entries in the two distance matrices</p></dd>
    <dt><code>rsample</code></dt><dd><p>A list of correlation coefficients calculated

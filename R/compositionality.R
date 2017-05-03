@@ -15,25 +15,33 @@ enumerate.substrings <- function(string) {
     }))
 }
 
-#' Count occurence of all substrings in a string.
-#'
-#' Returns a matrix with the original strings along rows and all substrings
-#' of those strings along columns. The cell values indicate whether (and how
-#' many times) the substring is contained in each of the strings.
+#' Count occurences of all possible substrings in one more strings.
 #'
 #' @param strings a list or vector of character sequences
-#' @return a matrix
+#' @param sortbylength logical indicating whether the substring columns should
+#'   be ordered according to the (decreasing) length of the substrings. Default
+#'   is to leave them in the original order in which they occur in the given
+#'   strings.
+#' @return A matrix with the original strings along rows and all substrings
+#'   of those strings along columns. The cell values indicate whether (and how
+#'   many times) the substring is contained in each of the strings.
 #' @examples
-#' count.substring.occurrences(c("asd", "asdd"))
+#' count.substring.occurrences(c("asd", "asdd", "foo"))
 #' @export
-count.substring.occurrences <- function(strings) {
+count.substring.occurrences <- function(strings, sortbylength=FALSE) {
   # list of all subsequences per input string
   allstrings <- sapply(strings, enumerate.substrings, simplify=FALSE)
   substrings <- unique(unlist(allstrings))
+  if (sortbylength)
+    substrings <- substrings[order(sapply(substrings, nchar), decreasing=TRUE)]
   sapply(substrings, function(all)
     sapply(allstrings, function(sub)
       length(which(sub == all))))
 }
+
+#' @importFrom stats weighted.mean
+weighted.mean.mp <- function(segmentation)
+  weighted.mean(segmentation$mp, segmentation$N)
 
 #' Spike's measure of additive compositionality.
 #'
@@ -56,7 +64,13 @@ count.substring.occurrences <- function(strings) {
 #' meaning features that are \emph{most predictive of each other}.
 #' Mathematically, for every meaning feature \eqn{f\in M}, it tries to find
 #' the sub-string \eqn{s_{ij}} from the set of strings \eqn{S} that maximises
-#' \deqn{comp(f,S) = \max_{s_{ij}\in S} P(f|s_{ij}) \cdot P(s_{ij}|f)}.
+#' \deqn{comp(f,S) = \max_{s_{ij}\in S}\ P(f|s_{ij}) \cdot P(s_{ij}|f)}.
+#'
+#' Based on these mappings onto individual meaning features,
+#' \code{sm.compositionality} then computes the average mutual predictability
+#' over all meaning features \eqn{M},
+#' \deqn{comp(M,S) = \frac{1}{|M|} \sum_{f\in M} comp(f,S),}
+#' as a measure of the overall compositionality of the signalling system.
 #'
 #' @section Meaning data format:
 #' The \code{meanings} can be a matrix or data frame in one of two formats. If
@@ -74,54 +88,132 @@ count.substring.occurrences <- function(strings) {
 #' matrix, \emph{they will be treated as categorical factors} in order to
 #' represent them as atomic meaning features.
 #'
-#' @describeIn sm.compositionality
-#' Calculates the mean predictability of all meaning features,
-#' \eqn{C = \frac{1}{|M|} \sum_{f\in M} comp(m,S)}. Returns a vector of three
-#' elements: \code{N}, the number of signal-meaning pairings on which the
-#' computation was based, \code{comp}, the compositionality measure, and
-#' \code{M}, the number of distinct meaning features over which the measure
-#' was computed. (When \code{groups} is not \code{NULL}, returns a matrix with
-#' the same elements along columns, with one row for every group.)
 #' @references Spike, M. (2016). Minimal requirements for the cultural
 #'   evolution of language. PhD thesis, The University of Edinburgh.
-#' @param strings a list or vector of character sequences
-#' @param meanings a matrix or data frame with as many rows as there are
-#'   strings (see below)
+#' @param x a list or vector of character sequences specifying the signals to
+#'   be analysed. Alternatively, \code{x} can also be a formula of the format
+#'   \code{s ~ m1 + m2 + ...}, where \code{s} and \code{m*} specify the column
+#'   names of the signals and meaning features found in the data frame that's
+#'   passed as the second argument.
+#' @param y a matrix or data frame with as many rows as there are signals,
+#'   indicating the presence/value of the different meaning dimensions along
+#'   columns (see section Meaning data format). If \code{x} is a formula, the
+#'   second argument can contain any number of columns, only the ones specified
+#'   in the formula will be considered.
 #' @param groups a list or vector with as many items as strings, used to split
 #'   \code{strings} and \code{meanings} into data sets for which
 #'   compositionality measures are computed separately.
+#' @param strict logical: if \code{TRUE}, perform additional filtering of
+#'   candidate segments. In particular, it removes combinations of segments
+#'   (across meanings) which overlap in at least one of the strings where they
+#'   co-occur. For convenience, it also removes segments which are shorter
+#'   substrings of longer candidates (for the same meaning feature).
+#' @return \code{sm.compositionality} calculates the mean predictability of all
+#'   meaning features and their most predictably co-occurring strings. Returns
+#'   a vector of three elements: \code{N} is the number of signal-meaning
+#'   pairings on which the computation was based, \code{comp} the mean mutual
+#'   predictability, and \code{M} the number of distinct meaning features over
+#'   which this average was computed. (When \code{groups} is not \code{NULL},
+#'   returns a matrix with the same elements along columns, with one row for
+#'   every group.)
+#'
+#'   \code{sm.segmentation} provides detailed information about the most
+#'   predictably co-occurring segments for every meaning feature. It returns
+#'   a data frame with one row for every meaning feature, in descending order
+#'   of their predictability from (and to) their corresponding string
+#'   segments. The data frame has the following columns:
+#'   \describe{
+#'     \item{\code{N}}{The number of signal-meaning pairings in which this
+#'       meaning feature was attested.}
+#'     \item{\code{mp}}{The highest mutual predictability between this
+#'       meaning feature and one (or more) segments that was found.}
+#'     \item{\code{p}}{Significance levels of the mutual predictability for the
+#'       given segment(s). The calculation depends on the frequency of the
+#'       meaning feature as well as the overall frequency of the segment
+#'       across all signals and indicates the (null) probability of the given
+#'       co-occurrence count of the two according to the hypergeometric
+#'       distribution. If multiple segments are tied for their mutual
+#'       predictability, the candidate list is filtered to include only those
+#'       with the highest significance levels (i.e. the lowest p values).}
+#'     \item{\code{ties}}{The number of substrings found in \code{strings}
+#'       which have this same level of mutual predictability with the meaning
+#'       feature.}
+#'     \item{\code{segments}}{For \code{strict = FALSE}: a list containing the
+#'       \code{ties} substrings in descending order of their length (the
+#'       ordering is for convenience only and not inherently meaningful). When
+#'       \code{strict = TRUE}, the lists of segments for each meaning feature
+#'       are all of the same length, with a meaningful relationship of the
+#'       order of segments across the different rows: every set of segments
+#'       which are found in the same position for each of the different
+#'       meaning features constitute a valid segmentation where the segments
+#'       occurrences in the actual signals do not overlap.}
+#'   }
 #' @examples
 #' # perfect communication system
 #' sm.compositionality(c("a", "b", "ab"),
-#'   cbind(a=c(T, F, T), b=c(F, T, T)))
+#'   cbind(a=c(TRUE, FALSE, TRUE), b=c(FALSE, TRUE, TRUE)))
 #' sm.segmentation(c("a", "b", "ab"),
-#'   cbind(a=c(T, F, T), b=c(F, T, T)))
+#'   cbind(a=c(TRUE, FALSE, TRUE), b=c(FALSE, TRUE, TRUE)))
 #'
+#' # not quite perfect communication system
 #' sm.compositionality(c("as", "bas", "basf"),
-#'   cbind(a=c(T, F, T), b=c(F, T, T)))
+#'   cbind(a=c(TRUE, FALSE, TRUE), b=c(FALSE, TRUE, TRUE)))
 #' sm.segmentation(c("as", "bas", "basf"),
-#'   cbind(a=c(T, F, T), b=c(F, T, T)))
+#'   cbind(a=c(TRUE, FALSE, TRUE), b=c(FALSE, TRUE, TRUE)))
+#'
+#' # force candidate segments to be non-overlapping via the 'strict' option
+#' sm.segmentation(c("as", "bas", "basf"),
+#'   cbind(a=c(TRUE, FALSE, TRUE), b=c(FALSE, TRUE, TRUE)), strict=TRUE)
 #'
 #' # the function also accepts meaning-dimension based matrix definitions:
 #' print(twobytwoanimals <- enumerate.meaningcombinations(c(animal=2, colour=2)))
+#'
 #' # note how there are many more candidate segments than just the full length
 #' # ones. given limited data, it is expected that shorter substrings will be
 #' # just as predictable as the full segments that contain them.
-#' sm.segmentation(c("greendog", "bluedog", "greencat", "bluecat"), twobytwoanimals)
-#' @seealso \code{\link{binaryfeaturematrix}}
+#' sm.segmentation(c("greendog", "greencat", "bluedog", "bluecat"), twobytwoanimals)
+#'
+#' # since there is no overlap in the constituent characters of the identified
+#' # 'morphemes', they are all tied in their mutual predictiveness with the
+#' # (shorter) substrings they contain
+#' 
+#' # to reduce the pool of candidate segments to those which are
+#' # non-overlapping and of maximal length, again use the 'strict=TRUE' option:
+#' 
+#' sm.segmentation(c("greendog", "greencat", "bluedog", "bluecat"), twobytwoanimals,
+#'   strict=TRUE)
+#' @seealso \code{\link{binaryfeaturematrix}}, \code{\link{ssm.compositionality}}
+#' @importFrom stats terms
 #' @export
-sm.compositionality <- function(strings, meanings, groups=NULL) {
+sm.compositionality <- function(x, y, groups=NULL, strict=FALSE)
+  UseMethod("sm.compositionality")
+
+#' @export
+sm.compositionality.formula <- function(x, y, groups=NULL, strict=FALSE)
+  runfromformula(sm.compositionality.default, x, y, groups, strict)
+#   t <- stats::terms(x)
+#   fields <- rownames(attr(t, "factors"))
+#   strings <- y[ , fields[attr(t, "response")]]
+#   if (!is.null(groups))
+#     groups <- y[ , groups]
+#   meanings <- y[ , attr(t, "term.labels")]
+#   sm.compositionality.default(strings, meanings, groups, strict)
+# }
+
+#' @export
+sm.compositionality.default <- function(x, y, groups=NULL, strict=FALSE) {
+  # TODO make sure it's a data frame and data/columns are well-formed?
   if (is.null(groups)) {
-    segmentation <- sm.segmentation(strings, meanings)
-    c(N=length(strings), comp=mean(segmentation$p), M=nrow(segmentation))
+    segmentation <- sm.segmentation(x, y, strict=strict)
+    data.frame(N=length(x), comp=weighted.mean.mp(segmentation), M=nrow(segmentation))
+    # TODO if (strict) cbind(rate=mean(segmentation$rate)) # m=sum(), mr=sum(), 
   } else {
     do.call(rbind, lapply(unique(groups), function(grp) {
-      c(group=grp, sm.compositionality(strings[groups==grp],
-                                       meanings[groups==grp,]))
+      cbind(group=grp, sm.compositionality(x[groups == grp],
+        y[groups == grp, ], strict=strict))
     }))
   }
 }
-# TODO implement formula interface
 
 # calculate P(s_{ij}|m)
 substring.predictability <- function(substringmatrix, meanings)
@@ -147,33 +239,487 @@ meaning.predictability <- function(substringmatrix, meanings)
         function(m) length(which(as.logical(m))) / sum(relevantrows))
     }))
 
-# meanings already have to be in binary representation!
-mutualpredictability <- function(strings, meanings) {
-  substringmatrix <- count.substring.occurrences(strings)
-  sgivenm <- substring.predictability(substringmatrix, meanings)
-  mgivens <- meaning.predictability(substringmatrix, meanings)
-  sgivenm * mgivens # mutual information: I(s;m) = H(m) - H(m|s)
+# take a mutual predictability matrix and select most predictive segments,
+# ordering meaning features by decreasing predictability
+topsegments <- function(x) {
+  # find top mutual predictiveness per meaning
+  mps <- apply(x, 2, max)
+  # get indices of segments tied for top predictiveness
+  mostpredictive <- lapply(1:ncol(x), function(i) which(x[,i] == mps[i]))
+
+  # get tied segments and order by length
+  segments <- lapply(mostpredictive, function(is)
+    # could use rownames(x)[is] instead?
+    names(is)[order(nchar(names(is)), decreasing=TRUE)])
+  data.frame(mp=mps, segments=I(segments))
 }
 
-#' @describeIn sm.compositionality
-#' Finds the most predictive segment(s) for every meaning feature, i.e. the
-#' substrings \eqn{s_{ij}} that maximise \eqn{P(m|s_{ij}) \cdot P(s_{ij}|m)}.
-#' Returns a matrix with one row for every meaning feature, in descending order
-#' of their predictability from (and to) their corresponding string segments.
-#' @export
-sm.segmentation <- function(strings, meanings) {
-  # make sure meaning matrix is in ultra-long binary format
-  meanings <- binaryfeaturematrix(meanings)
+# we have a selection of candidate ranges where all relevant segments are.
+# check that there's at least one selection of ranges without overlaps
+has.nonoverlapping.ranges <- function(pos)
+  is.null(find.selections(pos, function(boundaries) {
+      # order by first (start) row
+      boundaries <- boundaries[, order(boundaries[1, ])]
+      # do any next-segment starts precede the previous' ends?
+      return(any(boundaries[1, -1] <= boundaries[2, -ncol(boundaries)]))
+    }, first=TRUE, noptions=sapply(pos, nrow),
+    selectionfun=function(p, i) p[i, ]))
 
-  x <- mutualpredictability(strings, meanings)
-  highestps <- apply(x, 2, max)
-  mostpredictive <- lapply(1:ncol(x), function(i) which(x[,i] == highestps[i]))
-  segmentation <- data.frame(#meaning=colnames(meanings),
-    N=colSums(meanings), p=highestps,
-    segments=I(lapply(mostpredictive, function(x)
-      # put longest sequences first
-      names(x)[order(nchar(names(x)), decreasing=TRUE)])),
-    tiedsegments=sapply(mostpredictive, length))
-  # put most predictable meaning/sequence pairings first
-  structure(segmentation[order(-segmentation$p),], class=c("smcomp", "data.frame"))
+# check if the given segmentation produces overlap in any of the strings
+# meanings is a logical matrix of |strings| rows and |segments| columns
+#' @importFrom stringi stri_locate_all_fixed
+is.overlapping <- function(strings, meanings, segments) {
+  for (i in seq_along(strings)) {
+    # find segment positions in string
+    pos <- stri_locate_all_fixed(strings[i], segments[meanings[i,]])
+    # segments might be unattested in this string
+    pos <- pos[!sapply(pos, function(p) is.na(p[1]))]
+
+    # just one meaning? trivially non-overlapping
+    if (length(pos) < 2) # sum(meanings[i,])
+      next
+    if (!has.nonoverlapping.ranges(pos))
+      return(TRUE)
+  }
+  FALSE
+}
+
+#' @rdname sm.compositionality
+#' @export
+sm.segmentation <- function(x, y, strict=FALSE)
+  UseMethod("sm.segmentation")
+
+#' @export
+sm.segmentation.formula <- function(x, y, ...)
+  runfromformula(sm.segmentation.default, x, y, ...)
+
+#' @importFrom stats terms
+#' @export
+sm.segmentation.default <- function(x, y, strict=FALSE) {
+
+  # make sure meaning matrix is in ultra-long binary format
+  meanings <- binaryfeaturematrix(y, x)
+  meaningfrequencies <- colSums(meanings)
+  substringmatrix <- count.substring.occurrences(x)
+
+  mp <- substring.predictability(substringmatrix, meanings) *
+         meaning.predictability(substringmatrix, meanings)
+
+  meaninglabels <- colnames(meanings)
+#  meanings <- unname(meanings)
+
+  top <- topsegments(mp)
+  segments <- top$segments
+
+  # determine (and filter by) significance levels
+  ps <- lapply(seq_along(segments), function(i)
+    sapply(segments[[i]], function(seg)
+      mp.plvl(length(x), meaningfrequencies[i],
+        sum(substringmatrix[,seg] > 0), top$mp[i])))
+  p <- sapply(ps, min)
+  segments <- lapply(seq_along(segments), function(i)
+    segments[[i]][which(ps[[i]] == p[i])])
+
+  if (strict) {
+    # find selections of segments which don't overlap in individual strings.
+    message("Applying strict selection, checking ",
+      prod(sapply(top$segments, length)), " segment combinations for overlap")
+    nonoverlapping <- find.selections(top$segments,
+      function(elements) !is.overlapping(x, meanings, elements))
+    # if we simply consider overlap as non-occurrence of one of the segments we
+    # would have to re-calculate the mutual predictability for non-overlapping
+    # selections of segments (see mutualpredictability.strict) which might
+    # lower the score massively. the mutual predictability approach by itself
+    # is also problematic when we further try to improve the score by merging
+    # currently non-predictive features together since greedily maximising the
+    # overall *mean* mutual predictability at every step will not stop until
+    # all categories are merged.
+    segments <- mapply('[', top$segments, lapply(seq(ncol(nonoverlapping)),
+      function(i) nonoverlapping[,i]))
+
+    if (is.null(segments)) {
+      stop("No combination of non-overlapping per-meaning segments found among most predictive segment set. Note that this does not necessarily mean that no such segmentation exists. Try running with strict=FALSE.")
+    }
+    # more than one candidate segmentation
+    if (is.matrix(segments)) {
+      # limit to longest combination of candidate segments across all slots
+      # (just a heuristic! doesn't mean it's actually maximising string
+      # coverage across signals...)
+      segmentlengths <- apply(segments, 1, function(ss) sum(nchar(ss)))
+      # also make into list appropriate for merging into data frame below
+      longest <- which(segmentlengths == max(segmentlengths))
+      if (length(longest) == 1) {
+        segments <- segments[longest,]
+      } else {
+        segments <- lapply(which(segmentlengths == max(segmentlengths)),
+          function(row) segments[row,])
+      }
+    }
+
+    # nonoverlapping <- find.selections(replicate(ncol(mp),
+    #     rownames(x), simplify=FALSE),
+    #   function(elements) ! is.overlapping(x, meanings, elements))
+  }
+
+  # TODO if meanings was in wide format: include dimensions+values
+  structure(data.frame(row.names=meaninglabels,
+    N=meaningfrequencies, mp=top$mp, p=p,
+    ties=sapply(segments, length),
+    segments=I(segments))[order(-top$mp), ], class=c("sm", "data.frame"),
+    nsignals=length(x), ntotalchars=sum(sapply(x, nchar)))
+}
+
+# n = number of signals
+# m = number of signals in which meaning feature is attested
+# s = number of signals in which substring is attested
+# mp = mp level to be tested. needs to be strictly greater than 0
+#' @importFrom stats phyper
+mp.plvl <- function(n, m, s, mp) {
+  # between 0 and min(m,f) of the meaning-relevant sigs can contain the segment
+  # calculate mp values for each (trivially, mp = 0 when they never cooccur)
+  hits <- 0:min(m, s)
+  mps <- (hits / s) * (hits / m) # p(m|s) * p(s|m)
+  i <- match(mp, mps) # strict matching, might mess up because floating point
+  # the likelihood of each number of 'hits' occurring follows a hypergeometric
+  # distribution (sampling from a population with fixed number of successes)
+  phyper(i-2, m, n-m, s, lower.tail=FALSE)
+}
+
+#' Find a segmentation that maximises the overall coverage of all signals.
+#'
+#' This algorithm builds on Spike's measure of compositionality (see
+#' \code{\link{sm.compositionality}}), except instead of simply determining
+#' which segment(s) which have the highest mutual predictability for each
+#' meaning feature separately, it tries to find a combination of
+#' non-overlapping segments that maximises the overall string coverage over all
+#' signals. In other words, it tries to find a segmentation which can account
+#' for (or 'explain') as much of the string material in the signals as
+#' possible.
+#'
+#' @param x a list or vector of character sequences
+#' @param y a matrix or data frame with as many rows as there are
+#'   strings (see section Meaning data format)
+#' @param groups a list or vector with as many items as strings, used to split
+#'   the signals and meanings into data sets for which the compositionality
+#'   measures are computed separately.
+#' @param mergefeatures logical: if \code{TRUE}, \code{ssm.segmentation} will
+#'   try to improve on the initial solution by incrementally merging pairs of
+#'   meaning features as long as doing so improves the over string coverage
+#'   of the segmentation.
+#' @examples
+#' ssm.segmentation(c("as", "bas", "basf"),
+#'   cbind(a=c(TRUE, FALSE, TRUE), b=c(FALSE, TRUE, TRUE)))
+#'
+#' # TODO signaling system where one dimension is simply not encoded
+#' @seealso \code{\link{sm.compositionality}}
+#' @export
+ssm.compositionality <- function(x, y, groups=NULL)
+  UseMethod("ssm.compositionality")
+
+#' @export
+ssm.compositionality.formula <- function(x, y, groups=NULL)
+  runfromformula(ssm.compositionality.default, x, y, groups)
+
+#' @export
+ssm.compositionality.default <- function(x, y, groups=NULL) {
+  if (is.null(groups)) {
+    segmentation <- ssm.segmentation.default(x, y)
+    data.frame(N=length(x), M=ncol(y),
+      chars=sum(sapply(x, nchar)),
+      covered=0, # TODO
+      attr(segmentation, "weightedsignalcoverage"),
+      attr(segmentation, "meansignalcoverage"))
+  } else {
+    do.call(rbind, lapply(unique(groups), function(grp) {
+      cbind(group=grp, ssm.compositionality.default(x[groups == grp],
+                                                    y[groups == grp,]))
+    }))
+  }
+}
+
+#' @rdname ssm.compositionality
+#' @export
+ssm.segmentation <- function(x, y, mergefeatures=FALSE)
+  UseMethod("ssm.segmentation")
+
+#' @export
+ssm.segmentation.formula <- function(x, y, mergefeatures=FALSE)
+  runfromformula(ssm.segmentation.default, x, y, mergefeatures)
+
+#' @importFrom utils tail
+#' @export
+ssm.segmentation.default <- function(x, y, mergefeatures=FALSE) {
+  # make sure meaning matrix is in ultra-long binary format
+  meanings <- binaryfeaturematrix(y)
+
+  coverage <- maximise.stringcoverage(x, meanings)
+  message("Current segmentation covers ", coverage$charscovered, " characters..")
+
+  # based on this first selection of segments we can also consider (always
+  # trying to maximise coverage$meanstringcoverage):
+  # 1. less predictive segments of the current segmentations (in the limit
+  #   considering all substrings as candidates for all meanings).
+
+  if (mergefeatures) {
+    # 2. merge currently non-predictive features together.
+    # a heuristic based on incrementally merging the least predictive
+    # category and greedily maximising the overall *mean* mutual predictability
+    # at every step will not stop until all categories are merged.
+    # instead: find combination of segments that maximises string coverage
+
+    # as long as we still distinguish *some* features...
+    while (ncol(meanings) > 2) {
+      mergers <- combinat::combn(ncol(meanings), 2)
+      message("Trying ", ncol(mergers),
+        " different combinations of meaning feature mergers")
+      # TODO parallel::mclapply() here, plus limiting to within-dim mergers
+      mergers <- apply(mergers, 2, function(merge) {
+        mergeddata <- cbind(meanings[, -merge], apply(meanings[, merge], 1, any))
+        colnames(mergeddata)[ncol(mergeddata)] <-
+         paste(colnames(meanings)[merge], collapse="|")
+        list(meanings=mergeddata,
+          segmentation=maximise.stringcoverage(x, mergeddata, coverage$charscovered))
+      })
+      # don't consider merges which didn't improve string coverage
+      mergers <- mergers[sapply(mergers, function(y) !is.null(y$segmentation))]
+      # don't consider merges which didn't improve mean mutual predictability
+      mergers <- mergers[sapply(mergers, function(y) y$segmentation[["meanmp"]] > coverage$meanmp)]
+      # maybe also discard mergers which would reduce the meanrate?
+
+      # greedily select merger which maximises string coverage (doesn't work
+      # as well when going for highest mean mutual predictability)
+      highest <- which.max(sapply(mergers, function(merger)
+        merger$segmentation[["charscovered"]])) # charscovered or meanrate
+      if (length(highest)) {
+        meanings <- mergers[[highest]]$meanings
+        coverage <- mergers[[highest]]$segmentation
+        message("Merging ", tail(colnames(meanings), n=1), " improved coverage to ", coverage$charscovered)
+      } else {
+        break
+      }
+    }
+  }
+
+  meaninglabels <- colnames(meanings)
+  meaningfrequencies <- colSums(meanings)
+  meaningrealisations <- colSums(coverage$meanings, na.rm=TRUE)
+  # TODO if meanings was in wide format: include dimensions+values
+  structure(data.frame(row.names=meaninglabels,
+      N=meaningfrequencies, matches=meaningrealisations,
+      matchrate=meaningrealisations / meaningfrequencies,
+      mp=coverage$mps, #ties=sapply(segments, length),
+      segments=I(coverage$segments)) #reorder
+        [order(-meaningrealisations / meaningfrequencies, -coverage$mps), ],
+    class=c("ssm", "data.frame"),
+    nsignals=length(x),
+    ntotalchars=sum(sapply(x, nchar)),
+    charscovered=sum(coverage$charscoveredperstring),
+    meansignalcoverage=coverage$meancoverage,
+    weightedsignalcoverage=coverage$weightedcoverage)
+}
+
+# calculate the mean string coverage of the given segments for the given
+# strings, discounting overlaps
+#' @importFrom stringi stri_locate_all_fixed
+stringcoverage <- function(strings, meanings, segments) {
+  realisedsegments <- sapply(seq_along(strings), function(i) {
+    pos <- stri_locate_all_fixed(strings[i], segments[meanings[i,]])
+    # mark segments that are altogether missing/unattested
+    missing <- sapply(pos, function(p) is.na(p[1]))
+    if (any(missing))
+      meanings[i, which(meanings[i, ])[missing] ] <- NA
+
+    # next check for overlap in attested segments
+    if (sum(!missing) >= 2 && !has.nonoverlapping.ranges(pos[!missing])) {
+      # TODO only set minimum number necessary to avoid overlap to NA
+      # strict (allaround) punishment of any overlap
+      meanings[i, which(meanings[i, ])] <- NA
+    }
+
+    meanings[i,]
+  })
+
+  # calculate coverage (in absolute characters)
+  lengths <- sapply(segments, nchar)
+  charscovered <- sapply(seq_along(strings), function(i)
+    # strings/signals are along columns this time!
+    sum(lengths[which(realisedsegments[ , i])]))
+  list(meaningscoveredperstring=colSums(realisedsegments, na.rm=TRUE),
+    charscoveredperstring=charscovered,
+    meanings=I(t(realisedsegments)))
+}
+
+#' @importFrom stats weighted.mean
+#' @importFrom utils head
+# @export
+maximise.stringcoverage <- function(strings, meanings, charscovered=-1,
+    maxcombinations=500) {
+  substringmatrix <- count.substring.occurrences(strings, TRUE)
+  segments <- colnames(substringmatrix)
+  # FIXME this breaks if meanings is unnamed earlier...
+  sgivenm <- substring.predictability(substringmatrix, meanings)
+  meanings <- unname(meanings)
+  mgivens <- meaning.predictability(substringmatrix, meanings)
+  x <- sgivenm * mgivens
+
+  # find combination of segments that maximises string coverage (similar task
+  # to finding the highest strict mutual predictability)
+  predorder <- apply(-x, 2, function(xs) rank(xs, ties.method="min"))
+  # only look at top-scoring (in mutual predictability) segments..
+  segmentids <- lapply(1:ncol(x), function(i) which(predorder[,i] == 1))
+
+  meaningfrequencies <- colSums(meanings)
+  segmentlengths <- sapply(segments, nchar)
+
+  # figure out if we can do full enumeration...
+  if (prod(sapply(segmentids, length)) > maxcombinations) {
+    # make a clever selection based on which has a) most ties b) lowest mp?
+    # just try first/longest segment per feature
+    ids <- rbind(rep(1, ncol(meanings)),
+      # also try any tied top segments which have the highest sgivenm
+      sapply(seq_along(segmentids),
+        function(i) which.max(sgivenm[segmentids[[i]],i])))
+    segmentids <- lapply(seq_along(segmentids),
+      function(i) segmentids[[i]][unique(ids[,i])])
+  }
+  message("Trying ", prod(sapply(segmentids, length)), " combinations...")
+  sels <- unname(as.matrix(do.call(expand.grid, segmentids)))
+
+  # ways to optimise:
+  # 1. pre-compute upper limit
+  # upper bound for coverage = sum_m( nchar(s) * p(s|m) * p(m) )
+  upperbounds <- apply(sels, 1, function(sel)
+    sum(segmentlengths[sel] *
+      sgivenm[cbind(sel, seq_along(sel))] *
+      meaningfrequencies))
+
+  # 2. start with longest (theoretical) coverage strings
+  selectionid <- 0
+  coverage <- NULL
+  ord <- order(upperbounds, decreasing=TRUE)
+  j <- 0
+  for (i in ord) {
+    j <- j+1
+    if (upperbounds[i] <= charscovered) {
+#      message("Interrupting after ", j)
+      break
+    }
+  # 3. memoise some of the overlap functions?
+    nextcoverage <- stringcoverage(strings, meanings, segments[sels[i, ]])
+    nextcharscovered <- sum(nextcoverage$charscoveredperstring)
+    if (nextcharscovered > charscovered) {
+      selectionid <- i
+      coverage <- nextcoverage
+      charscovered <- nextcharscovered
+    }
+  }
+
+  if (!is.null(coverage)) {
+    coverage$sels <- sels[selectionid, ]
+    coverage$segments <- segments[coverage$sels]
+    coverage$charscovered <- charscovered
+    coverage$mps <- sapply(seq_along(coverage$sels), function(i)
+      x[coverage$sels[i], i])
+    coverage$meanmp <- weighted.mean(coverage$mps, colSums(meanings))
+    # feature-frequency-weighted mean rate == overall hit rate
+    coverage$meanrate <-
+      sum(coverage$meanings, na.rm=TRUE) / sum(meaningfrequencies)
+    perstringcoverage <- coverage$charscoveredperstring/sapply(strings, nchar)
+    coverage$meancoverage <- mean(perstringcoverage)
+    # weight by number of features encoded (this is often uniform anyway)
+    coverage$weightedcoverage <- weighted.mean(perstringcoverage, rowSums(meanings))
+    coverage
+  }
+}
+
+#' @export
+print.sm <- function(x, digits=3, ...) {
+  if (!is.null(digits)) {
+    d <- getOption("digits")
+    options(digits=digits)
+  }
+  print.data.frame(x)
+  cat("\nMean feature-wise mutual predictability, weighted by feature frequency:", weighted.mean.mp(x), "\n")
+  if (!is.null(digits))
+    options(digits=d)
+  invisible(x)
+}
+
+#' @export
+print.ssm <- function(x, digits=3, ...) {
+  print.sm(x, digits, ...)
+#  cat("Mean signal-wise character coverage, unweighted:",
+#    attr(x, "meansignalcoverage"), "\n")
+  if (!is.null(digits)) {
+    d <- getOption("digits")
+    options(digits=digits)
+  }
+  cat("Mean signal-wise character coverage, weighted by features per signal:",
+    attr(x, "weightedsignalcoverage"), "\n\nSegmentation is based on",
+    attr(x, "nsignals"), "signals totalling", attr(x, "ntotalchars"),
+    "characters.\nDiscounting overlaps, this segmentation accounts for",
+    attr(x, "charscovered"),
+    "of those characters.\nTotal character coverage rate:",
+    attr(x, "charscovered") / attr(x, "ntotalchars"), "\n")
+  if (!is.null(digits))
+    options(digits=d)
+  invisible(x)
+}
+
+# helper functions
+
+runfromformula <- function(FUN, x, y, ...) {
+  t <- stats::terms(x)
+  fields <- rownames(attr(t, "factors"))
+  lhs <- fields[attr(t, "response")]
+  rhs <- attr(t, "term.labels")
+  # TODO replace with attach()
+  FUN(y[,lhs], y[,rhs], ...)
+}
+
+# selectfrom is a list of N elements, each specifying one or more elements that
+# could be selected for that slot (by default determined via length(element)).
+# given a function testfun(selected-elements),
+# returns either the first or a matrix of all selections of elements from
+# selectfrom which satisfy testfun, with selection indices along columns.
+# if mapply(selectionfun, selectfrom, is) is not supposed to simplify the
+# elements to a vector or matrix, protect the result with a list()
+find.selections <- function(selectfrom, testfun, first=FALSE,
+    noptions=sapply(selectfrom, length), selectionfun="[[",
+    include.value=FALSE) { # , incremental=FALSE
+  selections <- NULL
+  is <- rep(1, length(selectfrom))
+  # increment range selections from back to front
+  nextinc <- length(selectfrom)
+  i <- 0
+  while (nextinc > 0) {
+    val <- testfun(mapply(selectionfun, selectfrom, is))
+    if (!is.null(val) && (length(val) > 1 || val)) {
+      if (first)
+        return(is) # TODO include value here too?
+      else
+        selections <- rbind(selections, c(list(sels=is), val))
+    }
+
+    # move on to next selection combination
+    while (nextinc > 0) {
+      if (is[nextinc] == noptions[nextinc]) {
+        # overflow: reset and carry over to next segment
+        is[nextinc] <- 1
+        nextinc <- nextinc - 1
+      } else {
+        # try next selection for current field
+        is[nextinc] <- is[nextinc] + 1
+        # if incremental==TRUE, at least one selection has to be on index 1
+#        if (!incremental || any(is == 1)) {
+          nextinc <- length(selectfrom)
+          break
+#        }
+      }
+    }
+  }
+  if (include.value)
+    selections
+  else if (!is.null(selections))
+    t(sapply(selections[,1], I))
 }

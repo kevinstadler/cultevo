@@ -2,21 +2,9 @@
 % Please edit documentation in R/dists.R
 \name{check.dist}
 \alias{check.dist}
-\alias{check.dist.dist}
-\alias{check.dist.default}
-\alias{check.dist.matrix}
-\alias{check.dist.list}
 \title{Check or fix a distance matrix.}
 \usage{
 check.dist(x)
-
-\method{check.dist}{dist}(x)
-
-\method{check.dist}{default}(x)
-
-\method{check.dist}{matrix}(x)
-
-\method{check.dist}{list}(x)
 }
 \arguments{
 \item{x}{an object (or list of objects) specifying a distance matrix}

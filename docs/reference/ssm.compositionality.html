@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Convert a categorical meaning matrix to a binary feature matrix. — binaryfeaturematrix • cultevo</title>
+<title>Find a segmentation that maximises the overall coverage of all signals. — ssm.compositionality • cultevo</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -91,53 +91,76 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Convert a categorical meaning matrix to a binary feature matrix.</h1>
+    <h1>Find a segmentation that maximises the overall coverage of all signals.</h1>
     </div>
 
     
-    <p>Convert a categorical meaning matrix to a binary feature matrix.</p>
+    <p>This algorithm builds on Spike's measure of compositionality (see
+<code><a href='sm.compositionality.html'>sm.compositionality</a></code>), except instead of simply determining
+which segment(s) which have the highest mutual predictability for each
+meaning feature separately, it tries to find a combination of
+non-overlapping segments that maximises the overall string coverage over all
+signals. In other words, it tries to find a segmentation which can account
+for (or 'explain') as much of the string material in the signals as
+possible.</p>
     
 
-    <pre><span class='fu'>binaryfeaturematrix</span>(<span class='no'>meanings</span>, <span class='kw'>rownames</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre><span class='fu'>ssm.compositionality</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>groups</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+
+<span class='fu'>ssm.segmentation</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>mergefeatures</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>meanings</th>
-      <td><p>a matrix with meaning dimensions along columns and different
-meaning combinations along rows (such as created by
-<code><a href='enumerate.meaningcombinations.html'>enumerate.meaningcombinations</a></code>).</p></td>
+      <th>x</th>
+      <td><p>a list or vector of character sequences</p></td>
     </tr>
     <tr>
-      <th>rownames</th>
-      <td><p>optional character vector of the same length as the number
-of rows of <code>meanings</code>.</p></td>
+      <th>y</th>
+      <td><p>a matrix or data frame with as many rows as there are
+strings (see section Meaning data format)</p></td>
+    </tr>
+    <tr>
+      <th>groups</th>
+      <td><p>a list or vector with as many items as strings, used to split
+the signals and meanings into data sets for which the compositionality
+measures are computed separately.</p></td>
+    </tr>
+    <tr>
+      <th>mergefeatures</th>
+      <td><p>logical: if <code>TRUE</code>, <code>ssm.segmentation</code> will
+try to improve on the initial solution by incrementally merging pairs of
+meaning features as long as doing so improves the over string coverage
+of the segmentation.</p></td>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p>A matrix of <code>TRUE</code>/<code>FALSE</code> values.</p>
+    <p><code><a href='sm.compositionality.html'>sm.compositionality</a></code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='enumerate.meaningcombinations.html'>enumerate.meaningcombinations</a></span>(<span class='fu'>c</span>(<span class='fl'>2</span>, <span class='fl'>2</span>))</div><div class='output co'>#&gt;      Var1 Var2
-#&gt; [1,]    1    3
-#&gt; [2,]    1    4
-#&gt; [3,]    2    3
-#&gt; [4,]    2    4</div><div class='input'><span class='fu'>binaryfeaturematrix</span>(<span class='fu'><a href='enumerate.meaningcombinations.html'>enumerate.meaningcombinations</a></span>(<span class='fu'>c</span>(<span class='fl'>2</span>, <span class='fl'>2</span>)))</div><div class='output co'>#&gt;      Var1=1 Var1=2 Var2=3 Var2=4
-#&gt; [1,]   TRUE  FALSE   TRUE  FALSE
-#&gt; [2,]   TRUE  FALSE  FALSE   TRUE
-#&gt; [3,]  FALSE   TRUE   TRUE  FALSE
-#&gt; [4,]  FALSE   TRUE  FALSE   TRUE</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>ssm.segmentation</span>(<span class='fu'>c</span>(<span class='st'>"as"</span>, <span class='st'>"bas"</span>, <span class='st'>"basf"</span>),
+  <span class='fu'>cbind</span>(<span class='kw'>a</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>TRUE</span>, <span class='fl'>FALSE</span>, <span class='fl'>TRUE</span>), <span class='kw'>b</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>FALSE</span>, <span class='fl'>TRUE</span>, <span class='fl'>TRUE</span>)))</div><div class='output co'>#&gt; <span class='message'>Trying 9 combinations...</span></div><div class='output co'>#&gt; <span class='message'>Current segmentation covers 6 characters..</span></div><div class='output co'>#&gt;   N matches matchrate    mp segments
+#&gt; b 2       2         1 1.000       ba
+#&gt; a 2       2         1 0.667        s
+#&gt; 
+#&gt; Mean feature-wise mutual predictability, weighted by feature frequency: 0.833 
+#&gt; Mean signal-wise character coverage, weighted by features per signal: 0.667 
+#&gt; 
+#&gt; Segmentation is based on 3 signals totalling 9 characters.
+#&gt; Discounting overlaps, this segmentation accounts for 6 of those characters.
+#&gt; Total character coverage rate: 0.667 </div><div class='input'>
+<span class='co'># TODO signaling system where one dimension is simply not encoded</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#value">Value</a></li>
+      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

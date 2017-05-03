@@ -21,7 +21,7 @@
 #' rep.matrix(diag(4), each.row=2)
 #' rep.matrix(diag(4), times.row=2)
 #' @seealso \code{\link[base]{rep}}
-#' @export
+#' @export rep.matrix
 rep.matrix <- function(x, times=1, each=1, times.row=times, times.col=times, each.row=each, each.col=each, ...) {
   # replicate individual elements
   x <- matrix(rep(x, each=each.row), ncol=each.row*nrow(x), byrow=TRUE)
@@ -79,14 +79,18 @@ enumerate.meaningcombinations <- function(dimensionality, uniquelabels=TRUE, off
 #' 
 #' @param meanings a matrix with meaning dimensions along columns and different
 #'   meaning combinations along rows (such as created by
-#'   \code{\link{enumerate.meaningcombinations}})
+#'   \code{\link{enumerate.meaningcombinations}}).
+#' @param rownames optional character vector of the same length as the number
+#'   of rows of \code{meanings}.
 #' @return A matrix of \code{TRUE}/\code{FALSE} values.
 #' @examples
 #' enumerate.meaningcombinations(c(2, 2))
 #' binaryfeaturematrix(enumerate.meaningcombinations(c(2, 2)))
 #' @export
-binaryfeaturematrix <- function(meanings) {
+binaryfeaturematrix <- function(meanings, rownames=NULL) {
   if (is.logical(meanings)) {
+    if (!is.null(row.names))
+      row.names(meanings) <- rownames
     meanings
   } else {
     if (is.null(colnames(meanings)))
@@ -99,7 +103,7 @@ binaryfeaturematrix <- function(meanings) {
       cols <- matrix(FALSE, nrow=nrow(meanings), ncol=length(features))
       cols[cbind(1:nrow(cols), match(meanings[, i], features))] <- TRUE
       structure(cols,
-        dimnames=list(NULL, paste(mdimnames[i], features, sep="=")))
+        dimnames=list(rownames, paste(mdimnames[i], features, sep="=")))
     }))
   }
 }

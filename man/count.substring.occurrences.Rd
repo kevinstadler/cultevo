@@ -2,21 +2,26 @@
 % Please edit documentation in R/compositionality.R
 \name{count.substring.occurrences}
 \alias{count.substring.occurrences}
-\title{Count occurence of all substrings in a string.}
+\title{Count occurences of all possible substrings in one more strings.}
 \usage{
-count.substring.occurrences(strings)
+count.substring.occurrences(strings, sortbylength = FALSE)
 }
 \arguments{
 \item{strings}{a list or vector of character sequences}
+
+\item{sortbylength}{logical indicating whether the substring columns should
+be ordered according to the (decreasing) length of the substrings. Default
+is to leave them in the original order in which they occur in the given
+strings.}
 }
 \value{
-a matrix
+A matrix with the original strings along rows and all substrings
+  of those strings along columns. The cell values indicate whether (and how
+  many times) the substring is contained in each of the strings.
 }
 \description{
-Returns a matrix with the original strings along rows and all substrings
-of those strings along columns. The cell values indicate whether (and how
-many times) the substring is contained in each of the strings.
+Count occurences of all possible substrings in one more strings.
 }
 \examples{
-count.substring.occurrences(c("asd", "asdd"))
+count.substring.occurrences(c("asd", "asdd", "foo"))
 }

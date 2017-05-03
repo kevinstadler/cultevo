@@ -5,19 +5,74 @@
 \alias{sm.segmentation}
 \title{Spike's measure of additive compositionality.}
 \usage{
-sm.compositionality(strings, meanings, groups = NULL)
+sm.compositionality(x, y, groups = NULL, strict = FALSE)
 
-sm.segmentation(strings, meanings)
+sm.segmentation(x, y, strict = FALSE)
 }
 \arguments{
-\item{strings}{a list or vector of character sequences}
+\item{x}{a list or vector of character sequences specifying the signals to
+be analysed. Alternatively, \code{x} can also be a formula of the format
+\code{s ~ m1 + m2 + ...}, where \code{s} and \code{m*} specify the column
+names of the signals and meaning features found in the data frame that's
+passed as the second argument.}
 
-\item{meanings}{a matrix or data frame with as many rows as there are
-strings (see below)}
+\item{y}{a matrix or data frame with as many rows as there are signals,
+indicating the presence/value of the different meaning dimensions along
+columns (see section Meaning data format). If \code{x} is a formula, the
+second argument can contain any number of columns, only the ones specified
+in the formula will be considered.}
 
 \item{groups}{a list or vector with as many items as strings, used to split
 \code{strings} and \code{meanings} into data sets for which
 compositionality measures are computed separately.}
+
+\item{strict}{logical: if \code{TRUE}, perform additional filtering of
+candidate segments. In particular, it removes combinations of segments
+(across meanings) which overlap in at least one of the strings where they
+co-occur. For convenience, it also removes segments which are shorter
+substrings of longer candidates (for the same meaning feature).}
+}
+\value{
+\code{sm.compositionality} calculates the mean predictability of all
+  meaning features and their most predictably co-occurring strings. Returns
+  a vector of three elements: \code{N} is the number of signal-meaning
+  pairings on which the computation was based, \code{comp} the mean mutual
+  predictability, and \code{M} the number of distinct meaning features over
+  which this average was computed. (When \code{groups} is not \code{NULL},
+  returns a matrix with the same elements along columns, with one row for
+  every group.)
+
+  \code{sm.segmentation} provides detailed information about the most
+  predictably co-occurring segments for every meaning feature. It returns
+  a data frame with one row for every meaning feature, in descending order
+  of their predictability from (and to) their corresponding string
+  segments. The data frame has the following columns:
+  \describe{
+    \item{\code{N}}{The number of signal-meaning pairings in which this
+      meaning feature was attested.}
+    \item{\code{mp}}{The highest mutual predictability between this
+      meaning feature and one (or more) segments that was found.}
+    \item{\code{p}}{Significance levels of the mutual predictability for the
+      given segment(s). The calculation depends on the frequency of the
+      meaning feature as well as the overall frequency of the segment
+      across all signals and indicates the (null) probability of the given
+      co-occurrence count of the two according to the hypergeometric
+      distribution. If multiple segments are tied for their mutual
+      predictability, the candidate list is filtered to include only those
+      with the highest significance levels (i.e. the lowest p values).}
+    \item{\code{ties}}{The number of substrings found in \code{strings}
+      which have this same level of mutual predictability with the meaning
+      feature.}
+    \item{\code{segments}}{For \code{strict = FALSE}: a list containing the
+      \code{ties} substrings in descending order of their length (the
+      ordering is for convenience only and not inherently meaningful). When
+      \code{strict = TRUE}, the lists of segments for each meaning feature
+      are all of the same length, with a meaningful relationship of the
+      order of segments across the different rows: every set of segments
+      which are found in the same position for each of the different
+      meaning features constitute a valid segmentation where the segments
+      occurrences in the actual signals do not overlap.}
+  }
 }
 \description{
 Implementation of the Spike-Montague information-theoretic measure of
@@ -41,23 +96,13 @@ meaning features that are \emph{most predictive of each other}.
 Mathematically, for every meaning feature \eqn{f\in M}, it tries to find
 the sub-string \eqn{s_{ij}} from the set of strings \eqn{S} that maximises
 \deqn{comp(f,S) = \max_{s_{ij}\in S}\ P(f|s_{ij}) \cdot P(s_{ij}|f)}.
+
+Based on these mappings onto individual meaning features,
+\code{sm.compositionality} then computes the average mutual predictability
+over all meaning features \eqn{M},
+\deqn{comp(M,S) = \frac{1}{|M|} \sum_{f\in M} comp(f,S),}
+as a measure of the overall compositionality of the signalling system.
 }
-\section{Functions}{
-\itemize{
-\item \code{sm.compositionality}: Calculates the mean predictability of all meaning features,
-\eqn{C = \frac{1}{|M|} \sum_{f\in M} comp(m,S)}. Returns a vector of three
-elements: \code{N}, the number of signal-meaning pairings on which the
-computation was based, \code{comp}, the compositionality measure, and
-\code{M}, the number of distinct meaning features over which the measure
-was computed. (When \code{groups} is not \code{NULL}, returns a matrix with
-the same elements along columns, with one row for every group.)
-
-\item \code{sm.segmentation}: Finds the most predictive segment(s) for every meaning feature, i.e. the
-substrings \eqn{s_{ij}} that maximise \eqn{P(m|s_{ij}) \cdot P(s_{ij}|m)}.
-Returns a matrix with one row for every meaning feature, in descending order
-of their predictability from (and to) their corresponding string segments.
-}}
-
 \section{Meaning data format}{
 
 The \code{meanings} can be a matrix or data frame in one of two formats. If
@@ -79,14 +124,19 @@ represent them as atomic meaning features.
 \examples{
 # perfect communication system
 sm.compositionality(c("a", "b", "ab"),
-  cbind(a=c(T, F, T), b=c(F, T, T)))
+  cbind(a=c(TRUE, FALSE, TRUE), b=c(FALSE, TRUE, TRUE)))
 sm.segmentation(c("a", "b", "ab"),
-  cbind(a=c(T, F, T), b=c(F, T, T)))
+  cbind(a=c(TRUE, FALSE, TRUE), b=c(FALSE, TRUE, TRUE)))
 
+# not quite perfect communication system
 sm.compositionality(c("as", "bas", "basf"),
-  cbind(a=c(T, F, T), b=c(F, T, T)))
+  cbind(a=c(TRUE, FALSE, TRUE), b=c(FALSE, TRUE, TRUE)))
 sm.segmentation(c("as", "bas", "basf"),
-  cbind(a=c(T, F, T), b=c(F, T, T)))
+  cbind(a=c(TRUE, FALSE, TRUE), b=c(FALSE, TRUE, TRUE)))
+
+# force candidate segments to be non-overlapping via the 'strict' option
+sm.segmentation(c("as", "bas", "basf"),
+  cbind(a=c(TRUE, FALSE, TRUE), b=c(FALSE, TRUE, TRUE)), strict=TRUE)
 
 # the function also accepts meaning-dimension based matrix definitions:
 print(twobytwoanimals <- enumerate.meaningcombinations(c(animal=2, colour=2)))
@@ -94,12 +144,22 @@ print(twobytwoanimals <- enumerate.meaningcombinations(c(animal=2, colour=2)))
 # note how there are many more candidate segments than just the full length
 # ones. given limited data, it is expected that shorter substrings will be
 # just as predictable as the full segments that contain them.
-sm.segmentation(c("greendog", "bluedog", "greencat", "bluecat"), twobytwoanimals)
+sm.segmentation(c("greendog", "greencat", "bluedog", "bluecat"), twobytwoanimals)
+
+# since there is no overlap in the constituent characters of the identified
+# 'morphemes', they are all tied in their mutual predictiveness with the
+# (shorter) substrings they contain
+
+# to reduce the pool of candidate segments to those which are
+# non-overlapping and of maximal length, again use the 'strict=TRUE' option:
+
+sm.segmentation(c("greendog", "greencat", "bluedog", "bluecat"), twobytwoanimals,
+  strict=TRUE)
 }
 \references{
 Spike, M. (2016). Minimal requirements for the cultural
   evolution of language. PhD thesis, The University of Edinburgh.
 }
 \seealso{
-\code{\link{binaryfeaturematrix}}
+\code{\link{binaryfeaturematrix}}, \code{\link{ssm.compositionality}}
 }

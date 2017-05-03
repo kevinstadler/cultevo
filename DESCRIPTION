@@ -1,13 +1,13 @@
 Package: cultevo
 Title: Tools, Measures and Statistical Tests for Cultural Evolution
 Version: 1.0.0
-Date: 2017-03-28
+Date: 2017-05-03
 Authors@R: person("Kevin Stadler", role=c("aut", "cre"), email="kevin.stadler@mpi.nl")
 Description: This package provides implementations of functions and statistical
     tests often used in the study of cultural evolution. It provides functions
-    for computing distance matrices, performing Mantel tests on them,
-    visualising the results of those tests, as well as a robust implementation
-    of Page's L test for monotonicity.
+    for measuring the compositionality of signaling systems, computing string
+    and meaning distance matrices, as well as a robust implementation of Page's
+    test for monotonicity of ranks.
 URL: https://github.com/kevinstadler/cultevo
 BugReports: https://github.com/kevinstadler/cultevo/issues
 Encoding: UTF-8
@@ -19,7 +19,8 @@ Imports:
     Hmisc,
     pspearman,
     stats,
+    stringi,
     utils
 Suggests:
-    memoise,
+    memoise
 RoxygenNote: 6.0.1

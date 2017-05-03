@@ -127,7 +127,7 @@ normalisedlevenshteindists <- function(strings) {
 #'   character vectors.
 #' @param x one or more strings to be split (and, optionally, counted)
 #' @param split the boundary character or sequence at which to segment the
-#'   string(s)
+#'   string(s). The default, \code{NULL}, splits the string after every character.
 #' @examples
 #' segment.string(c("asd", "fghj"))
 #'
@@ -223,17 +223,14 @@ read.dist <- function(data, el1.column=1, el2.column=2, dist.columns=3) {
 check.dist <- function(x)
   UseMethod("check.dist")
 
-#' @rdname check.dist
 #' @export
 check.dist.dist <- function(x)
   as.matrix(x)
 
-#' @rdname check.dist
 #' @export
 check.dist.default <- function(x)
   as.matrix(tryCatch(stats::as.dist(x), warning=function(w) stop(w)))
 
-#' @rdname check.dist
 #' @export
 check.dist.matrix <- function(x) {
   if (any(diag(x) != 0)) {
@@ -248,7 +245,6 @@ check.dist.matrix <- function(x) {
   check.dist.default(x)
 }
 
-#' @rdname check.dist
 #' @export
 check.dist.list <- function(x)
   lapply(x, check.dist)
@@ -263,3 +259,4 @@ check.dist.list <- function(x)
 #' @export
 shuffle.locations <- function(m, perm = sample.int(dim(m)[1]))
   m[perm, perm]
+# https://stat.ethz.ch/R-manual/R-devel/library/Matrix/html/pMatrix-class.html
