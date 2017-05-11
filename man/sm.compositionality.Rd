@@ -52,14 +52,11 @@ substrings of longer candidates (for the same meaning feature).}
       meaning feature was attested.}
     \item{\code{mp}}{The highest mutual predictability between this
       meaning feature and one (or more) segments that was found.}
-    \item{\code{p}}{Significance levels of the mutual predictability for the
-      given segment(s). The calculation depends on the frequency of the
-      meaning feature as well as the overall frequency of the segment
-      across all signals and indicates the (null) probability of the given
-      co-occurrence count of the two according to the hypergeometric
-      distribution. If multiple segments are tied for their mutual
-      predictability, the candidate list is filtered to include only those
-      with the highest significance levels (i.e. the lowest p values).}
+    \item{\code{p}}{Significance levels of the given mutual predictability,
+      i.e. the probability that the given mutual predictability level could
+      be reached by chance. The calculation depends on the frequency of the
+      meaning feature as well as the number and relative frequency of all
+      substrings across all signals.}
     \item{\code{ties}}{The number of substrings found in \code{strings}
       which have this same level of mutual predictability with the meaning
       feature.}
@@ -75,7 +72,7 @@ substrings of longer candidates (for the same meaning feature).}
   }
 }
 \description{
-Implementation of the Spike-Montague information-theoretic measure of
+Implementation of the Spike-Montague segmentation and measure of
 additive compositionality (Spike 2016), which finds the most predictive
 association between substrings and categorical meaning features. Additive
 means that it does not take the ordering of elements into account, i.e.
@@ -144,17 +141,24 @@ print(twobytwoanimals <- enumerate.meaningcombinations(c(animal=2, colour=2)))
 # note how there are many more candidate segments than just the full length
 # ones. given limited data, it is expected that shorter substrings will be
 # just as predictable as the full segments that contain them.
-sm.segmentation(c("greendog", "greencat", "bluedog", "bluecat"), twobytwoanimals)
+sm.segmentation(c("greendog", "bluedog", "greencat", "bluecat"), twobytwoanimals)
+
+# do the same thing but using the formula interface
+print(twobytwosignalingsystem <- cbind(twobytwoanimals,
+  signal=c("greendog", "bluedog", "greencat", "bluecat")))
+
+sm.segmentation(signal ~ colour + animal, twobytwosignalingsystem)
+
 
 # since there is no overlap in the constituent characters of the identified
 # 'morphemes', they are all tied in their mutual predictiveness with the
 # (shorter) substrings they contain
-
+#
 # to reduce the pool of candidate segments to those which are
 # non-overlapping and of maximal length, again use the 'strict=TRUE' option:
 
-sm.segmentation(c("greendog", "greencat", "bluedog", "bluecat"), twobytwoanimals,
-  strict=TRUE)
+sm.segmentation(signal ~ colour + animal, twobytwosignalingsystem, strict=TRUE)
+
 }
 \references{
 Spike, M. (2016). Minimal requirements for the cultural

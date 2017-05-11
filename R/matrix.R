@@ -44,7 +44,7 @@ rep.matrix <- function(x, times=1, each=1, times.row=times, times.col=times, eac
 #'   other (potentially ragged) 2-dimensional data structure listing the
 #'   possible meaning values for every dimension
 #' @param uniquelabels logical, determines whether the same integers can be
-#'   reused across meaning dimensions or not. When \code{uniquelabels==FALSE},
+#'   reused across meaning dimensions or not. When \code{uniquelabels = FALSE},
 #'   the resulting matrix will be very reminiscent of tables listing all binary
 #'   combinations of factors. Ignored when \code{dimensionality} specifies the
 #'   meaning values
@@ -72,7 +72,7 @@ enumerate.meaningcombinations <- function(dimensionality, uniquelabels=TRUE, off
     combs <- do.call(expand.grid, mapply(function(nvalues, off)if (is.na(nvalues)) NA else off+1:nvalues, rev(dimensionality), offsets, SIMPLIFY=FALSE))
   }
   structure(as.matrix(combs[,ncol(combs):1]),
-    dimnames=list(NULL, colnames(combs)))
+    dimnames=list(NULL, rev(colnames(combs))))
 }
 
 #' Convert a categorical meaning matrix to a binary feature matrix.

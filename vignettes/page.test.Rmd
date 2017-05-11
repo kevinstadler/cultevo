@@ -37,6 +37,9 @@ It also cannot show whether *differences* between the conditions/generations are
 To test the sensitivity of the test to a single step-wise difference across conditions we can take a typical sample set of $N=4$ replications with $k=10$ levels each and fix the very first position to always be ranked first, with all successive ranks being randomly shuffled:
 
 ```{r}
+# make results reproducible
+set.seed(1000)
+
 pseudorandomranks <- function(...)
   unlist(lapply(list(...), function(p) if (length(p) > 1) sample(p) else p))
 

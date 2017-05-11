@@ -107,7 +107,7 @@ possible.</p>
 
     <pre><span class='fu'>ssm.compositionality</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>groups</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
-<span class='fu'>ssm.segmentation</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>mergefeatures</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+<span class='fu'>ssm.segmentation</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>mergefeatures</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -131,8 +131,13 @@ measures are computed separately.</p></td>
       <th>mergefeatures</th>
       <td><p>logical: if <code>TRUE</code>, <code>ssm.segmentation</code> will
 try to improve on the initial solution by incrementally merging pairs of
-meaning features as long as doing so improves the over string coverage
+meaning features as long as doing so improves the overall string coverage
 of the segmentation.</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>logical: if <code>TRUE</code>, messages detailed information about
+the number of segment combinations considered for every coverage computed.</p></td>
     </tr>
     </table>
     
@@ -143,17 +148,53 @@ of the segmentation.</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>ssm.segmentation</span>(<span class='fu'>c</span>(<span class='st'>"as"</span>, <span class='st'>"bas"</span>, <span class='st'>"basf"</span>),
-  <span class='fu'>cbind</span>(<span class='kw'>a</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>TRUE</span>, <span class='fl'>FALSE</span>, <span class='fl'>TRUE</span>), <span class='kw'>b</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>FALSE</span>, <span class='fl'>TRUE</span>, <span class='fl'>TRUE</span>)))</div><div class='output co'>#&gt; <span class='message'>Trying 9 combinations...</span></div><div class='output co'>#&gt; <span class='message'>Current segmentation covers 6 characters..</span></div><div class='output co'>#&gt;   N matches matchrate    mp segments
-#&gt; b 2       2         1 1.000       ba
-#&gt; a 2       2         1 0.667        s
+  <span class='fu'>cbind</span>(<span class='kw'>a</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>TRUE</span>, <span class='fl'>FALSE</span>, <span class='fl'>TRUE</span>), <span class='kw'>b</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>FALSE</span>, <span class='fl'>TRUE</span>, <span class='fl'>TRUE</span>)))</div><div class='output co'>#&gt; <span class='message'>Checking 9 segment combinations for overlaps...</span></div><div class='output co'>#&gt; <span class='message'>Initial segmentation covers 6 of 9 characters, mean mp 0.833</span></div><div class='output co'>#&gt;   N matches matchrate    mp     p segments
+#&gt; b 2       2         1 1.000 0.651        b
+#&gt; a 2       2         1 0.667 0.994       as
 #&gt; 
 #&gt; Mean feature-wise mutual predictability, weighted by feature frequency: 0.833 
-#&gt; Mean signal-wise character coverage, weighted by features per signal: 0.667 
+#&gt; Mean signal-wise character coverage, weighted by features per signal: 0.708 
 #&gt; 
 #&gt; Segmentation is based on 3 signals totalling 9 characters.
 #&gt; Discounting overlaps, this segmentation accounts for 6 of those characters.
 #&gt; Total character coverage rate: 0.667 </div><div class='input'>
-<span class='co'># TODO signaling system where one dimension is simply not encoded</span></div></pre>
+<span class='co'># signaling system where a distinction is not encoded</span>
+<span class='fu'>print</span>(<span class='no'>threebytwoanimals</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='enumerate.meaningcombinations.html'>enumerate.meaningcombinations</a></span>(<span class='fu'>list</span>(<span class='kw'>animal</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='st'>"dog"</span>, <span class='st'>"cat"</span>, <span class='st'>"tiger"</span>),
+  <span class='kw'>colour</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='st'>"col1"</span>, <span class='st'>"col2"</span>))))</div><div class='output co'>#&gt;      animal  colour
+#&gt; [1,] "dog"   "col1"
+#&gt; [2,] "dog"   "col2"
+#&gt; [3,] "cat"   "col1"
+#&gt; [4,] "cat"   "col2"
+#&gt; [5,] "tiger" "col1"
+#&gt; [6,] "tiger" "col2"</div><div class='input'>
+<span class='fu'>ssm.segmentation</span>(<span class='fu'>c</span>(<span class='st'>"greendog"</span>, <span class='st'>"bluedog"</span>, <span class='st'>"greenfeline"</span>, <span class='st'>"bluefeline"</span>, <span class='st'>"greenfeline"</span>, <span class='st'>"bluefeline"</span>),
+  <span class='no'>threebytwoanimals</span>)</div><div class='output co'>#&gt; <span class='message'>Checking 1 segment combinations for overlaps...</span></div><div class='output co'>#&gt; <span class='message'>Initial segmentation covers 57 of 57 characters, mean mp 0.833</span></div><div class='output co'>#&gt;              N matches matchrate  mp     p segments
+#&gt; animal=dog   2       2         1 1.0 0.982      dog
+#&gt; colour=col1  3       3         1 1.0 0.615    green
+#&gt; colour=col2  3       3         1 1.0 0.615     blue
+#&gt; animal=cat   2       2         1 0.5     1   feline
+#&gt; animal=tiger 2       2         1 0.5     1   feline
+#&gt; 
+#&gt; Mean feature-wise mutual predictability, weighted by feature frequency: 0.833 
+#&gt; Mean signal-wise character coverage, weighted by features per signal: 1 
+#&gt; 
+#&gt; Segmentation is based on 6 signals totalling 57 characters.
+#&gt; Discounting overlaps, this segmentation accounts for 57 of those characters.
+#&gt; Total character coverage rate: 1 </div><div class='input'>
+<span class='co'># do the same thing again, but allow merging of features</span>
+<span class='fu'>ssm.segmentation</span>(<span class='fu'>c</span>(<span class='st'>"greendog"</span>, <span class='st'>"bluedog"</span>, <span class='st'>"greenfeline"</span>, <span class='st'>"bluefeline"</span>, <span class='st'>"greenfeline"</span>, <span class='st'>"bluefeline"</span>),
+  <span class='no'>threebytwoanimals</span>, <span class='kw'>mergefeatures</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='message'>Checking 1 segment combinations for overlaps...</span></div><div class='output co'>#&gt; <span class='message'>Initial segmentation covers 57 of 57 characters, mean mp 0.833</span></div><div class='output co'>#&gt; <span class='message'>Merging animal=cat|animal=tiger improved coverage to 57 out of 57, mean mp 1</span></div><div class='output co'>#&gt;                         N matches matchrate mp     p segments
+#&gt; animal=dog              2       2         1  1 0.982      dog
+#&gt; colour=col1             3       3         1  1 0.615    green
+#&gt; colour=col2             3       3         1  1 0.615     blue
+#&gt; animal=cat|animal=tiger 4       4         1  1 0.701   feline
+#&gt; 
+#&gt; Mean feature-wise mutual predictability, weighted by feature frequency: 1 
+#&gt; Mean signal-wise character coverage, weighted by features per signal: 1 
+#&gt; 
+#&gt; Segmentation is based on 6 signals totalling 57 characters.
+#&gt; Discounting overlaps, this segmentation accounts for 57 of those characters.
+#&gt; Total character coverage rate: 1 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

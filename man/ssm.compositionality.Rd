@@ -7,7 +7,7 @@
 \usage{
 ssm.compositionality(x, y, groups = NULL)
 
-ssm.segmentation(x, y, mergefeatures = FALSE)
+ssm.segmentation(x, y, mergefeatures = FALSE, verbose = FALSE)
 }
 \arguments{
 \item{x}{a list or vector of character sequences}
@@ -21,8 +21,11 @@ measures are computed separately.}
 
 \item{mergefeatures}{logical: if \code{TRUE}, \code{ssm.segmentation} will
 try to improve on the initial solution by incrementally merging pairs of
-meaning features as long as doing so improves the over string coverage
+meaning features as long as doing so improves the overall string coverage
 of the segmentation.}
+
+\item{verbose}{logical: if \code{TRUE}, messages detailed information about
+the number of segment combinations considered for every coverage computed.}
 }
 \description{
 This algorithm builds on Spike's measure of compositionality (see
@@ -38,7 +41,16 @@ possible.
 ssm.segmentation(c("as", "bas", "basf"),
   cbind(a=c(TRUE, FALSE, TRUE), b=c(FALSE, TRUE, TRUE)))
 
-# TODO signaling system where one dimension is simply not encoded
+# signaling system where a distinction is not encoded
+print(threebytwoanimals <- enumerate.meaningcombinations(list(animal=c("dog", "cat", "tiger"),
+  colour=c("col1", "col2"))))
+
+ssm.segmentation(c("greendog", "bluedog", "greenfeline", "bluefeline", "greenfeline", "bluefeline"),
+  threebytwoanimals)
+
+# do the same thing again, but allow merging of features
+ssm.segmentation(c("greendog", "bluedog", "greenfeline", "bluefeline", "greenfeline", "bluefeline"),
+  threebytwoanimals, mergefeatures=TRUE)
 }
 \seealso{
 \code{\link{sm.compositionality}}

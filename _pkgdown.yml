@@ -31,6 +31,7 @@ reference:
     - read.dist
   - title: Misc functions
     contents:
+    - pvalue.str
     - rep.matrix
     - shuffle.locations
     - temperature.colors

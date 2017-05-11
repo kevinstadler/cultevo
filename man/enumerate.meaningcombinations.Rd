@@ -14,7 +14,7 @@ other (potentially ragged) 2-dimensional data structure listing the
 possible meaning values for every dimension}
 
 \item{uniquelabels}{logical, determines whether the same integers can be
-reused across meaning dimensions or not. When \code{uniquelabels==FALSE},
+reused across meaning dimensions or not. When \code{uniquelabels = FALSE},
 the resulting matrix will be very reminiscent of tables listing all binary
 combinations of factors. Ignored when \code{dimensionality} specifies the
 meaning values}
