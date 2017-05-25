@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Convert a categorical meaning matrix to a binary feature matrix. — binaryfeaturematrix • cultevo</title>
+<title>Convert a meaning matrix to a binary 'meaning-feature-present' matrix. — binaryfeaturematrix • cultevo</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -91,11 +91,15 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Convert a categorical meaning matrix to a binary feature matrix.</h1>
+    <h1>Convert a meaning matrix to a binary 'meaning-feature-present' matrix.</h1>
     </div>
 
     
-    <p>Convert a categorical meaning matrix to a binary feature matrix.</p>
+    <p>Transforms a meaning matrix to 'wide' format where, instead of having
+a column for every meaning dimension store all possible meaning values,
+every possible value for any dimension is treated as its own categorical
+'meaning feature' whose presence or absence is represented by a logical
+<code>TRUE</code>/<code>FALSE</code> value in its own meaning feature column.</p>
     
 
     <pre><span class='fu'>binaryfeaturematrix</span>(<span class='no'>meanings</span>, <span class='kw'>rownames</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
@@ -105,8 +109,8 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>meanings</th>
-      <td><p>a matrix with meaning dimensions along columns and different
-meaning combinations along rows (such as created by
+      <td><p>a matrix or data frame with meaning dimensions along columns
+and different meaning combinations along rows (such as created by
 <code><a href='enumerate.meaningcombinations.html'>enumerate.meaningcombinations</a></code>).</p></td>
     </tr>
     <tr>
@@ -118,7 +122,25 @@ of rows of <code>meanings</code>.</p></td>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A matrix of <code>TRUE</code>/<code>FALSE</code> values.</p>
+    <p>A matrix of <code>TRUE</code>/<code>FALSE</code> values with as many rows as
+  <code>meanings</code> and one column for every column-value combination in
+  <code>meanings</code>.</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Given a matrix or data frame with meaning dimensions along columns and
+different combinations of meaning feature values along rows, creates a
+a matrix with the same number of rows but with one column for every
+possible value for every meaning dimension.</p>
+<p>All meaning dimensions and values are treated <em>categorically</em>, i.e. as
+factors with no gradual notion of meaning feature similarity, neither
+within nor across the original meaning dimensions. Information about which
+feature values correspond to which meaning dimensions is essentially
+discarded in this representation, but could in principle be recovered
+through the patterns of (non)-co-occurrence of different meaning features.</p>
+<p>In order for the resulting meaning columns to be interpretable, the column
+names of the result are of the structure <code>columnname=value</code>, based on
+the column names of the input meaning matrix (see Examples).</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -138,6 +160,8 @@ of rows of <code>meanings</code>.</p></td>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

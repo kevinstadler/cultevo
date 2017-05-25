@@ -1,8 +1,8 @@
 Package: cultevo
 Title: Tools, Measures and Statistical Tests for Cultural Evolution
 Version: 1.0.0
-Date: 2017-05-03
-Authors@R: person("Kevin Stadler", role=c("aut", "cre"), email="kevin.stadler@mpi.nl")
+Date: 2017-05-25
+Authors@R: person("Kevin Stadler", role=c("aut", "cre"), email="kevin.stadler@ed.ac.uk")
 Description: This package provides implementations of functions and statistical
     tests often used in the study of cultural evolution. It provides functions
     for measuring the compositionality of signaling systems, computing string

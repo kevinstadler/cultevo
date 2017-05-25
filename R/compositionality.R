@@ -213,6 +213,7 @@ sm.compositionality.default <- function(x, y, groups=NULL, strict=FALSE) {
     # TODO if (strict) cbind(rate=mean(segmentation$rate)) # m=sum(), mr=sum(), 
   } else {
     do.call(rbind, lapply(unique(groups), function(grp) {
+      # FIXME preserve type of group (numeric/factor)?
       cbind(group=grp, sm.compositionality(x[groups == grp],
         y[groups == grp, ], strict=strict))
     }))
@@ -735,7 +736,7 @@ print.ssm <- function(x, digits=3, ...) {
   cat("Mean signal-wise character coverage, weighted by features per signal:",
     attr(x, "weightedsignalcoverage"), "\n\nSegmentation is based on",
     attr(x, "nsignals"), "signals totalling", attr(x, "ntotalchars"),
-    "characters.\nDiscounting overlaps, this segmentation accounts for",
+    "characters.\nDiscounting overlaps, the segmentation above accounts for",
     attr(x, "charscovered"),
     "of those characters.\nTotal character coverage rate:",
     attr(x, "charscovered") / attr(x, "ntotalchars"), "\n")
@@ -752,7 +753,7 @@ runfromformula <- function(FUN, x, y, ...) {
   lhs <- fields[attr(t, "response")]
   rhs <- attr(t, "term.labels")
   # TODO replace with attach()
-  FUN(y[,lhs], y[,rhs], ...)
+  FUN(y[,lhs], y[,rhs,drop=FALSE], ...)
 }
 
 # selectfrom is a list of N elements, each specifying one or more elements that

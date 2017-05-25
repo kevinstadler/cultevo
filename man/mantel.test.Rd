@@ -39,8 +39,8 @@ particular \code{plot}, \code{method}, \code{trials} and
 
 \item{omitzerodistances}{logical: if \code{TRUE}, the calculation of the
 correlation coefficient omits pairs of off-diagonal cells which contain a
-0 in the first distance matrix argument. (For the formula interface, this
-is the matrix which specifies the meaning distances.)}
+0 in the \emph{second} distance matrix argument. (For the formula
+interface, this is the matrix which specifies the meaning distances.)}
 
 \item{groups}{when \code{x} is a formula: column name by which the data in
 \code{y} is split into separate data sets to run several Mantel tests on}
@@ -118,7 +118,11 @@ are passed on to \code{\link[graphics]{plot.default}}.
 \item \code{default}: Perform Mantel correlation test on two distance
 matrices. The distance matrices can either be of type
 \code{\link[stats]{dist}}, plain R matrices or any object that can be
-interpreted by \code{\link{check.dist}}.
+interpreted by \code{\link{check.dist}}. The order of the two matrices does
+not matter unless \code{omitzerodistances = TRUE}, in which case cells with
+a 0 in the \emph{second} matrix are omitted from the calculation of the
+correlation coefficient. For consistency it is therefore recommended to
+always pass the string distance matrix first, meaning distance matrix second.
 
 \item \code{formula}: This function can be called with experimental result
 data frames, distance matrix calculation is taken care of internally.
@@ -149,9 +153,13 @@ mantel.test(hammingdists(enumerate.meaningcombinations(c(2, 2, 2, 2))),
 mantel.test(word ~ Var1 + Var2, cbind(word=c("aa", "ab", "ba", "bb"),
   enumerate.meaningcombinations(c(2, 2))))
 
-# running tests on a list of distance matrices and plotting them
-plot(mantel.test(list(dist(1:8), dist(sample(8:1)), dist(runif(8))),
-  hammingdists(enumerate.meaningcombinations(c(2, 2, 2)))), xlab="group")
+# passing a list of distance matrices as the first argument runs separate
+# tests on pairwise combinations of the first and second argument(s)
+result <- mantel.test(list(dist(1:8), dist(sample(8:1)), dist(runif(8))),
+  hammingdists(enumerate.meaningcombinations(c(2, 2, 2))))
+
+print(result)
+plot(result, xlab="group")
 }
 \seealso{
 \code{\link[stats]{cor}},

@@ -29,7 +29,7 @@ temperature.colors <- function(mn, mx=NULL, intensity=1) {
 #' @examples
 #' pvalue.str(1:8/101)
 #' @export
-pvalue.str <- function(ps, digits=3, thresholds=c(.001, .01, .05)) {
+pvalue.str <- function(ps, digits=3, thresholds=c(.001, .01)) {
   lvls <- apply(outer(as.vector(ps), thresholds, '<'), 1, function(r) match(TRUE, r))
   out <- paste('<', thresholds, sep='')[lvls]
   # could add = too?

@@ -21,8 +21,8 @@
 #' @param trials maximum number of permutations to be tested
 #' @param omitzerodistances logical: if \code{TRUE}, the calculation of the
 #'   correlation coefficient omits pairs of off-diagonal cells which contain a
-#'   0 in the first distance matrix argument. (For the formula interface, this
-#'   is the matrix which specifies the meaning distances.)
+#'   0 in the \emph{second} distance matrix argument. (For the formula
+#'   interface, this is the matrix which specifies the meaning distances.)
 #' @param groups when \code{x} is a formula: column name by which the data in
 #'   \code{y} is split into separate data sets to run several Mantel tests on
 #' @param stringdistfun when \code{x} is a formula: edit distance function used
@@ -85,7 +85,11 @@ mantel.test <- function(x, y, ...)
 #' @describeIn mantel.test Perform Mantel correlation test on two distance
 #' matrices. The distance matrices can either be of type
 #' \code{\link[stats]{dist}}, plain R matrices or any object that can be
-#' interpreted by \code{\link{check.dist}}.
+#' interpreted by \code{\link{check.dist}}. The order of the two matrices does
+#' not matter unless \code{omitzerodistances = TRUE}, in which case cells with
+#' a 0 in the \emph{second} matrix are omitted from the calculation of the
+#' correlation coefficient. For consistency it is therefore recommended to
+#' always pass the string distance matrix first, meaning distance matrix second.
 #' @importFrom stats cor
 mantel.test.default <- function(x, y, plot=FALSE, method="pearson", trials=9999, omitzerodistances=FALSE, ...) {
   m1 <- check.dist(x)
@@ -107,7 +111,7 @@ mantel.test.default <- function(x, y, plot=FALSE, method="pearson", trials=9999,
   # extract values relevent for correlation computation
   indices <- which(lower.tri(m1))
   if (omitzerodistances)
-    indices <- setdiff(indices, which(m1 == 0))
+    indices <- setdiff(indices, which(m2 == 0))
   m1 <- m1[indices]
   duration <- max(0.001, system.time(veridical <- cor(m1, m2[indices], method=method))[[3]])
 
@@ -119,25 +123,27 @@ mantel.test.default <- function(x, y, plot=FALSE, method="pearson", trials=9999,
   if (exact)
     message("Permutation space is small, enumerating all ", factorial(d), " possible permutations.")
   if (duration*trials > 30)
-    message("Estimated time to evaluate all ", trials, " permutations is ", duration*trials, "s, go get yourself a biscuit!")
+    message("Estimated time to evaluate all ", trials, " permutations is ",
+      round(duration*trials), "s, go get yourself a biscuit!")
 
   if (exact) {
     rsample <- sapply(combinat::permn(d), function(perm) cor(m1, shuffle.locations(m2, perm)[indices], method=method))
   } else {
-    rsample <- replicate(trials, cor(m1, shuffle.locations(m2)[indices], method=method))
+    rsample <- replicate(trials,
+      cor(m1, shuffle.locations(m2)[indices], method=method))
     # calculate lower bound by sampling local permutations
     # all pairwise swaps
-    switches <- combinat::combn(d, 2)
-    localrs <- apply(switches, 2, function(i) {
-      cor(m1,
-        shuffle.locations(m2,
-          c(seq_len(i[1]-1), i[2], i[1]+seq_len(i[2]-i[1]), i[1], i[2]+seq_len(d-i[2])))[indices],
-        method=method)})
-    p.lowerbound <- sum(localrs >= veridical) / factorial(d)
+    # switches <- combinat::combn(d, 2)
+    # localrs <- apply(switches, 2, function(i) {
+    #   cor(m1,
+    #     shuffle.locations(m2,
+    #       c(seq_len(i[1]-1), i[2], i[1]+seq_len(i[2]-i[1]), i[1], i[2]+seq_len(d-i[2])))[indices],
+    #     method=method)})
+    # p.lowerbound <- sum(localrs >= veridical) / factorial(d)
   }
 
   greater <- sum(rsample >= veridical)
-  # http://www.ncbi.nlm.nih.gov/pmc/articles/PMC379178/
+  # empirical p value http://www.ncbi.nlm.nih.gov/pmc/articles/PMC379178/
   p.empirical <- (greater + 1) / (length(rsample) + 1)
 
   mn <- mean(rsample)
@@ -179,14 +185,14 @@ mantel.test.formula <- function(x, y, groups=NULL, stringdistfun=utils::adist,
   # TODO implement grouping/conditioning term parsing for formula interface
   if (is.null(groups)) {
     # pass meanings first
-    mantel.test.default(meaningdistfun(y[,rhs]), stringdistfun(y[,lhs]), ...)
+    mantel.test.default(stringdistfun(y[,lhs]), meaningdistfun(y[,rhs]), ...)
   } else {
     levels <- sort(unique(y[,groups]))
     mantel.test.list(sapply(levels, function(lvl)
-          meaningdistfun(y[which(y[[groups]] == lvl), rhs]),
+          stringdistfun(y[which(y[[groups]] == lvl), lhs]),
         simplify=FALSE),
       sapply(levels, function(lvl)
-          stringdistfun(y[which(y[[groups]] == lvl), lhs]),
+          meaningdistfun(y[which(y[[groups]] == lvl), rhs]),
         simplify=FALSE), ...)
   }
 }
@@ -198,9 +204,13 @@ mantel.test.formula <- function(x, y, groups=NULL, stringdistfun=utils::adist,
 #' \code{mantel} object with as many rows.
 #' @examples
 #'
-#' # running tests on a list of distance matrices and plotting them
-#' plot(mantel.test(list(dist(1:8), dist(sample(8:1)), dist(runif(8))),
-#'   hammingdists(enumerate.meaningcombinations(c(2, 2, 2)))), xlab="group")
+#' # passing a list of distance matrices as the first argument runs separate
+#' # tests on pairwise combinations of the first and second argument(s)
+#' result <- mantel.test(list(dist(1:8), dist(sample(8:1)), dist(runif(8))),
+#'   hammingdists(enumerate.meaningcombinations(c(2, 2, 2))))
+#'
+#' print(result)
+#' plot(result, xlab="group")
 #' @export
 mantel.test.list <- function(x, y, plot=FALSE, ...) {
   # catch plot argument so that individual tests don't all produce a plot
@@ -216,6 +226,8 @@ mantel.test.list <- function(x, y, plot=FALSE, ...) {
 #' @export
 print.mantel <- function(x, ...) {
   for (i in 1:nrow(x))
+    if (!is.null(x$group))
+      cat("Group ", x$group[i], ":\n")
     cat("Mantel permutation test (method: ", x$method[i], ")\nr = ",
       format(x$statistic[i], digits=3), ", N = ", x$N[i], "\n",
       length(x$rsample[[i]]), " permutations, mean = ",
@@ -235,6 +247,8 @@ blue.if.true <- function(x, default="black")
 method.label <- list(pearson="r", kendall=expression(tau), spearman=expression(rho))
 
 # grab the xaxt, xlab, xlim and ylim arguments to stop them from being passed on via ...
+# @importFrom graphics curve plot points segments text
+#' @importFrom stats dnorm
 plotmantelsample <- function(mantels, nbins=25, main="", xaxt=NULL, xlab=NULL, xlim=NULL, ylim=NULL, ...) {
   d <- list()
   if (nrow(mantels) > 1)
@@ -253,7 +267,7 @@ plotmantelsample <- function(mantels, nbins=25, main="", xaxt=NULL, xlab=NULL, x
     graphics::curve({stats::dnorm(x, mean=mantels$mean[i], sd=mantels$sd[i])}, lty=3, add=TRUE)
     # mark veridical r
     col <- blue.if.true(mantels$is.unique.max[i])
-    level <- stats::dnorm(mantels$statistic[i], mean=mantels$mean[i], sd=mantels$sd[i])
+    level <- dnorm(mantels$statistic[i], mean=mantels$mean[i], sd=mantels$sd[i])
     graphics::segments(mantels$statistic[i], 0, y1=level, col=col, lty=2)
     graphics::points(mantels$statistic[i], y=0.15+level, pch=25, bg=col, col=col)
     graphics::text(mantels$statistic[i], 0.15+level, paste("p=", format(mantels$p.value[i], digits=3), sep=""), pos=3)
@@ -273,12 +287,14 @@ plotmantelsample <- function(mantels, nbins=25, main="", xaxt=NULL, xlab=NULL, x
 #' @param xlab the x axis label used when plotting the result of several Mantel
 #'   tests next to each other
 #' @rdname mantel.test
+#' @importFrom graphics abline axis boxplot points text
 #' @export
 plot.mantel <- function(x, xlab="generation", ...) {
-  if (nrow(x) <= 2) {
+  if (nrow(x) == 1) {
     plotmantelsample(x)
   } else {
     # TODO replace with boxplots
+    # TODO x axis factor labels
     Hmisc::errbar(1:nrow(x), x$mean, x$mean + x$sd, x$mean - x$sd, xlab=xlab,
       xaxt="n", ylab=paste(method.label[[x$method[1]]], " (mean+-sd)", sep=""),
       xlim=c(0.5, nrow(x) + 0.5),

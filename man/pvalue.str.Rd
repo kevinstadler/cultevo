@@ -4,7 +4,7 @@
 \alias{pvalue.str}
 \title{Convert p-values into strings with inequalities.}
 \usage{
-pvalue.str(ps, digits = 3, thresholds = c(0.001, 0.01, 0.05))
+pvalue.str(ps, digits = 3, thresholds = c(0.001, 0.01))
 }
 \arguments{
 \item{ps}{a vector (or single scalar) of significance levels}

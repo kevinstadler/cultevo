@@ -2,23 +2,46 @@
 % Please edit documentation in R/matrix.R
 \name{binaryfeaturematrix}
 \alias{binaryfeaturematrix}
-\title{Convert a categorical meaning matrix to a binary feature matrix.}
+\title{Convert a meaning matrix to a binary 'meaning-feature-present' matrix.}
 \usage{
 binaryfeaturematrix(meanings, rownames = NULL)
 }
 \arguments{
-\item{meanings}{a matrix with meaning dimensions along columns and different
-meaning combinations along rows (such as created by
+\item{meanings}{a matrix or data frame with meaning dimensions along columns
+and different meaning combinations along rows (such as created by
 \code{\link{enumerate.meaningcombinations}}).}
 
 \item{rownames}{optional character vector of the same length as the number
 of rows of \code{meanings}.}
 }
 \value{
-A matrix of \code{TRUE}/\code{FALSE} values.
+A matrix of \code{TRUE}/\code{FALSE} values with as many rows as
+  \code{meanings} and one column for every column-value combination in
+  \code{meanings}.
 }
 \description{
-Convert a categorical meaning matrix to a binary feature matrix.
+Transforms a meaning matrix to 'wide' format where, instead of having
+a column for every meaning dimension store all possible meaning values,
+every possible value for any dimension is treated as its own categorical
+'meaning feature' whose presence or absence is represented by a logical
+\code{TRUE}/\code{FALSE} value in its own meaning feature column.
+}
+\details{
+Given a matrix or data frame with meaning dimensions along columns and
+different combinations of meaning feature values along rows, creates a
+a matrix with the same number of rows but with one column for every
+possible value for every meaning dimension.
+
+All meaning dimensions and values are treated \emph{categorically}, i.e. as
+factors with no gradual notion of meaning feature similarity, neither
+within nor across the original meaning dimensions. Information about which
+feature values correspond to which meaning dimensions is essentially
+discarded in this representation, but could in principle be recovered
+through the patterns of (non)-co-occurrence of different meaning features.
+
+In order for the resulting meaning columns to be interpretable, the column
+names of the result are of the structure \code{columnname=value}, based on
+the column names of the input meaning matrix (see Examples).
 }
 \examples{
 enumerate.meaningcombinations(c(2, 2))

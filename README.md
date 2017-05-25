@@ -1,10 +1,12 @@
-# cultevo: tools and tests for cultural evolution in R
+# Tools and tests for cultural evolution in R
 
-This package provides implementations of functions and statistical tests often used in the study of cultural evolution. See the [Function reference](https://kevinstadler.github.io/cultevo/reference/index.html) for a full list of functions.
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cultevo)](https://kevinstadler.github.io/cultevo/)
+
+**cultevo** provides implementations of functions and statistical tests often used in the study of cultural evolution. See the [Function reference](https://kevinstadler.github.io/cultevo/reference/index.html) for a full list of functions.
 
 ## Installation
 
-In order to install the latest version you first need the [devtools](https://CRAN.R-project.org/package=devtools) package
+In order to install the latest development version you first need the [devtools](https://CRAN.R-project.org/package=devtools) package
 
     install.packages("devtools")
 
