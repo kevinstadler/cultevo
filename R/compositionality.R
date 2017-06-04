@@ -532,16 +532,17 @@ ssm.segmentation.default <- function(x, y, mergefeatures=FALSE, verbose=FALSE) {
     # instead: find combination of segments that maximises string coverage
 
     # as long as we still distinguish *some* features...
+    # TODO fix substring predictability to work with one feature, then do >= 2
     while (ncol(meanings) > 2) {
-      mergers <- combinat::combn(ncol(meanings), 2)
+      mergers <- as.matrix(combinat::combn(ncol(meanings), 2))
       if (verbose)
         message("Trying ", ncol(mergers),
           " different combinations of meaning feature mergers")
       # TODO parallel::mclapply() here, plus limiting to within-dim mergers
       mergers <- apply(mergers, 2, function(merge) {
         mergeddata <- cbind(meanings[, -merge], apply(meanings[, merge], 1, any))
-        colnames(mergeddata)[ncol(mergeddata)] <-
-         paste(colnames(meanings)[merge], collapse="|")
+        colnames(mergeddata) <- c(colnames(meanings)[-merge],
+          paste(colnames(meanings)[merge], collapse="|"))
         list(meanings=mergeddata,
           segmentation=maximise.stringcoverage(x, mergeddata, coverage$charscovered, verbose=verbose))
       })
