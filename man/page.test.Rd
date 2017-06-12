@@ -31,14 +31,14 @@ statistic is computed}
 }
 \value{
 \code{page.test} returns a list of class \code{pagetest} (and
-  \code{htest}) containing the following fields:
+\code{htest}) containing the following fields:
 \describe{
-   \item{\code{statistic}}{value of the \code{L} statistic for the given
-     data set}
-   \item{\code{parameter}}{the number of conditions (k) and replications (N)
-     of the data set (the columns and rows of the data set, respectively)}
-   \item{\code{p.value}}{significance level}
-   \item{\code{p.type}}{whether the computed p value is "exact" or "approximate"}
+\item{\code{statistic}}{value of the \code{L} statistic for the given
+data set}
+\item{\code{parameter}}{the number of conditions (k) and replications (N)
+of the data set (the columns and rows of the data set, respectively)}
+\item{\code{p.value}}{significance level}
+\item{\code{p.type}}{whether the computed p value is "exact" or "approximate"}
 }
 }
 \description{
@@ -86,5 +86,5 @@ Siegel, S., and N. J. Castellan, Jr. (1988). Nonparametric
 Statistics for the Behavioral Sciences. McGraw-Hill.
 }
 \seealso{
-\code{\link[base]{rank}}
+\code{\link[base]{rank}}, \href{https://kevinstadler.github.io/cultevo/articles/page.test.html}{Page test tutorial}
 }

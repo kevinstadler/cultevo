@@ -72,7 +72,7 @@ page.test <- function(data, verbose=TRUE) {
 #'
 #' @param ties.method how to resolve tied ranks. Passed on to
 #' \code{\link[base]{rank}}, should be left on "average" (the default).
-#' @seealso \code{\link[base]{rank}}
+#' @seealso \code{\link[base]{rank}}, [Page test tutorial](https://kevinstadler.github.io/cultevo/articles/page.test.html)
 #' @export
 page.L <- function(data, verbose=TRUE, ties.method="average") {
   # perform row-wise rankings
@@ -174,75 +174,3 @@ print.pagetest <- function(x, ...)
   invisible(cat("Page test of monotonicity: L=", x$statistic, ", k=", x$k,
     ", N=", x$N, "\np = ",
     format(x$p.value, digits=4), " (", x$p.type, ")\n", sep=""))
-
-# =============================================================================
-# Below here are functions used to pre-compute the exact distribution of the
-# Page L statistic for individual rows (rankings). This is currently tractable
-# for k up to 14
-# =============================================================================
-
-# calculate the multinomial coefficient (number of permutations of a multiset,
-# i.e. the number of possible orders in which n elements can be drawn when some
-# of the individual elements are identical. might overflow for large n/k.
-
-# ks == vector of positive integers specifying the multiplicities of the
-# individual elements. 1 elements can be omitted.
-mcombn <- function(n, ks)
-#  if (!all.equal(c(n, ks), as.integer(c(n, ks))) || sum(ks) > n)
-#    stop("All arguments must be integer with sum(ks) == n")
-  factorial(n) / prod(sapply(ks, factorial))
-
-# Calculates the probabilities of one replication (row) producing a certain L
-# under the null hypothesis. Loops through all factorial(k) possible rankings,
-# calculates their row-wise Ls and returns a table of frequencies (ordered by
-# descending L)
-rowwise.ls <- function(k) {
-  ncombinations <- factorial(k)
-#  ls <- numeric(ncombinations)
-  comb <- 1:k
-  maxl <- sum(comb * comb)
-  minl <- sum(comb * rev(comb))
-  ls <- numeric(1+maxl-minl)
-  ls[1] <- 1
-
-  # helper variables to detect opportunity for half-way interruption
-  meanl <- (minl+maxl)/2
-  highls <- 1
-  meanls <- 0
-  # Heap's non-recursive algorithm for enumerating all rank permutations
-  # cf. http://www.cs.princeton.edu/~rs/talks/perms.pdf
-  cs <- rep(1, k)
-  n <- 1
-  while (n <= k) {
-    if (cs[n] < n) {
-      if (n %% 2) {
-        comb[c(1,n)] <- comb[c(n,1)] # odd recursion level
-      } else {
-        comb[c(cs[n],n)] <- comb[c(n,cs[n])] # even recursion level
-      }
-      cs[n] <- cs[n]+1
-      n <- 1
-      l <- sum(1:k * comb)
-      ls[1+maxl-l] <- ls[1+maxl-l] + 1
-
-      # probability space is symmetric, so can fold around half-way point
-      if (l > meanl) {
-        highls <- highls + 1
-      } else if (l == meanl) {
-        meanls <- meanls + 1
-      }
-      if (2*highls+meanls == ncombinations) {
-        halfpoint <- length(ls)/2
-        ls[length(ls):ceiling(halfpoint+1)] <- ls[1:floor(halfpoint)]
-        break
-      }
-    } else {
-      cs[n] <- 1
-      n <- n+1
-    }
-  }
-  # sanity check that Heap's worked: sum(ls) == factorial(k)
-  # divide by total count to get probabilities
-  names(ls) <- maxl:minl
-  ls/ncombinations
-}
