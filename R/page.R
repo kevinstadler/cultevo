@@ -8,17 +8,20 @@
 #' 1988, p.184). Given that even a single point change in the distribution of
 #' ranks across conditions represents evidence against the null hypothesis,
 #' the Page test is simply a test for \emph{some ordered differences in
-#' ranks}, but not a 'trend test' in any meaningful way.
+#' ranks}, but not a 'trend test' in any meaningful way (see also the
+#' [Page test tutorial](https://kevinstadler.github.io/cultevo/articles/page.test.html)).
 #'
-#' Tests the given matrix for monotonically increasing ranks across \code{k}
-#' linearly ordered conditions (along columns) based on \code{N} replications
-#' (along rows). To test for monotonically \emph{decreasing} ranks you can
-#' either reverse the order of columns, or simply invert the ranks by
-#' prepending the dataset with a \code{-}.
+#' Tests the given matrix for monotonically *increasing* ranks across `k`
+#' linearly ordered conditions (along columns) based on `N` replications
+#' (along rows). To test for monotonically *decreasing* ranks, either reverse
+#' the order of columns, or simply invert the rank ordering by calling `-` on
+#' the entire dataset.
 #'
-#' Exact p values are computed for \code{k} up to 22, using the pre-computed
-#' null distributions from the \code{pspearman} package. For larger \code{k}, p
-#' values are computed based on a Normal distribution approximation.
+#' Exact p-values are computed for `k` up to 22, using the pre-computed null
+#' distributions from the
+#' [`pspearman`](https://CRAN.R-project.org/package=pspearman) package. For
+#' larger `k`, p-values are computed based on a Normal distribution
+#' approximation (Siegel and Castellan, 1988).
 #'
 #' @param data a matrix with the different conditions along its \code{k}
 #'   columns and the \code{N} replications along rows. Conversion of the data
@@ -26,14 +29,15 @@
 #' @param verbose whether to print the final rankings based on which the L
 #'   statistic is computed
 #' @return \code{page.test} returns a list of class \code{pagetest} (and
-#'   \code{htest}) containing the following fields:
+#'   \code{htest}) containing the following elements:
 #' \describe{
-#'    \item{\code{statistic}}{value of the \code{L} statistic for the given
-#'      data set}
-#'    \item{\code{parameter}}{the number of conditions (k) and replications (N)
-#'      of the data set (the columns and rows of the data set, respectively)}
+#'    \item{\code{statistic}}{value of the L statistic for the data set}
+#'    \item{\code{parameter}}{a named vector specifying the number of
+#'      conditions (k) and replications (N) of the data (which is the number of
+#'      columns and rows of the data set, respectively)}
 #'    \item{\code{p.value}}{significance level}
-#'    \item{\code{p.type}}{whether the computed p value is "exact" or "approximate"}
+#'    \item{\code{p.type}}{whether the computed p-value is `"exact"` or
+#'      `"approximate"`}
 #' }
 #' @examples
 #' page.test(t(replicate(4, sample(4))))
@@ -68,7 +72,7 @@ page.test <- function(data, verbose=TRUE) {
 }
 
 #' @describeIn page.test
-#' Calculate Page's L statistic for the given dataset. Returns a numeric.
+#' Calculate Page's L statistic for the given dataset.
 #'
 #' @param ties.method how to resolve tied ranks. Passed on to
 #' \code{\link[base]{rank}}, should be left on "average" (the default).
@@ -131,9 +135,9 @@ if (requireNamespace("memoise", quietly = TRUE))
   L.null.distribution <- memoise::memoise(L.null.distribution)
 
 #' @describeIn page.test Calculate exact significance levels of the Page L
-#' statistic. Returns a single numeric indicating the null probability that
-#' the Page statistic with the given \code{k}, \code{N} is greater or equal
-#' the given \code{L}.
+#' statistic. Returns a single numeric indicating the null probability of
+#' the Page statistic with the given `k`, `N` being greater or equal than the
+#' given `L`.
 #'
 #' @param k number of conditions/generations
 #' @param N number of replications/chains

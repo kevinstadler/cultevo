@@ -16,8 +16,8 @@ of rows of \code{meanings}.}
 }
 \value{
 A matrix of \code{TRUE}/\code{FALSE} values with as many rows as
-  \code{meanings} and one column for every column-value combination in
-  \code{meanings}.
+\code{meanings} and one column for every column-value combination in
+\code{meanings}.
 }
 \description{
 Transforms a meaning matrix to 'wide' format where, instead of having

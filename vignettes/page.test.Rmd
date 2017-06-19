@@ -10,31 +10,32 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+The Page test is a non-parametric test for monotonically ordered differences in ranks. It can be used to assess the statistical evidence for an increase in the ordinal ranks between $k$ 'treatments' (conditions or generations), based on $N$ independent replications for each treatment. The predicted ordering of the treatments $1 \ldots k$ has to be specified a priori.
+
 ## Definition
 
-Page's "test for linear ranks" tests whether there is a linear ordering between $k$ conditions of a between-subjects design with $N$ replications. The predicted ordering of the conditions (or generations) has to be specified a priori.
-
-Let $m_i$ be the mean ordinal rank of some measure of interest in treatment $i$, then the null hypothesis of the test (identical to many other tests, e.g. Friedman's) is
+Let $m_i$ be the mean ordinal rank of the measure of interest obtained for treatment $i$, then the null hypothesis of the test (identical to many other tests, e.g. Friedman's) is
 $$ m_1 = m_2 = \ldots = m_k $$
 i.e. there is no difference between the expected ranks for the $k$ conditions. For some reason the original formulation of the *alternative* hypothesis being tested given in @Page1963 is
 $$m_1 > m_2 > \ldots > m_k.$$
 
-Later papers and textbook entries correctly point out that the alternative hypothesis considered is actually
+<!-- http://www.itl.nist.gov/div898/software/dataplot/refman1/auxillar/page.htm -->
+Later papers and textbook entries correctly point out that the alternative hypothesis is actually
 $$m_1 \le m_2 \le \ldots \le m_k$$
 where *at least one* of the inequalities has to be a true inequality [@Siegel1988;@Hollander1999, p.284; @VanDeWiel2001, p.143]. <!-- Sheshkin2004, IX., one that is actually wrong using '<' is Rayner2000 also: "The scores will be different and will increase as the treatment levels change" - but not ALL are different -->
-What this means is that even if there is only a single step-wise change in the mean rank, e.g.
+What this means is that strong evidence for nothing more than a single step-wise change in the mean rank, e.g.
 $$m_1 < m_2 = \ldots = m_k$$
-this is sufficient evidence *against* the null hypothesis.
+can be sufficient for the test to *reject* the null hypothesis.
 
 ## What the Page test is not
 
-As the alternative hypothesis shows, the Page test is not a 'trend test' in any meaningful way, since it does not test for successive or cumulative changes in ranks. (Note how the original paper speaks of k *treatments* rather than generations, i.e. the Page test was never meant for dependent measures.)
+As the alternative hypothesis shows, the Page test is not a 'trend test' in any meaningful way, since it does not test for successive or cumulative changes in ranks. (Note how the original paper speaks of k *treatments* rather than generations, i.e. the Page test was not intended for dependent measures.)
 
-It also cannot show whether *differences* between the conditions/generations are significant, since it is a non-parametric test that only considers *ranks*, not absolute changes in the underlying measure. These points will be demonstrated using some controlled, semi-randomly generated data sets.
+It also cannot show whether *differences* between the conditions/generations are significant, since it is a non-parametric test that only considers *ranks*, not absolute changes in the underlying measure. These points will be demonstrated using some semi-randomly generated data sets.
 
 ## Mock dataset demonstration
 
-To test the sensitivity of the test to a single step-wise difference across conditions we can take a typical sample set of $N=4$ replications with $k=10$ levels each and fix the very first position to always be ranked first, with all successive ranks being randomly shuffled:
+To test the sensitivity of the test to a single step-wise difference across conditions we can take a typical sample set of $N=4$ replications with $k=10$ levels each and fix the very first position to always be ranked first, with all successive ranks being randomly shuffled. This is equivalent to the first generation doing badly at a task, with all successive generations outperforming the first one, but no cumulative improvement between them.
 
 ```{r}
 # make results reproducible
@@ -50,7 +51,7 @@ lowestthenrandom <- function()
 t(replicate(4, lowestthenrandom()))
 ```
 
-Given this semi-random data generation function, we can now create a large number of data sets containing a variable number of replications $N$, and compute their expected distribution of significance levels according to the Page test.
+Given this semi-random data generation function, we can now create a large number of data sets and compute their expected distribution of significance levels according to the Page test, and see how it varies based on the number of replications $N$.
 
 ```{r}
 library(cultevo)
@@ -78,15 +79,15 @@ sampleps <- function(testfun, N, datafun, nrepetitions=1000)
   testfun(function() t(replicate(N, datafun())), nrepetitions)
 ```
 
-Generating 1000 datasets like the one above which really only exhibit a single point change in the distribution of median ranks, we get a significant result about half of the time:
+Generating 1000 datasets like the one above -- which really only exhibit a single point change in the distribution of mean ranks -- we get a significant result about half of the time:
 ```{r}
 sampleps(sampleLs, 4, lowestthenrandom)
 ```
-Increasing the number of replications to 10, still only assuming that the first generation ranks differently from all the other ones (which do not exhibit consistent ordering in themselves):
+Increasing the number of replications to $N=10$, still only assuming that the first generation performs differently from all the other ones:
 ```{r}
 sampleps(sampleLs, 10, lowestthenrandom)
 ```
-The influence is even stronger when the single change point gets closer to the middle of the ordered conditions. When we generate 1000 datasets where the first two ranks are always shuffled in the first two positions, followed by ranks 3-10 also shuffled randomly, we obtain the following distribution of p values:
+The influence is even stronger when the single change point occurs closer to the middle of the number of conditions. Generating 1000 datasets where the first two ranks are always shuffled in the first two positions, followed by ranks 3-10 also shuffled randomly, we obtain the following distribution of p values:
 ```{r}
 sampleps(sampleLs, 4, function() pseudorandomranks(1:2, 3:10))
 ```
@@ -96,18 +97,18 @@ The test is so sensitive to evidence for a change in the *a prior* suspected dir
 # upwards jump from the first three observations to the remaining 7, but the
 # remaining 7 exhibit a consistent downwards trend
 upwardsjumpdownardstrend <- function() pseudorandomranks(1:3, 10, 9, 8, 7, 6, 5, 4)
-
-# 
 sampleps(sampleLs, 10, upwardsjumpdownardstrend)
+
+# start around the middle, then sudden downward followed by extreme upwards jump
 updownup <- function() pseudorandomranks(3:4, 5:6, 1:2, 7:8)
 sampleps(sampleLs, 10, updownup)
 ```
 
 ## Alternatives to the Page test
 
-It's not 1963 anymore, so everybody has a computer, and probably some prior expectations about the development of their (presumably continuous) measure of interest. Will its value rise indefinitely across conditions/generations, or is there a ceiling where it will level out? Do you have an idea of the value at which it will level out? Will it rise linearly between conditions until it hits its maximum? Logarithmically? Exponentially? All of these are specific hypotheses corresponding to specific models that can be fit and then be compared based on your data [@Winter2016].
+It's not 1963 anymore, so everybody has a computer, and probably some prior expectations about the development of their (presumably continuous) measure of interest. Will its value rise indefinitely across conditions/generations, or is there a ceiling where it will level out? Do you have an idea of the value at which it will level out? Will it rise linearly between conditions until it hits its maximum? Logarithmically? Exponentially? All of these are specific hypotheses corresponding to specific models that can be fit and then compared based on your data [@Winter2016].
 
-If you are simply looking for other non-parametric tests for sequential (or otherwise temporally dependent) data, the seasonal Kendall test [@Hirsch1982;@Gilbert1987;@Gibbons2009] takes seasonal effects on environmental measurements into account by computing the Mann Kendall test on each of $k$ seasons/months separately, and then combining the individual test results. Since the order of the individual seasons is not actually taken into account (it only is in a later version of the test, @Hirsch1984), the test is essentially a within-subject version that combines the results of $k$ independent Mann-Kendall tests into one to increase the statistical power [@Gibbons2009, p.211]. The test was in fact already transferred to test for trends in different geographic sample locations rather than seasons (see @Helsel2006). The seasonal's test alternative hypothesis is "a monotone trend in one or more seasons" [@Hirsch1984, p.728].
+If you are simply looking for other non-parametric tests for sequential (or otherwise temporally dependent) data, the seasonal Kendall test [@Hirsch1982;@Gilbert1987;@Gibbons2009] takes seasonal effects on environmental measurements into account by computing the Mann Kendall test on each of $k$ seasons/months separately, and then combining the individual test results. Since the order of the individual seasons is not actually taken into account (it only is in a later version of the test, @Hirsch1984), the test is essentially a within-subject version that combines the results of $k$ independent Mann-Kendall tests into one to increase the statistical power [@Gibbons2009, p.211]. The test was in fact already used to test for trends in different geographic sample locations rather than seasons [@Helsel2006]. The seasonal's test alternative hypothesis is "a monotone trend in one or more seasons" [@Hirsch1984, p.728].
 
 ## Citation
 

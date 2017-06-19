@@ -31,14 +31,15 @@ statistic is computed}
 }
 \value{
 \code{page.test} returns a list of class \code{pagetest} (and
-\code{htest}) containing the following fields:
+\code{htest}) containing the following elements:
 \describe{
-\item{\code{statistic}}{value of the \code{L} statistic for the given
-data set}
-\item{\code{parameter}}{the number of conditions (k) and replications (N)
-of the data set (the columns and rows of the data set, respectively)}
+\item{\code{statistic}}{value of the L statistic for the data set}
+\item{\code{parameter}}{a named vector specifying the number of
+conditions (k) and replications (N) of the data (which is the number of
+columns and rows of the data set, respectively)}
 \item{\code{p.value}}{significance level}
-\item{\code{p.type}}{whether the computed p value is "exact" or "approximate"}
+\item{\code{p.type}}{whether the computed p-value is \code{"exact"} or
+\code{"approximate"}}
 }
 }
 \description{
@@ -50,29 +51,32 @@ one} of the inequalities is a strict inequality (Siegel and Castellan
 1988, p.184). Given that even a single point change in the distribution of
 ranks across conditions represents evidence against the null hypothesis,
 the Page test is simply a test for \emph{some ordered differences in
-ranks}, but not a 'trend test' in any meaningful way.
+ranks}, but not a 'trend test' in any meaningful way (see also the
+\href{https://kevinstadler.github.io/cultevo/articles/page.test.html}{Page test tutorial}).
 }
 \details{
-Tests the given matrix for monotonically increasing ranks across \code{k}
+Tests the given matrix for monotonically \emph{increasing} ranks across \code{k}
 linearly ordered conditions (along columns) based on \code{N} replications
-(along rows). To test for monotonically \emph{decreasing} ranks you can
-either reverse the order of columns, or simply invert the ranks by
-prepending the dataset with a \code{-}.
+(along rows). To test for monotonically \emph{decreasing} ranks, either reverse
+the order of columns, or simply invert the rank ordering by calling \code{-} on
+the entire dataset.
 
-Exact p values are computed for \code{k} up to 22, using the pre-computed
-null distributions from the \code{pspearman} package. For larger \code{k}, p
-values are computed based on a Normal distribution approximation.
+Exact p-values are computed for \code{k} up to 22, using the pre-computed null
+distributions from the
+\href{https://CRAN.R-project.org/package=pspearman}{pspearman} package. For
+larger \code{k}, p-values are computed based on a Normal distribution
+approximation (Siegel and Castellan, 1988).
 }
 \section{Functions}{
 \itemize{
 \item \code{page.test}: See above.
 
-\item \code{page.L}: Calculate Page's L statistic for the given dataset. Returns a numeric.
+\item \code{page.L}: Calculate Page's L statistic for the given dataset.
 
 \item \code{page.compute.exact}: Calculate exact significance levels of the Page L
-statistic. Returns a single numeric indicating the null probability that
-the Page statistic with the given \code{k}, \code{N} is greater or equal
-the given \code{L}.
+statistic. Returns a single numeric indicating the null probability of
+the Page statistic with the given \code{k}, \code{N} being greater or equal than the
+given \code{L}.
 }}
 
 \examples{

@@ -11,7 +11,7 @@ normalisedlevenshteindists(strings)
 }
 \value{
 A distance matrix specifying all pairwise normalised Levenshtein
-  distances between the strings.
+distances between the strings.
 }
 \description{
 Compute the normalised Levenshtein distances between strings.

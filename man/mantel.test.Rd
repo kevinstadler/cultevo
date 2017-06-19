@@ -66,26 +66,26 @@ tests next to each other}
 A dataframe of class \code{mantel}, with one row per Mantel
 test carried out, containing the following columns:
 \describe{
-   \item{\code{method}}{Character string specifying the type of correlation
-         coefficient used ("spearman", "kendall", or, inadvisable in the
-         likely case of ties: "pearson")}
-   \item{\code{statistic}}{The veridical correlation coefficient between
-         the entries in the two distance matrices}
-   \item{\code{rsample}}{A list of correlation coefficients calculated
-         from the permutations of the input matrices}
-   \item{\code{mean}}{Average correlation coefficient produced by the permutations}
-   \item{\code{sd}}{Standard deviation of the sampled correlation coefficients}
-   \item{\code{p.value}}{Empirical p-value computed from the Mantel
-         test: let \code{ngreater} be the number of correlation coefficients
-         in \code{rsample} greater than or equal to \code{statistic}, then
-         \code{p.value} is \code{(ngreater+1)/(length(rsample)+1}}
-   \item{\code{p.approx}}{The theoretical p-value that would correspond
-         to the standard \code{z} score as calculated above.}
-   \item{\code{is.unique.max}}{Logical, \code{TRUE} iff the veridical
-         correlation coefficient is greater than any of the coefficients
-         calculated for the permutations. If this is true, then
-         \code{p.value == 1 / (length(rsample)+1)}}
- }
+\item{\code{method}}{Character string specifying the type of correlation
+coefficient used ("spearman", "kendall", or, inadvisable in the
+likely case of ties: "pearson")}
+\item{\code{statistic}}{The veridical correlation coefficient between
+the entries in the two distance matrices}
+\item{\code{rsample}}{A list of correlation coefficients calculated
+from the permutations of the input matrices}
+\item{\code{mean}}{Average correlation coefficient produced by the permutations}
+\item{\code{sd}}{Standard deviation of the sampled correlation coefficients}
+\item{\code{p.value}}{Empirical p-value computed from the Mantel
+test: let \code{ngreater} be the number of correlation coefficients
+in \code{rsample} greater than or equal to \code{statistic}, then
+\code{p.value} is \code{(ngreater+1)/(length(rsample)+1}}
+\item{\code{p.approx}}{The theoretical p-value that would correspond
+to the standard \code{z} score as calculated above.}
+\item{\code{is.unique.max}}{Logical, \code{TRUE} iff the veridical
+correlation coefficient is greater than any of the coefficients
+calculated for the permutations. If this is true, then
+\code{p.value == 1 / (length(rsample)+1)}}
+}
 Multiple \code{mantel} objects can easily be combined by calling
 \code{rbind(test1, test2, ...)}.
 }
@@ -163,7 +163,7 @@ plot(result, xlab="group")
 }
 \seealso{
 \code{\link[stats]{cor}},
-  \code{\link[utils]{adist}}, \code{\link{hammingdists}},
-  \code{\link{normalisedlevenshteindists}},
-  \code{\link{orderinsensitivedists}}
+\code{\link[utils]{adist}}, \code{\link{hammingdists}},
+\code{\link{normalisedlevenshteindists}},
+\code{\link{orderinsensitivedists}}
 }

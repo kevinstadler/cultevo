@@ -16,8 +16,8 @@ strings.}
 }
 \value{
 A matrix with the original strings along rows and all substrings
-  of those strings along columns. The cell values indicate whether (and how
-  many times) the substring is contained in each of the strings.
+of those strings along columns. The cell values indicate whether (and how
+many times) the substring is contained in each of the strings.
 }
 \description{
 Count occurences of all possible substrings in one more strings.

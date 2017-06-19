@@ -12,7 +12,7 @@ single numeric indicating the semantic distance between its arguments}
 }
 \value{
 A function that takes a meaning matrix and returns a corresponding
-  distance matrix of class \code{\link[stats]{dist}}.
+distance matrix of class \code{\link[stats]{dist}}.
 }
 \description{
 This function takes as its only argument a function \code{f(m1, m2)} which

@@ -24,8 +24,8 @@ when \code{dimensionality} specifies the meaning values}
 }
 \value{
 A matrix that has as many columns as there are dimensions, with
-  every row specifying one of the possible meaning combinations. The entries
-  of the first dimension cycle slowest (see examples).
+every row specifying one of the possible meaning combinations. The entries
+of the first dimension cycle slowest (see examples).
 }
 \description{
 Enumerates all possible combinations of meanings for a meaning space of the

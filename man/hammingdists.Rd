@@ -14,7 +14,7 @@ equality (with the exception of \code{NA} values, see below.}
 }
 \value{
 A distance matrix of type \code{\link{dist}} with \code{n*(n-1)/2}
-  rows/columns, where n is the number of rows in \code{meanings}.
+rows/columns, where n is the number of rows in \code{meanings}.
 }
 \description{
 Returns a distance matrix giving all pairwise Hamming distances between the

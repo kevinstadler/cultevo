@@ -11,7 +11,7 @@ check.dist(x)
 }
 \value{
 a symmetric \code{matrix} object (or list of such objects) of the
-  same dimension as \code{x}
+same dimension as \code{x}
 }
 \description{
 Checks or fixes the given distance matrix specification and returns an

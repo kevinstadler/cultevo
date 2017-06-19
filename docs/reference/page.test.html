@@ -103,7 +103,8 @@ one</em> of the inequalities is a strict inequality (Siegel and Castellan
 1988, p.184). Given that even a single point change in the distribution of
 ranks across conditions represents evidence against the null hypothesis,
 the Page test is simply a test for <em>some ordered differences in
-ranks</em>, but not a 'trend test' in any meaningful way.</p>
+ranks</em>, but not a 'trend test' in any meaningful way (see also the
+<a href = 'https://kevinstadler.github.io/cultevo/articles/page.test.html'>Page test tutorial</a>).</p>
     
 
     <pre><span class='fu'>page.test</span>(<span class='no'>data</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
@@ -148,36 +149,39 @@ statistic is computed</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p><code>page.test</code> returns a list of class <code>pagetest</code> (and
-<code>htest</code>) containing the following fields:</p><dl class='dl-horizontal'>
-<dt><code>statistic</code></dt><dd><p>value of the <code>L</code> statistic for the given
-data set</p></dd>
-<dt><code>parameter</code></dt><dd><p>the number of conditions (k) and replications (N)
-of the data set (the columns and rows of the data set, respectively)</p></dd>
+<code>htest</code>) containing the following elements:</p><dl class='dl-horizontal'>
+<dt><code>statistic</code></dt><dd><p>value of the L statistic for the data set</p></dd>
+<dt><code>parameter</code></dt><dd><p>a named vector specifying the number of
+conditions (k) and replications (N) of the data (which is the number of
+columns and rows of the data set, respectively)</p></dd>
 <dt><code>p.value</code></dt><dd><p>significance level</p></dd>
-<dt><code>p.type</code></dt><dd><p>whether the computed p value is "exact" or "approximate"</p></dd>
+<dt><code>p.type</code></dt><dd><p>whether the computed p-value is <code>"exact"</code> or
+<code>"approximate"</code></p></dd>
 </dl>
 
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Tests the given matrix for monotonically increasing ranks across <code>k</code>
+    <p>Tests the given matrix for monotonically <em>increasing</em> ranks across <code>k</code>
 linearly ordered conditions (along columns) based on <code>N</code> replications
-(along rows). To test for monotonically <em>decreasing</em> ranks you can
-either reverse the order of columns, or simply invert the ranks by
-prepending the dataset with a <code>-</code>.</p>
-<p>Exact p values are computed for <code>k</code> up to 22, using the pre-computed
-null distributions from the <code>pspearman</code> package. For larger <code>k</code>, p
-values are computed based on a Normal distribution approximation.</p>
+(along rows). To test for monotonically <em>decreasing</em> ranks, either reverse
+the order of columns, or simply invert the rank ordering by calling <code>-</code> on
+the entire dataset.</p>
+<p>Exact p-values are computed for <code>k</code> up to 22, using the pre-computed null
+distributions from the
+<a href = 'https://CRAN.R-project.org/package=pspearman'>pspearman</a> package. For
+larger <code>k</code>, p-values are computed based on a Normal distribution
+approximation (Siegel and Castellan, 1988).</p>
     
     <h2 class="hasAnchor" id="functions"><a class="anchor" href="#functions"></a>Functions</h2>
 
     <ul>
 <li><p><code>page.test</code>: See above.</p></li>
-<li><p><code>page.L</code>: Calculate Page's L statistic for the given dataset. Returns a numeric.</p></li>
+<li><p><code>page.L</code>: Calculate Page's L statistic for the given dataset.</p></li>
 <li><p><code>page.compute.exact</code>: Calculate exact significance levels of the Page L
-statistic. Returns a single numeric indicating the null probability that
-the Page statistic with the given <code>k</code>, <code>N</code> is greater or equal
-the given <code>L</code>.</p></li>
+statistic. Returns a single numeric indicating the null probability of
+the Page statistic with the given <code>k</code>, <code>N</code> being greater or equal than the
+given <code>L</code>.</p></li>
 </ul>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>

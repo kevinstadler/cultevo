@@ -95,11 +95,10 @@
     </div>
 
     
-    <p>Implementation of the Spike-Montague segmentation and measure of
-additive compositionality (Spike 2016), which finds the most predictive
-association between substrings and categorical meaning features. Additive
-means that it does not take the ordering of elements into account, i.e.
-<code>GREEN DOG = GREEN + DOG = DOG + GREEN</code>.</p>
+    <p>Implementation of the Spike-Montague segmentation and measure of additive
+compositionality (Spike 2016), which finds the most predictive associations
+between meaning features and substrings. Computation is deterministic and
+fast.</p>
     
 
     <pre><span class='fu'>sm.compositionality</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>groups</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>strict</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
@@ -143,90 +142,167 @@ substrings of longer candidates (for the same meaning feature).</p></td>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>sm.compositionality</code> calculates the mean predictability of all
-  meaning features and their most predictably co-occurring strings. Returns
-  a vector of three elements: <code>N</code> is the number of signal-meaning
-  pairings on which the computation was based, <code>comp</code> the mean mutual
-  predictability, and <code>M</code> the number of distinct meaning features over
-  which this average was computed. (When <code>groups</code> is not <code>NULL</code>,
-  returns a matrix with the same elements along columns, with one row for
-  every group.)</p>
-<p><code>sm.segmentation</code> provides detailed information about the most
-  predictably co-occurring segments for every meaning feature. It returns
-  a data frame with one row for every meaning feature, in descending order
-  of their predictability from (and to) their corresponding string
-  segments. The data frame has the following columns:</p><dl class='dl-horizontal'>
-    <dt><code>N</code></dt><dd><p>The number of signal-meaning pairings in which this
-      meaning feature was attested.</p></dd>
-    <dt><code>mp</code></dt><dd><p>The highest mutual predictability between this
-      meaning feature and one (or more) segments that was found.</p></dd>
-    <dt><code>p</code></dt><dd><p>Significance levels of the given mutual predictability,
-      i.e. the probability that the given mutual predictability level could
-      be reached by chance. The calculation depends on the frequency of the
-      meaning feature as well as the number and relative frequency of all
-      substrings across all signals.</p></dd>
-    <dt><code>ties</code></dt><dd><p>The number of substrings found in <code>strings</code>
-      which have this same level of mutual predictability with the meaning
-      feature.</p></dd>
-    <dt><code>segments</code></dt><dd><p>For <code>strict = FALSE</code>: a list containing the
-      <code>ties</code> substrings in descending order of their length (the
-      ordering is for convenience only and not inherently meaningful). When
-      <code>strict = TRUE</code>, the lists of segments for each meaning feature
-      are all of the same length, with a meaningful relationship of the
-      order of segments across the different rows: every set of segments
-      which are found in the same position for each of the different
-      meaning features constitute a valid segmentation where the segments
-      occurrences in the actual signals do not overlap.</p></dd>
-  </dl>
+    <p><code>sm.compositionality</code> calculates the weighted average of the
+mutual predictability of all meaning features and their most predictably
+co-occurring strings. The function returns a data frame of three columns:
+<code>N</code> is the total number of signals (utterances) on which the computation
+was based, <code>M</code> the number of distinct meaning features attested across
+all signals, and <code>meanmp</code> the mean mutual predictability across all these
+features, weighted by the features' relative frequency. When <code>groups</code> is
+not <code>NULL</code>, the data frame contains one row for every group.
+
+<code>sm.segmentation</code> provides detailed information about the most
+predictably co-occurring segments for every meaning feature. It returns
+a data frame with one row for every meaning feature, in descending order
+of the mutual predictability from (and to) their corresponding string
+segments. The data frame has the following columns:</p><dl class='dl-horizontal'>
+<dt><code>N</code></dt><dd><p>The number of signal-meaning pairings in which this
+meaning feature was attested.</p></dd>
+<dt><code>mp</code></dt><dd><p>The highest mutual predictability between this
+meaning feature and one (or more) segments that was found.</p></dd>
+<dt><code>p</code></dt><dd><p>Significance levels of the given mutual predictability,
+i.e. the probability that the given mutual predictability level could
+be reached by chance. The calculation depends on the frequency of the
+meaning feature as well as the number and relative frequency of all
+substrings across all signals (see below).</p></dd>
+<dt><code>ties</code></dt><dd><p>The number of substrings found in <code>strings</code>
+which have this same level of mutual predictability with the meaning
+feature.</p></dd>
+<dt><code>segments</code></dt><dd><p>For <code>strict = FALSE</code>: a list containing the
+<code>ties</code> substrings in descending order of their length (the
+ordering is for convenience only and not inherently meaningful). When
+<code>strict = TRUE</code>, the lists of segments for each meaning feature
+are all of the same length, with a meaningful relationship of the
+order of segments across the different rows: every set of segments
+which are found in the same position for each of the different
+meaning features constitute a valid segmentation where the segments
+occurrences in the actual signals do not overlap.</p></dd>
+</dl>
 
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The measure really captures the degree to which a synonymy-free signalling
-system exists at the level of semantic <em>features</em>, rather than looking
-for complex meanings per se. The resulting segmentations may therefore
-overlap, which means <em>holistic</em> signalling systems can currently still
-get relative high compositionality scores. A modification to account for
-this is under development.</p>
-<p>The segmentation algorithm scans through all sub-strings found in
-<code>strings</code> to find the most bijective mapping onto all the meaning
-features present in <code>meanings</code>, i.e. the pairings of sub-strings and
-meaning features that are <em>most predictive of each other</em>.
-Mathematically, for every meaning feature \(f\in M\), it tries to find
-the sub-string \(s_{ij}\) from the set of strings \(S\) that maximises
-$$comp(f,S) = \max_{s_{ij}\in S}\ P(f|s_{ij}) \cdot P(s_{ij}|f)$$.</p>
-<p>Based on these mappings onto individual meaning features,
-<code>sm.compositionality</code> then computes the average mutual predictability
-over all meaning features \(M\),
-$$comp(M,S) = \frac{1}{|M|} \sum_{f\in M} comp(f,S),$$
+    <p>The algorithm works on compositional meanings that can be expressed as sets
+of categorical meaning features (see below), and does not take the order
+of elements into account. Rather than looking directly at how complex
+meanings are expressed, the measure really captures the degree to which a
+homonymy- and synonymy-free signalling system exists at the level of
+individual semantic <em>features</em>.</p>
+<p>The segmentation algorithm provided by <code>sm.segmentation()</code> scans through
+all sub-strings found in <code>strings</code> to find the pairings of meaning features
+and sub-strings whose respective presence is <em>most predictive of each
+other</em>. Mathematically, for every meaning feature \(f\in M\), it finds
+the sub-string \(s_{ij}\) from the set of strings \(S\) that yields the
+highest <em>mutual predictability</em> across all signals,
+$$mp(f,S) = \max_{s_{ij}\in S}\ P(f|s_{ij}) \cdot P(s_{ij}|f)\;.$$</p>
+<p>Based on the mutual predictability levels obtained for the individual
+meaning features, <code>sm.compositionality</code> then computes the mean mutual
+predictability weighted by the individual features' relative frequencies of
+attestation, i.e.
+$$mp(M,S) = \sum_{f\in M} freq_f \cdot mp(f,S)\;,$$
 as a measure of the overall compositionality of the signalling system.</p>
+<p>Since mutual predictability is determined seperately for every meaning
+feature, the most predictive sub-strings posited for different meaning
+features as returned by <code>sm.segmentation()</code> can overlap, and even coincide
+completely. Such results are generally indicative of either limited data
+(in particular frequent co-occurrence of the meaning features in question),
+or spurious results in the absence of a consistent signalling system. The
+latter will also be indicated by the significance level of the given mutual
+predictability.</p>
+    
+    <h2 class="hasAnchor" id="null-distribution-and-p-value-calculation"><a class="anchor" href="#null-distribution-and-p-value-calculation"></a>Null distribution and p-value calculation</h2>
+
+    
+    <p>A perfectly unambiguous mapping between a meaning feature to a specific
+string segment will always yield a mutual predictability of <code>1</code>. In the
+absence of such a regular mapping, on the other hand, chance co-occurrences
+of strings and meanings will in most cases stop the mutual predictability
+from going all the way down to <code>0</code>. In order to help distinguish chance
+co-occurrence levels from significant signal-meaning associations,
+<code>sm.segmentation()</code> provides significance levels for the mutual
+predictability levels obtained for each meaning feature.</p>
+<p>What is the baseline level of association between a meaning feature and a
+set of sub-strings that we would expect to be due to chance co-occurrences?
+This depends on several factors, from the number of data points on which the
+analysis is based to the frequency of the meaning feature in question and,
+perhaps most importantly, the overall makeup of the different substrings
+that are present in the signals. Since every substring attested in the data
+is a candidate for signalling the presence of a meaning feature, the
+absolute number of different substrings greatly affects the likelihood of
+chance signal-meaning associations. (Diversity of the set of substrings is
+in turn heavily influenced by the size of the underlying alphabet, a factor
+which is often not appreciated.)</p>
+<p>For every candidate substring, the degree of association with a specific
+meaning feature that we would expect by chance is again dependent on the
+absolute number of signals in which the substring is attested.</p>
+<p>Starting from the simplest case, take a meaning that is featured in \(m\)
+of the total \(n\) signals (where \(0 &lt; m \leq n\)). Assume next that
+there is a string segment that is attested in \(s\) of these signals
+(where again \(0 &lt; s \leq n\)). The degree of association between the
+meaning feature and string segment is dependent on the number of times that
+they co-occur, which can be no more than \(c_{max} = min(m, s)\) times.
+The null probability of getting a given number of co-occurrences can be
+obtained by considering all possible reshufflings of the meaning feature in
+question across all signals: if \(s\) signals contain a given substring,
+how many of \(s\) randomly drawn signals from the pool of \(n\) signals
+would contain the meaning feature if a total of \(m\) signals in the pool
+did? Approached from this angle, the likelihood of the number of
+co-occurrences follows the
+<a href = 'https://en.wikipedia.org/wiki/Hypergeometric_distribution'>hypergeometric distribution</a>,
+with \(c\) being the number of successes when taking \(s\) draws without
+replacement from a population of size \(n\) with fixed number of successes
+\(m\).</p>
+<p>For every number of co-occurrences \(c \in [0, c_{max}]\), one can
+compute the corresponding mutual probability level as
+\(p(c|s) \cdot p(c|m)\) to obtain the null distribution of mutual
+predictability levels between a meaning feature and <em>one</em> substring of a
+particular frequency \(s\):
+$$Pr(mp = p(c|s) \cdot p(c|m)) = f(k=c; N=n, K=m, n=s)$$</p>
+<p>From this, we can now derive the null distribution for the entire set of
+attested substrings as follows: making the simplifying assumption that the
+occurrences of different substrings are independent of each other, we first
+aggregate over the null distributions of all the individual substrings to
+obtain the mean probability \(p=Pr(X\ge mp)\) of finding a given mutual
+predictability level at least as high as \(mp\) for one randomly drawn
+string from the entire population of substrings. Assuming the total number
+of candidate substrings is \(|S|\), the overall null probability that at
+least one of them would yield a mutual predictability at least as high is
+$$Pr(X\ge 0), X \equiv B(n=|S|, p=p)\;.$$</p>
+<p>Note that, since the null distribution also depends on the frequency with
+which the meaning feature is attested, the significance levels corresponding
+to a given mutual predictability level are not necessarily identical for
+all meaning features, even within one analysis.</p>
+<p>(In theory, one can also compute an overall p-value of the weighted mean
+mutual predictability as calculated by <code>sm.compositionality</code>. However, the
+significance levels for the individual meaning features are much more
+insightful and should therefore be consulted directly.)</p>
     
     <h2 class="hasAnchor" id="meaning-data-format"><a class="anchor" href="#meaning-data-format"></a>Meaning data format</h2>
 
     
-    <p>The <code>meanings</code> can be a matrix or data frame in one of two formats. If
-it is a matrix of logicals (TRUE/FALSE values), then the columns are
-assumed to refer to meaning <em>features</em>, with individual cells
-indicating whether the meaning feature is present or absent in the message
-indicated by that row (see <code><a href='binaryfeaturematrix.html'>binaryfeaturematrix</a></code> for an
-explanation).
-If <code>meanings</code> is a data frame or matrix of any other type, it is
-assumed that the columns specify different meaning dimensions, with the
-cell values showing the levels with which the different dimensions can be
-realised. This dimension-based representation is automatically converted to
-a feature-based one using <code><a href='binaryfeaturematrix.html'>binaryfeaturematrix</a></code>. As a
-consequence, whatever the actual types of the columns in the meaning
-matrix, <em>they will be treated as categorical factors</em> in order to
-represent them as atomic meaning features.</p>
+    <p>The <code>meanings</code> argument can be a matrix or data frame in one of two formats.
+If it is a matrix of logicals (<code>TRUE</code>/<code>FALSE</code> values), then the columns are
+assumed to refer to meaning <em>features</em>, with individual cells indicating
+whether the meaning feature is present or absent in the signal represented
+by that row (see <code><a href='binaryfeaturematrix.html'>binaryfeaturematrix()</a></code> for an explanation). If <code>meanings</code>
+is a data frame or matrix of any other type, it is assumed that the columns
+specify different meaning dimensions, with the cell values showing the
+levels with which the different dimensions can be realised. This
+dimension-based representation is automatically converted to a
+feature-based one by calling <code><a href='binaryfeaturematrix.html'>binaryfeaturematrix()</a></code>. As a consequence,
+whatever the actual types of the columns in the meaning matrix, <em>they will
+be treated as categorical factors</em> for the purpose of this algorithm, also
+discarding any explicit knowledge of which 'meaning dimension' they might
+belong to.</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Spike, M. (2016). Minimal requirements for the cultural
-  evolution of language. PhD thesis, The University of Edinburgh.</p>
+evolution of language. PhD thesis, The University of Edinburgh.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='binaryfeaturematrix.html'>binaryfeaturematrix</a></code>, <code><a href='ssm.compositionality.html'>ssm.compositionality</a></code></p>
+    <p><code><a href='binaryfeaturematrix.html'>binaryfeaturematrix()</a></code>, <code><a href='ssm.compositionality.html'>ssm.compositionality()</a></code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -310,6 +386,8 @@ represent them as atomic meaning features.</p>
       <li><a href="#value">Value</a></li>
 
       <li><a href="#details">Details</a></li>
+
+      <li><a href="#null-distribution-and-p-value-calculation">Null distribution and p-value calculation</a></li>
 
       <li><a href="#meaning-data-format">Meaning data format</a></li>
 

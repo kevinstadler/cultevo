@@ -69,29 +69,30 @@
       <h1>The Page test is not a trend test</h1>
                         <h4 class="author">Kevin Stadler</h4>
             
-            <h4 class="date">2017-05-11</h4>
+            <h4 class="date">2017-06-19</h4>
           </div>
 
     
     
 <div class="contents">
+<p>The Page test is a non-parametric test for monotonically ordered differences in ranks. It can be used to assess the statistical evidence for an increase in the ordinal ranks between <span class="math inline">\(k\)</span> ‘treatments’ (conditions or generations), based on <span class="math inline">\(N\)</span> independent replications for each treatment. The predicted ordering of the treatments <span class="math inline">\(1 \ldots k\)</span> has to be specified a priori.</p>
 <div id="definition" class="section level2">
 <h2 class="hasAnchor">
 <a href="#definition" class="anchor"></a>Definition</h2>
-<p>Page’s “test for linear ranks” tests whether there is a linear ordering between <span class="math inline">\(k\)</span> conditions of a between-subjects design with <span class="math inline">\(N\)</span> replications. The predicted ordering of the conditions (or generations) has to be specified a priori.</p>
-<p>Let <span class="math inline">\(m_i\)</span> be the mean ordinal rank of some measure of interest in treatment <span class="math inline">\(i\)</span>, then the null hypothesis of the test (identical to many other tests, e.g. Friedman’s) is <span class="math display">\[ m_1 = m_2 = \ldots = m_k \]</span> i.e. there is no difference between the expected ranks for the <span class="math inline">\(k\)</span> conditions. For some reason the original formulation of the <em>alternative</em> hypothesis being tested given in <span class="citation">Page (1963)</span> is <span class="math display">\[m_1 &gt; m_2 &gt; \ldots &gt; m_k.\]</span></p>
-<p>Later papers and textbook entries correctly point out that the alternative hypothesis considered is actually <span class="math display">\[m_1 \le m_2 \le \ldots \le m_k\]</span> where <em>at least one</em> of the inequalities has to be a true inequality <span class="citation">(Siegel and Castellan 1988; Hollander and Wolfe 1999, 284; Van De Wiel and Di Bucchianico 2001, 143)</span>. <!-- Sheshkin2004, IX., one that is actually wrong using '<' is Rayner2000 also: "The scores will be different and will increase as the treatment levels change" - but not ALL are different --> What this means is that even if there is only a single step-wise change in the mean rank, e.g. <span class="math display">\[m_1 &lt; m_2 = \ldots = m_k\]</span> this is sufficient evidence <em>against</em> the null hypothesis.</p>
+<p>Let <span class="math inline">\(m_i\)</span> be the mean ordinal rank of the measure of interest obtained for treatment <span class="math inline">\(i\)</span>, then the null hypothesis of the test (identical to many other tests, e.g. Friedman’s) is <span class="math display">\[ m_1 = m_2 = \ldots = m_k \]</span> i.e. there is no difference between the expected ranks for the <span class="math inline">\(k\)</span> conditions. For some reason the original formulation of the <em>alternative</em> hypothesis being tested given in <span class="citation">Page (1963)</span> is <span class="math display">\[m_1 &gt; m_2 &gt; \ldots &gt; m_k.\]</span></p>
+<!-- http://www.itl.nist.gov/div898/software/dataplot/refman1/auxillar/page.htm -->
+<p>Later papers and textbook entries correctly point out that the alternative hypothesis is actually <span class="math display">\[m_1 \le m_2 \le \ldots \le m_k\]</span> where <em>at least one</em> of the inequalities has to be a true inequality <span class="citation">(Siegel and Castellan 1988; Hollander and Wolfe 1999, 284; Van De Wiel and Di Bucchianico 2001, 143)</span>. <!-- Sheshkin2004, IX., one that is actually wrong using '<' is Rayner2000 also: "The scores will be different and will increase as the treatment levels change" - but not ALL are different --> What this means is that strong evidence for nothing more than a single step-wise change in the mean rank, e.g. <span class="math display">\[m_1 &lt; m_2 = \ldots = m_k\]</span> can be sufficient for the test to <em>reject</em> the null hypothesis.</p>
 </div>
 <div id="what-the-page-test-is-not" class="section level2">
 <h2 class="hasAnchor">
 <a href="#what-the-page-test-is-not" class="anchor"></a>What the Page test is not</h2>
-<p>As the alternative hypothesis shows, the Page test is not a ‘trend test’ in any meaningful way, since it does not test for successive or cumulative changes in ranks. (Note how the original paper speaks of k <em>treatments</em> rather than generations, i.e. the Page test was never meant for dependent measures.)</p>
-<p>It also cannot show whether <em>differences</em> between the conditions/generations are significant, since it is a non-parametric test that only considers <em>ranks</em>, not absolute changes in the underlying measure. These points will be demonstrated using some controlled, semi-randomly generated data sets.</p>
+<p>As the alternative hypothesis shows, the Page test is not a ‘trend test’ in any meaningful way, since it does not test for successive or cumulative changes in ranks. (Note how the original paper speaks of k <em>treatments</em> rather than generations, i.e. the Page test was not intended for dependent measures.)</p>
+<p>It also cannot show whether <em>differences</em> between the conditions/generations are significant, since it is a non-parametric test that only considers <em>ranks</em>, not absolute changes in the underlying measure. These points will be demonstrated using some semi-randomly generated data sets.</p>
 </div>
 <div id="mock-dataset-demonstration" class="section level2">
 <h2 class="hasAnchor">
 <a href="#mock-dataset-demonstration" class="anchor"></a>Mock dataset demonstration</h2>
-<p>To test the sensitivity of the test to a single step-wise difference across conditions we can take a typical sample set of <span class="math inline">\(N=4\)</span> replications with <span class="math inline">\(k=10\)</span> levels each and fix the very first position to always be ranked first, with all successive ranks being randomly shuffled:</p>
+<p>To test the sensitivity of the test to a single step-wise difference across conditions we can take a typical sample set of <span class="math inline">\(N=4\)</span> replications with <span class="math inline">\(k=10\)</span> levels each and fix the very first position to always be ranked first, with all successive ranks being randomly shuffled. This is equivalent to the first generation doing badly at a task, with all successive generations outperforming the first one, but no cumulative improvement between them.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># make results reproducible</span>
 <span class="kw">set.seed</span>(<span class="dv">1000</span>)
 
@@ -108,7 +109,7 @@ lowestthenrandom &lt;-<span class="st"> </span>function()
 ## [2,]    1    4   10    7    3    6    5    2    9     8
 ## [3,]    1    2    6    3    9    8   10    7    4     5
 ## [4,]    1    9    2   10    5    8    4    7    3     6</code></pre>
-<p>Given this semi-random data generation function, we can now create a large number of data sets containing a variable number of replications <span class="math inline">\(N\)</span>, and compute their expected distribution of significance levels according to the Page test.</p>
+<p>Given this semi-random data generation function, we can now create a large number of data sets and compute their expected distribution of significance levels according to the Page test, and see how it varies based on the number of replications <span class="math inline">\(N\)</span>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(cultevo)
 
 sampleLs &lt;-<span class="st"> </span>function(datafun, nrepetitions) {
@@ -132,15 +133,15 @@ sampleLs &lt;-<span class="st"> </span>function(datafun, nrepetitions) {
 <span class="co"># choose some N (number of replications)</span>
 sampleps &lt;-<span class="st"> </span>function(testfun, N, datafun, <span class="dt">nrepetitions=</span><span class="dv">1000</span>)
   <span class="kw">testfun</span>(function() <span class="kw">t</span>(<span class="kw">replicate</span>(N, <span class="kw">datafun</span>())), nrepetitions)</code></pre></div>
-<p>Generating 1000 datasets like the one above which really only exhibit a single point change in the distribution of median ranks, we get a significant result about half of the time:</p>
+<p>Generating 1000 datasets like the one above – which really only exhibit a single point change in the distribution of mean ranks – we get a significant result about half of the time:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sampleps</span>(sampleLs, <span class="dv">4</span>, lowestthenrandom)</code></pre></div>
 <pre><code>## 0.001  0.01  0.05    NS 
 ## 0.043 0.173 0.290 0.494</code></pre>
-<p>Increasing the number of replications to 10, still only assuming that the first generation ranks differently from all the other ones (which do not exhibit consistent ordering in themselves):</p>
+<p>Increasing the number of replications to <span class="math inline">\(N=10\)</span>, still only assuming that the first generation performs differently from all the other ones:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sampleps</span>(sampleLs, <span class="dv">10</span>, lowestthenrandom)</code></pre></div>
 <pre><code>## 0.001  0.01  0.05    NS 
 ## 0.261 0.341 0.275 0.123</code></pre>
-<p>The influence is even stronger when the single change point gets closer to the middle of the ordered conditions. When we generate 1000 datasets where the first two ranks are always shuffled in the first two positions, followed by ranks 3-10 also shuffled randomly, we obtain the following distribution of p values:</p>
+<p>The influence is even stronger when the single change point occurs closer to the middle of the number of conditions. Generating 1000 datasets where the first two ranks are always shuffled in the first two positions, followed by ranks 3-10 also shuffled randomly, we obtain the following distribution of p values:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sampleps</span>(sampleLs, <span class="dv">4</span>, function() <span class="kw">pseudorandomranks</span>(<span class="dv">1</span>:<span class="dv">2</span>, <span class="dv">3</span>:<span class="dv">10</span>))</code></pre></div>
 <pre><code>## 0.001  0.01  0.05    NS 
 ## 0.432 0.431 0.127 0.010</code></pre>
@@ -148,12 +149,11 @@ sampleps &lt;-<span class="st"> </span>function(testfun, N, datafun, <span class
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># upwards jump from the first three observations to the remaining 7, but the</span>
 <span class="co"># remaining 7 exhibit a consistent downwards trend</span>
 upwardsjumpdownardstrend &lt;-<span class="st"> </span>function() <span class="kw">pseudorandomranks</span>(<span class="dv">1</span>:<span class="dv">3</span>, <span class="dv">10</span>, <span class="dv">9</span>, <span class="dv">8</span>, <span class="dv">7</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">4</span>)
-
-<span class="co"># </span>
 <span class="kw">sampleps</span>(sampleLs, <span class="dv">10</span>, upwardsjumpdownardstrend)</code></pre></div>
 <pre><code>## 0.001  0.01  0.05    NS 
 ##     0     1     0     0</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">updownup &lt;-<span class="st"> </span>function() <span class="kw">pseudorandomranks</span>(<span class="dv">3</span>:<span class="dv">4</span>, <span class="dv">5</span>:<span class="dv">6</span>, <span class="dv">1</span>:<span class="dv">2</span>, <span class="dv">7</span>:<span class="dv">8</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># start around the middle, then sudden downward followed by extreme upwards jump</span>
+updownup &lt;-<span class="st"> </span>function() <span class="kw">pseudorandomranks</span>(<span class="dv">3</span>:<span class="dv">4</span>, <span class="dv">5</span>:<span class="dv">6</span>, <span class="dv">1</span>:<span class="dv">2</span>, <span class="dv">7</span>:<span class="dv">8</span>)
 <span class="kw">sampleps</span>(sampleLs, <span class="dv">10</span>, updownup)</code></pre></div>
 <pre><code>## 0.001  0.01  0.05    NS 
 ## 0.983 0.017 0.000 0.000</code></pre>
@@ -161,8 +161,8 @@ upwardsjumpdownardstrend &lt;-<span class="st"> </span>function() <span class="k
 <div id="alternatives-to-the-page-test" class="section level2">
 <h2 class="hasAnchor">
 <a href="#alternatives-to-the-page-test" class="anchor"></a>Alternatives to the Page test</h2>
-<p>It’s not 1963 anymore, so everybody has a computer, and probably some prior expectations about the development of their (presumably continuous) measure of interest. Will its value rise indefinitely across conditions/generations, or is there a ceiling where it will level out? Do you have an idea of the value at which it will level out? Will it rise linearly between conditions until it hits its maximum? Logarithmically? Exponentially? All of these are specific hypotheses corresponding to specific models that can be fit and then be compared based on your data <span class="citation">(Winter and Wieling 2016)</span>.</p>
-<p>If you are simply looking for other non-parametric tests for sequential (or otherwise temporally dependent) data, the seasonal Kendall test <span class="citation">(Hirsch, Slack, and Smith 1982; Gilbert 1987; Gibbons, Bhaumik, and Aryal 2009)</span> takes seasonal effects on environmental measurements into account by computing the Mann Kendall test on each of <span class="math inline">\(k\)</span> seasons/months separately, and then combining the individual test results. Since the order of the individual seasons is not actually taken into account (it only is in a later version of the test, <span class="citation">Hirsch and Slack (1984)</span>), the test is essentially a within-subject version that combines the results of <span class="math inline">\(k\)</span> independent Mann-Kendall tests into one to increase the statistical power <span class="citation">(Gibbons, Bhaumik, and Aryal 2009, 211)</span>. The test was in fact already transferred to test for trends in different geographic sample locations rather than seasons (see <span class="citation">Helsel and Frans (2006)</span>). The seasonal’s test alternative hypothesis is “a monotone trend in one or more seasons” <span class="citation">(Hirsch and Slack 1984, 728)</span>.</p>
+<p>It’s not 1963 anymore, so everybody has a computer, and probably some prior expectations about the development of their (presumably continuous) measure of interest. Will its value rise indefinitely across conditions/generations, or is there a ceiling where it will level out? Do you have an idea of the value at which it will level out? Will it rise linearly between conditions until it hits its maximum? Logarithmically? Exponentially? All of these are specific hypotheses corresponding to specific models that can be fit and then compared based on your data <span class="citation">(Winter and Wieling 2016)</span>.</p>
+<p>If you are simply looking for other non-parametric tests for sequential (or otherwise temporally dependent) data, the seasonal Kendall test <span class="citation">(Hirsch, Slack, and Smith 1982; Gilbert 1987; Gibbons, Bhaumik, and Aryal 2009)</span> takes seasonal effects on environmental measurements into account by computing the Mann Kendall test on each of <span class="math inline">\(k\)</span> seasons/months separately, and then combining the individual test results. Since the order of the individual seasons is not actually taken into account (it only is in a later version of the test, <span class="citation">Hirsch and Slack (1984)</span>), the test is essentially a within-subject version that combines the results of <span class="math inline">\(k\)</span> independent Mann-Kendall tests into one to increase the statistical power <span class="citation">(Gibbons, Bhaumik, and Aryal 2009, 211)</span>. The test was in fact already used to test for trends in different geographic sample locations rather than seasons <span class="citation">(Helsel and Frans 2006)</span>. The seasonal’s test alternative hypothesis is “a monotone trend in one or more seasons” <span class="citation">(Hirsch and Slack 1984, 728)</span>.</p>
 </div>
 <div id="citation" class="section level2">
 <h2 class="hasAnchor">

@@ -18,7 +18,7 @@ between the two corresponding elements}
 }
 \value{
 a distance matrix (or list of distance matrixes when there is more
-  than one \code{dist.columns}) of type \code{matrix}
+than one \code{dist.columns}) of type \code{matrix}
 }
 \description{
 Read a distance matrix from a file or data frame.
