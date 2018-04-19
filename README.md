@@ -2,7 +2,7 @@
 
 [![Travis-CI Build Status](https://travis-ci.org/kevinstadler/cultevo.svg?branch=master)](https://travis-ci.org/kevinstadler/cultevo) [![CRAN Status Badge](http://www.r-pkg.org/badges/version/cultevo)](https://kevinstadler.github.io/cultevo/)
 
-**cultevo** provides implementations of functions and statistical tests often used in the study of cultural evolution. See the [Function reference](https://kevinstadler.github.io/cultevo/reference/index.html) for a full list of functions.
+**cultevo** provides tools, measures and statistical tests often used in the study of cultural evolution. See the [Function reference](https://kevinstadler.github.io/cultevo/reference/index.html) for a full list of functions.
 
 ## Installation
 
@@ -36,4 +36,4 @@ A BibTeX entry for LaTeX users is
 
 ## License
 
-This project is licensed under the terms of the [MIT license](http://opensource.org/licenses/MIT), Copyright (c) 2014-2017 Kevin Stadler.
+This project is licensed under the terms of the [MIT license](http://opensource.org/licenses/MIT), Copyright (c) 2014-2018 Kevin Stadler.

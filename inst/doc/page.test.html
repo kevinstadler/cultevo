@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Kevin Stadler" />
+
+<meta name="date" content="2017-06-19" />
+
+<title>The Page test is not a trend test</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#header {
+text-align: center;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">The Page test is not a trend test</h1>
+<h4 class="author"><em>Kevin Stadler</em></h4>
+<h4 class="date"><em>2017-06-19</em></h4>
+
+
+
+<p>The Page test is a non-parametric test for monotonically ordered differences in ranks. It can be used to assess the statistical evidence for an increase in the ordinal ranks between <span class="math inline">\(k\)</span> ‘treatments’ (conditions or generations), based on <span class="math inline">\(N\)</span> independent replications for each treatment. The ordering of the treatments <span class="math inline">\(1 \ldots k\)</span> along which we expect the monotonic effect has to be specified a priori.</p>
+<div id="definition" class="section level2">
+<h2>Definition</h2>
+<p>Let <span class="math inline">\(m_i\)</span> be the mean ordinal rank of the measure of interest obtained for treatment <span class="math inline">\(i\)</span>, then the null hypothesis of the test (identical to many other tests, e.g. Friedman’s) is <span class="math display">\[ m_1 = m_2 = \ldots = m_k \]</span> i.e. there is no difference between the expected ranks for the <span class="math inline">\(k\)</span> conditions. For some reason the original formulation of the <em>alternative</em> hypothesis being tested given in <span class="citation">Page (1963)</span> is <span class="math display">\[m_1 &gt; m_2 &gt; \ldots &gt; m_k.\]</span></p>
+<!-- http://www.itl.nist.gov/div898/software/dataplot/refman1/auxillar/page.htm -->
+<p>Later papers and textbook entries correctly point out that the alternative hypothesis is actually <span class="math display">\[m_1 \le m_2 \le \ldots \le m_k\]</span> where <em>at least one</em> of the inequalities has to be a true inequality <span class="citation">(Siegel and Castellan 1988; Hollander and Wolfe 1999, 284; Van De Wiel and Di Bucchianico 2001, 143)</span>. <!-- Sheshkin2004, IX., one that is actually wrong using '<' is Rayner2000 also: "The scores will be different and will increase as the treatment levels change" - but not ALL are different --> What this means is that strong evidence for just <em>a single step-wise change</em> in the mean rank, e.g. <span class="math display">\[m_1 &lt; m_2 = \ldots = m_k\]</span> can be sufficient for the test to <em>reject</em> the null hypothesis.</p>
+</div>
+<div id="what-the-page-test-is-not" class="section level2">
+<h2>What the Page test is not</h2>
+<p>As the alternative hypothesis shows, the Page test is not a ‘trend test’ in any meaningful way, since it does not test for successive or cumulative changes in ranks. (Note how the original paper speaks of k <em>treatments</em> rather than generations, i.e. the Page test was not designed for what are essentially dependent measures.)</p>
+<p>It also cannot show whether <em>differences</em> between the conditions/generations are significant, since it is a non-parametric test that only considers <em>ranks</em>, not absolute changes in the underlying measure. These points will be demonstrated using some semi-randomly generated data sets.</p>
+</div>
+<div id="mock-dataset-demonstration" class="section level2">
+<h2>Mock dataset demonstration</h2>
+<p>To test the sensitivity of the test to a single step-wise difference across conditions we can take a typical sample set of <span class="math inline">\(N=4\)</span> replications with <span class="math inline">\(k=10\)</span> levels each and fix the very first position to always be ranked first, with all successive ranks being randomly shuffled. This is equivalent to the first generation doing badly at a task, with all successive generations outperforming the first one, but no cumulative improvement between them.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co"># make results reproducible</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">set.seed</span>(<span class="dv">1000</span>)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">pseudorandomranks &lt;-<span class="st"> </span><span class="cf">function</span>(...)</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">  <span class="kw">unlist</span>(<span class="kw">lapply</span>(<span class="kw">list</span>(...), <span class="cf">function</span>(p) <span class="cf">if</span> (<span class="kw">length</span>(p) <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>) <span class="kw">sample</span>(p) <span class="cf">else</span> p))</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">lowestthenrandom &lt;-<span class="st"> </span><span class="cf">function</span>()</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">  <span class="kw">pseudorandomranks</span>(<span class="dv">1</span>, <span class="dv">2</span><span class="op">:</span><span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb1-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="co"># example ordering</span></a>
+<a class="sourceLine" id="cb1-11" data-line-number="11"><span class="kw">t</span>(<span class="kw">replicate</span>(<span class="dv">4</span>, <span class="kw">lowestthenrandom</span>()))</a></code></pre></div>
+<pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+## [1,]    1    4    8    2    6   10    9    7    3     5
+## [2,]    1    4   10    7    3    6    5    2    9     8
+## [3,]    1    2    6    3    9    8   10    7    4     5
+## [4,]    1    9    2   10    5    8    4    7    3     6</code></pre>
+<p>Given this semi-random data generation function, we can now create a large number of data sets and compute their expected distribution of significance levels according to the Page test, and see how it varies based on the number of replications <span class="math inline">\(N\)</span>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">library</span>(cultevo)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">sampleLs &lt;-<span class="st"> </span><span class="cf">function</span>(datafun, nrepetitions) {</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">  ps &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="st">&quot;0.001&quot;</span> =<span class="st"> </span><span class="dv">0</span>, <span class="st">&quot;0.01&quot;</span> =<span class="st"> </span><span class="dv">0</span>, <span class="st">&quot;0.05&quot;</span> =<span class="st"> </span><span class="dv">0</span>, <span class="st">&quot;NS&quot;</span> =<span class="st"> </span><span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">  <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq</span>(nrepetitions)) {</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">    p &lt;-<span class="st"> </span><span class="kw">page.test</span>(<span class="kw">datafun</span>(), <span class="dt">verbose=</span><span class="ot">FALSE</span>)<span class="op">$</span>p.value</a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">    <span class="cf">if</span> (p <span class="op">&lt;=</span><span class="st"> </span><span class="fl">0.001</span>) {</a>
+<a class="sourceLine" id="cb3-8" data-line-number="8">      p &lt;-<span class="st"> &quot;0.001&quot;</span></a>
+<a class="sourceLine" id="cb3-9" data-line-number="9">    } <span class="cf">else</span> <span class="cf">if</span> (p <span class="op">&lt;=</span><span class="st"> </span><span class="fl">0.01</span>) {</a>
+<a class="sourceLine" id="cb3-10" data-line-number="10">      p &lt;-<span class="st"> &quot;0.01&quot;</span></a>
+<a class="sourceLine" id="cb3-11" data-line-number="11">    } <span class="cf">else</span> <span class="cf">if</span> (p <span class="op">&lt;=</span><span class="st"> </span><span class="fl">0.05</span>) {</a>
+<a class="sourceLine" id="cb3-12" data-line-number="12">      p &lt;-<span class="st"> &quot;0.05&quot;</span></a>
+<a class="sourceLine" id="cb3-13" data-line-number="13">    } <span class="cf">else</span> {</a>
+<a class="sourceLine" id="cb3-14" data-line-number="14">      p &lt;-<span class="st"> &quot;NS&quot;</span></a>
+<a class="sourceLine" id="cb3-15" data-line-number="15">    }</a>
+<a class="sourceLine" id="cb3-16" data-line-number="16">    ps[[p]] &lt;-<span class="st"> </span>ps[[p]] <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb3-17" data-line-number="17">  }</a>
+<a class="sourceLine" id="cb3-18" data-line-number="18">  <span class="kw">unlist</span>(ps) <span class="op">/</span><span class="st"> </span>nrepetitions</a>
+<a class="sourceLine" id="cb3-19" data-line-number="19">}</a>
+<a class="sourceLine" id="cb3-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb3-21" data-line-number="21"><span class="co"># choose some N (number of replications)</span></a>
+<a class="sourceLine" id="cb3-22" data-line-number="22">sampleps &lt;-<span class="st"> </span><span class="cf">function</span>(testfun, N, datafun, <span class="dt">nrepetitions=</span><span class="dv">1000</span>)</a>
+<a class="sourceLine" id="cb3-23" data-line-number="23">  <span class="kw">testfun</span>(<span class="cf">function</span>() <span class="kw">t</span>(<span class="kw">replicate</span>(N, <span class="kw">datafun</span>())), nrepetitions)</a></code></pre></div>
+<p>Generating 1000 datasets like the one above – which really only exhibit a single point change in the distribution of mean ranks – we get a significant result about half of the time:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">sampleps</span>(sampleLs, <span class="dt">N=</span><span class="dv">4</span>, lowestthenrandom)</a></code></pre></div>
+<pre><code>## 0.001  0.01  0.05    NS 
+## 0.043 0.173 0.290 0.494</code></pre>
+<p>Increasing the number of replications to <span class="math inline">\(N=10\)</span>, still only assuming that the first generation performs differently from all the other ones:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">sampleps</span>(sampleLs, <span class="dt">N=</span><span class="dv">10</span>, lowestthenrandom)</a></code></pre></div>
+<pre><code>## 0.001  0.01  0.05    NS 
+## 0.261 0.341 0.275 0.123</code></pre>
+<p>The influence is even stronger when the single change point occurs closer to the middle of the number of conditions. Based on 1000 randomly generated datasets where the first two ranks are always shuffled in the first two positions, followed by ranks 3-10 also shuffled randomly across just 4 replications, we obtain the following distribution of p values:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">sampleps</span>(sampleLs, <span class="dt">N=</span><span class="dv">4</span>, <span class="cf">function</span>() <span class="kw">pseudorandomranks</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="dv">3</span><span class="op">:</span><span class="dv">10</span>))</a></code></pre></div>
+<pre><code>## 0.001  0.01  0.05    NS 
+## 0.432 0.431 0.127 0.010</code></pre>
+<p>The test is so sensitive to any (even just single-point) evidence for a change in the <em>a priori</em> suspected direction that it is largely unaffected by evidence for a consistent trend in the opposite direction, as can be seen in this data set where more than half of the pairwise differences between ranks indicate a downward trend:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="co"># abrupt upwards jump after the first three observations, but the</span></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="co"># remaining seven observations exhibit a consistent downwards trend</span></a>
+<a class="sourceLine" id="cb10-3" data-line-number="3">upwardsjumpdownardstrend &lt;-<span class="st"> </span><span class="cf">function</span>() <span class="kw">pseudorandomranks</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dv">10</span>, <span class="dv">9</span>, <span class="dv">8</span>, <span class="dv">7</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="kw">sampleps</span>(sampleLs, <span class="dt">N=</span><span class="dv">4</span>, upwardsjumpdownardstrend)</a></code></pre></div>
+<pre><code>## 0.001  0.01  0.05    NS 
+## 0.000 0.000 0.988 0.012</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="co"># start around the middle, then sudden downward followed by extreme upwards jump</span></a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">updownup &lt;-<span class="st"> </span><span class="cf">function</span>() <span class="kw">pseudorandomranks</span>(<span class="dv">3</span><span class="op">:</span><span class="dv">4</span>, <span class="dv">5</span><span class="op">:</span><span class="dv">6</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="dv">7</span><span class="op">:</span><span class="dv">8</span>)</a>
+<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="kw">sampleps</span>(sampleLs, <span class="dt">N=</span><span class="dv">4</span>, updownup)</a></code></pre></div>
+<pre><code>## 0.001  0.01  0.05    NS 
+##     0     0     1     0</code></pre>
+</div>
+<div id="alternatives-to-the-page-test" class="section level2">
+<h2>Alternatives to the Page test</h2>
+<p>It’s not 1963 anymore, so everybody has a computer, and probably some more concrete expectations about the development of their (presumably continuous) measure of interest. Will its value rise indefinitely across conditions/generations, or is there a ceiling where it will level out? Do you have an idea of the value at which it will level out? Will it rise linearly between conditions until it hits its maximum? Logarithmically? Exponentially? All of these are specific hypotheses corresponding to specific models that can be fit and then compared based on your data <span class="citation">(Winter and Wieling 2016)</span>.</p>
+<p>If you are simply looking for other non-parametric tests for sequential (or otherwise temporally dependent) data, the seasonal Kendall test <span class="citation">(Hirsch, Slack, and Smith 1982; Gilbert 1987; Gibbons, Bhaumik, and Aryal 2009)</span> takes seasonal effects on environmental measurements into account by computing the Mann Kendall test on each of <span class="math inline">\(k\)</span> seasons/months separately, and then combining the individual test results. Since the order of the individual seasons is not actually taken into account (it only is in a later version of the test, <span class="citation">Hirsch and Slack (1984)</span>), the test is essentially a within-subject version that combines the results of <span class="math inline">\(k\)</span> independent Mann-Kendall tests into one to increase the statistical power <span class="citation">(Gibbons, Bhaumik, and Aryal 2009, 211)</span>. The test was in fact already used to test for trends in different geographic sample locations rather than seasons <span class="citation">(Helsel and Frans 2006)</span>. The seasonal’s test alternative hypothesis is “a monotone trend in one or more seasons” <span class="citation">(Hirsch and Slack 1984, 728)</span>.</p>
+</div>
+<div id="citation" class="section level2">
+<h2>Citation</h2>
+<p>This tutorial can be cited as:</p>
+<pre><code>techreport{Stadler2017,
+author = {Stadler, Kevin},
+title = {{The Page test is not a trend test}},
+url = {https://kevinstadler.github.io/cultevo/articles/page.test.html},
+year = {2017}
+}</code></pre>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2>References</h2>
+<div id="refs" class="references">
+<div id="ref-Gibbons2009">
+<p>Gibbons, Robert D, Dulal Bhaumik, and Subhash Aryal. 2009. <em>Statistical Methods for Groundwater Monitoring</em>. 2nd ed.</p>
+</div>
+<div id="ref-Gilbert1987">
+<p>Gilbert, Richard. 1987. <em>Statistical Methods for Environmental Pollution Monitoring</em>. John Wiley &amp; Sons, Inc.</p>
+</div>
+<div id="ref-Helsel2006">
+<p>Helsel, Dennis R, and Lonna M Frans. 2006. “Regional Kendall test for trend.” <em>Environmental Science and Technology</em> 40 (13):4066–73. <a href="https://doi.org/10.1021/es051650b" class="uri">https://doi.org/10.1021/es051650b</a>.</p>
+</div>
+<div id="ref-Hirsch1984">
+<p>Hirsch, Robert M, and James R Slack. 1984. “A Nonparametric Trend Test for Seasonal Data With Serial Dependence.” <em>Water Resources Research</em> 20 (6):727–32. <a href="https://doi.org/10.1029/WR020i006p00727" class="uri">https://doi.org/10.1029/WR020i006p00727</a>.</p>
+</div>
+<div id="ref-Hirsch1982">
+<p>Hirsch, Robert M, James R Slack, and Richard A Smith. 1982. “Techniques of trend analysis for monthly water quality data.” <em>Water Resources Research</em> 18 (1):107–21. <a href="https://doi.org/10.1029/WR018i001p00107" class="uri">https://doi.org/10.1029/WR018i001p00107</a>.</p>
+</div>
+<div id="ref-Hollander1999">
+<p>Hollander, Miles, and Douglas A Wolfe. 1999. <em>Nonparametric Statistical Methods</em>.</p>
+</div>
+<div id="ref-Page1963">
+<p>Page, Ellis Batten. 1963. “Ordered hypotheses for multiple treatments: a significance test for linear ranks.” <em>Journal of the American Statistical Association</em> 58:216–30. <a href="https://doi.org/10.1080/01621459.1963.10500843" class="uri">https://doi.org/10.1080/01621459.1963.10500843</a>.</p>
+</div>
+<div id="ref-Siegel1988">
+<p>Siegel, Sidney, and N. John Castellan. 1988. <em>Nonparametric Statistics for the Behavioral Sciences</em>. McGraw-Hill.</p>
+</div>
+<div id="ref-VanDeWiel2001">
+<p>Van De Wiel, Mark A., and A. Di Bucchianico. 2001. “Fast computation of the exact null distribution of Spearman’s rho and Page’s L statistic for samples with and without ties.” <em>Journal of Statistical Planning and Inference</em> 92:133–45. <a href="https://doi.org/10.1016/S0378-3758(00)00166-X" class="uri">https://doi.org/10.1016/S0378-3758(00)00166-X</a>.</p>
+</div>
+<div id="ref-Winter2016">
+<p>Winter, Bodo, and Martijn Wieling. 2016. “How to analyze linguistic change using mixed models, Growth Curve Analysis and Generalized Additive Modeling.” <em>Journal of Language Evolution</em> 1 (1):7–18. <a href="https://doi.org/10.1093/jole/lzv003" class="uri">https://doi.org/10.1093/jole/lzv003</a>.</p>
+</div>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

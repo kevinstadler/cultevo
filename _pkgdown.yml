@@ -3,15 +3,15 @@ template:
     bootswatch: cerulean
     ganalytics: UA-96498670-1
 reference:
-  - title: Page test for monotonicity of ordered ranks
+  - title: Page test for monotonicity of ranks
     contents:
     - page.test
-  - title: Tests for compositionality of signalling systems
+  - title: Segmentation and measurement of compositional signalling systems
     contents:
     - sm.segmentation
     - ssm.segmentation
     - mantel.test
-  - title: Edit distances and string manipulation
+  - title: String manipulation and edit distance calculation
     contents:
     - normalisedlevenshteindists
     - orderinsensitivedists
@@ -25,7 +25,7 @@ reference:
     - hammingdists
     - wrap.meaningdistfunction
   - title: Distance matrices
-    desc:  Functions for creating and manipulating distance matrices
+    desc: Functions for creating and manipulating distance matrices of class `dist`.
     contents:
     - check.dist
     - read.dist
