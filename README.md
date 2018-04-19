@@ -1,6 +1,6 @@
 # Tools and tests for cultural evolution in R
 
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cultevo)](https://kevinstadler.github.io/cultevo/)
+[![Travis-CI Build Status](https://travis-ci.org/kevinstadler/cultevo.svg?branch=master)](https://travis-ci.org/kevinstadler/cultevo) [![CRAN Status Badge](http://www.r-pkg.org/badges/version/cultevo)](https://kevinstadler.github.io/cultevo/)
 
 **cultevo** provides implementations of functions and statistical tests often used in the study of cultural evolution. See the [Function reference](https://kevinstadler.github.io/cultevo/reference/index.html) for a full list of functions.
 
