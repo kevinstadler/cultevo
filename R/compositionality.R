@@ -43,7 +43,7 @@ count.substring.occurrences <- function(strings, sortbylength=FALSE) {
 weighted.mean.mp <- function(segmentation)
   weighted.mean(segmentation$mp, segmentation$N)
 
-#' Spike's measure of additive compositionality.
+#' Spike's segmentation and measure of additive compositionality.
 #'
 #' Implementation of the Spike-Montague segmentation and measure of additive
 #' compositionality (Spike 2016), which finds the most predictive associations
@@ -55,7 +55,7 @@ weighted.mean.mp <- function(segmentation)
 #' of elements into account. Rather than looking directly at how complex
 #' meanings are expressed, the measure really captures the degree to which a
 #' homonymy- and synonymy-free signalling system exists at the level of
-#' individual semantic *features*.
+#' *individual semantic features*.
 #'
 #' The segmentation algorithm provided by `sm.segmentation()` scans through
 #' all sub-strings found in `strings` to find the pairings of meaning features
@@ -173,9 +173,9 @@ weighted.mean.mp <- function(segmentation)
 #'   evolution of language. PhD thesis, The University of Edinburgh.
 #' @param x a list or vector of character sequences specifying the signals to
 #'   be analysed. Alternatively, \code{x} can also be a formula of the format
-#'   \code{s ~ m1 + m2 + ...}, where \code{s} and \code{m*} specify the column
-#'   names of the signals and meaning features found in the data frame that's
-#'   passed as the second argument.
+#'   \code{s ~ m1 + m2 + ...}, where \code{s} and \code{m1}, \code{m2}, etc.
+#'   specify the column names of the signals and meaning features found in the
+#'   data frame that is passed as the second argument.
 #' @param y a matrix or data frame with as many rows as there are signals,
 #'   indicating the presence/value of the different meaning dimensions along
 #'   columns (see section Meaning data format). If \code{x} is a formula, the
@@ -189,16 +189,7 @@ weighted.mean.mp <- function(segmentation)
 #'   (across meanings) which overlap in at least one of the strings where they
 #'   co-occur. For convenience, it also removes segments which are shorter
 #'   substrings of longer candidates (for the same meaning feature).
-#' @return \code{sm.compositionality} calculates the weighted average of the
-#'   mutual predictability of all meaning features and their most predictably
-#'   co-occurring strings. The function returns a data frame of three columns:
-#'   `N` is the total number of signals (utterances) on which the computation
-#'   was based, `M` the number of distinct meaning features attested across
-#'   all signals, and `meanmp` the mean mutual predictability across all these
-#'   features, weighted by the features' relative frequency. When `groups` is
-#'   not `NULL`, the data frame contains one row for every group.
-#'
-#'   \code{sm.segmentation} provides detailed information about the most
+#' @return \code{sm.segmentation} provides detailed information about the most
 #'   predictably co-occurring segments for every meaning feature. It returns
 #'   a data frame with one row for every meaning feature, in descending order
 #'   of the mutual predictability from (and to) their corresponding string
@@ -226,6 +217,16 @@ weighted.mean.mp <- function(segmentation)
 #'       meaning features constitute a valid segmentation where the segments
 #'       occurrences in the actual signals do not overlap.}
 #'   }
+#'
+#'   \code{sm.compositionality} calculates the weighted average of the
+#'   mutual predictability of all meaning features and their most predictably
+#'   co-occurring strings, as computed by \code{sm.segmentation}. The function
+#'   returns a data frame of three columns:
+#'   `N` is the total number of signals (utterances) on which the computation
+#'   was based, `M` the number of distinct meaning features attested across
+#'   all signals, and `meanmp` the mean mutual predictability across all these
+#'   features, weighted by the features' relative frequency. When `groups` is
+#'   not `NULL`, the data frame contains one row for every group.
 #' @examples
 #' # perfect communication system
 #' sm.compositionality(c("a", "b", "ab"),
@@ -509,16 +510,21 @@ mp.plvls <- function(nsignals, substringmatrix, meaningfrequencies, mps)
     mp.null.probability(nsignals, meaningfrequencies[i],
       tabulate(colSums(substringmatrix > 0)), mps[i]))
 
-#' Find a segmentation that maximises the overall coverage of all signals.
+#' Find a segmentation that maximises the overall string coverage across all signals.
 #'
 #' This algorithm builds on Spike's measure of compositionality (see
 #' \code{\link{sm.compositionality}}), except instead of simply determining
-#' which segment(s) which have the highest mutual predictability for each
-#' meaning feature separately, it tries to find a combination of
-#' non-overlapping segments that maximises the overall string coverage over all
-#' signals. In other words, it tries to find a segmentation which can account
-#' for (or 'explain') as much of the string material in the signals as
-#' possible.
+#' which segment(s) have the highest mutual predictability for each
+#' meaning feature separately, it attempts to find a combination of
+#' non-overlapping segments for each feature that maximises the overall string
+#' coverage over all signals. In other words, it tries to find a segmentation
+#' which can account for (or 'explain') as much of the string material in the
+#' signals as possible.
+#'
+#' For large data sets and long strings, this computation can get very slow.
+#' If the attested signals are such that no perfect segmentation is possible,
+#' this algorithm is not guaranteed to find any segmentation (as no such
+#' segmentation might exist).
 #'
 #' @param x a list or vector of character sequences
 #' @param y a matrix or data frame with as many rows as there are

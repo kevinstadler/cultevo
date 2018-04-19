@@ -1,4 +1,3 @@
-^.travis.yml$
-^_pkgdown.yml$
+^_pkgdown\.yml$
 ^docs$
 ^\.travis\.yml$

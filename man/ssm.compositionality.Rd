@@ -3,7 +3,7 @@
 \name{ssm.compositionality}
 \alias{ssm.compositionality}
 \alias{ssm.segmentation}
-\title{Find a segmentation that maximises the overall coverage of all signals.}
+\title{Find a segmentation that maximises the overall string coverage across all signals.}
 \usage{
 ssm.compositionality(x, y, groups = NULL)
 
@@ -30,12 +30,18 @@ the number of segment combinations considered for every coverage computed.}
 \description{
 This algorithm builds on Spike's measure of compositionality (see
 \code{\link{sm.compositionality}}), except instead of simply determining
-which segment(s) which have the highest mutual predictability for each
-meaning feature separately, it tries to find a combination of
-non-overlapping segments that maximises the overall string coverage over all
-signals. In other words, it tries to find a segmentation which can account
-for (or 'explain') as much of the string material in the signals as
-possible.
+which segment(s) have the highest mutual predictability for each
+meaning feature separately, it attempts to find a combination of
+non-overlapping segments for each feature that maximises the overall string
+coverage over all signals. In other words, it tries to find a segmentation
+which can account for (or 'explain') as much of the string material in the
+signals as possible.
+}
+\details{
+For large data sets and long strings, this computation can get very slow.
+If the attested signals are such that no perfect segmentation is possible,
+this algorithm is not guaranteed to find any segmentation (as no such
+segmentation might exist).
 }
 \examples{
 ssm.segmentation(c("as", "bas", "basf"),

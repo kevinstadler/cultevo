@@ -3,7 +3,7 @@
 \name{sm.compositionality}
 \alias{sm.compositionality}
 \alias{sm.segmentation}
-\title{Spike's measure of additive compositionality.}
+\title{Spike's segmentation and measure of additive compositionality.}
 \usage{
 sm.compositionality(x, y, groups = NULL, strict = FALSE)
 
@@ -12,9 +12,9 @@ sm.segmentation(x, y, strict = FALSE)
 \arguments{
 \item{x}{a list or vector of character sequences specifying the signals to
 be analysed. Alternatively, \code{x} can also be a formula of the format
-\code{s ~ m1 + m2 + ...}, where \code{s} and \code{m*} specify the column
-names of the signals and meaning features found in the data frame that's
-passed as the second argument.}
+\code{s ~ m1 + m2 + ...}, where \code{s} and \code{m1}, \code{m2}, etc.
+specify the column names of the signals and meaning features found in the
+data frame that is passed as the second argument.}
 
 \item{y}{a matrix or data frame with as many rows as there are signals,
 indicating the presence/value of the different meaning dimensions along
@@ -33,15 +33,6 @@ co-occur. For convenience, it also removes segments which are shorter
 substrings of longer candidates (for the same meaning feature).}
 }
 \value{
-\code{sm.compositionality} calculates the weighted average of the
-mutual predictability of all meaning features and their most predictably
-co-occurring strings. The function returns a data frame of three columns:
-\code{N} is the total number of signals (utterances) on which the computation
-was based, \code{M} the number of distinct meaning features attested across
-all signals, and \code{meanmp} the mean mutual predictability across all these
-features, weighted by the features' relative frequency. When \code{groups} is
-not \code{NULL}, the data frame contains one row for every group.
-
 \code{sm.segmentation} provides detailed information about the most
 predictably co-occurring segments for every meaning feature. It returns
 a data frame with one row for every meaning feature, in descending order
@@ -70,6 +61,16 @@ which are found in the same position for each of the different
 meaning features constitute a valid segmentation where the segments
 occurrences in the actual signals do not overlap.}
 }
+
+\code{sm.compositionality} calculates the weighted average of the
+mutual predictability of all meaning features and their most predictably
+co-occurring strings, as computed by \code{sm.segmentation}. The function
+returns a data frame of three columns:
+\code{N} is the total number of signals (utterances) on which the computation
+was based, \code{M} the number of distinct meaning features attested across
+all signals, and \code{meanmp} the mean mutual predictability across all these
+features, weighted by the features' relative frequency. When \code{groups} is
+not \code{NULL}, the data frame contains one row for every group.
 }
 \description{
 Implementation of the Spike-Montague segmentation and measure of additive
@@ -83,7 +84,7 @@ of categorical meaning features (see below), and does not take the order
 of elements into account. Rather than looking directly at how complex
 meanings are expressed, the measure really captures the degree to which a
 homonymy- and synonymy-free signalling system exists at the level of
-individual semantic \emph{features}.
+\emph{individual semantic features}.
 
 The segmentation algorithm provided by \code{sm.segmentation()} scans through
 all sub-strings found in \code{strings} to find the pairings of meaning features
