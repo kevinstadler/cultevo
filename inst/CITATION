@@ -1,8 +1,10 @@
-citEntry(entry = "manual",
-  author = as.person("Kevin Stadler"),
+year <- sub("-.*", "", meta$Date)
+note <- sprintf("R package version %s", meta$Version)
+
+bibentry(bibtype = "Manual",
   title = "cultevo: Tools, Measures and Statistical Tests for Cultural Evolution",
-  type = "R package",
-  year = "2017",
-  url = "https://kevinstadler.github.io/cultevo/",
-  textVersion = "Stadler, Kevin (2017) cultevo: Tools, Measures and Statistical Tests for Cultural Evolution. https://kevinstadler.github.io/cultevo/"
+  author = person("Kevin", "Stadler", role = c("aut", "cre")),
+  year = year,
+  note = note,
+  url = "https://kevinstadler.github.io/cultevo/"
 )

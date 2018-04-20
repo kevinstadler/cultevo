@@ -26,11 +26,11 @@ A BibTeX entry for LaTeX users is
 
 ```
   @Manual{cultevo,
-    author = {Kevin Stadler},
     title = {cultevo: Tools, Measures and Statistical Tests for Cultural Evolution},
-    type = {R package},
-    year = {2017},
-    url = {https://kevinstadler.github.io/cultevo/},
+    author = {Kevin Stadler},
+    year = {2018},
+    note = {R package version 1.0.1},
+    url = {https://kevinstadler.github.io/cultevo/}
   }
 ```
 
