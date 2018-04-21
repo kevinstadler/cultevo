@@ -20,3 +20,6 @@ Create a vector of 'temperature' (from blue over white to red) colors.
 image(as.matrix(1:7), z=as.matrix(1:7), col=temperature.colors(7))
 image(as.matrix(1:7), z=as.matrix(1:7), col=temperature.colors(-4, 2))
 }
+\seealso{
+\code{\link[grDevices:gray]{grDevices::gray()}}, \code{\link[grDevices:palette]{grDevices::palette()}}, \code{\link[grDevices:rainbow]{grDevices::rainbow()}}
+}

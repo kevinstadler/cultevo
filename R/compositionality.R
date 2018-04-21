@@ -179,8 +179,8 @@ weighted.mean.mp <- function(segmentation)
 #' @param y a matrix or data frame with as many rows as there are signals,
 #'   indicating the presence/value of the different meaning dimensions along
 #'   columns (see section Meaning data format). If \code{x} is a formula, the
-#'   second argument can contain any number of columns, only the ones specified
-#'   in the formula will be considered.
+#'   \code{y} data frame can contain any number of columns, but only the ones
+#'   whose column name is specified in the formula will be considered.
 #' @param groups a list or vector with as many items as strings, used to split
 #'   \code{strings} and \code{meanings} into data sets for which
 #'   compositionality measures are computed separately.
@@ -207,10 +207,10 @@ weighted.mean.mp <- function(segmentation)
 #'     \item{\code{ties}}{The number of substrings found in \code{strings}
 #'       which have this same level of mutual predictability with the meaning
 #'       feature.}
-#'     \item{\code{segments}}{For \code{strict = FALSE}: a list containing the
+#'     \item{\code{segments}}{For \code{strict=FALSE}: a list containing the
 #'       \code{ties} substrings in descending order of their length (the
 #'       ordering is for convenience only and not inherently meaningful). When
-#'       \code{strict = TRUE}, the lists of segments for each meaning feature
+#'       \code{strict=TRUE}, the lists of segments for each meaning feature
 #'       are all of the same length, with a meaningful relationship of the
 #'       order of segments across the different rows: every set of segments
 #'       which are found in the same position for each of the different
@@ -228,7 +228,8 @@ weighted.mean.mp <- function(segmentation)
 #'   features, weighted by the features' relative frequency. When `groups` is
 #'   not `NULL`, the data frame contains one row for every group.
 #' @examples
-#' # perfect communication system
+#' # perfect communication system for two meaning features (which are marked
+#' # as either present or absent)
 #' sm.compositionality(c("a", "b", "ab"),
 #'   cbind(a=c(TRUE, FALSE, TRUE), b=c(FALSE, TRUE, TRUE)))
 #' sm.segmentation(c("a", "b", "ab"),
@@ -240,24 +241,25 @@ weighted.mean.mp <- function(segmentation)
 #' sm.segmentation(c("as", "bas", "basf"),
 #'   cbind(a=c(TRUE, FALSE, TRUE), b=c(FALSE, TRUE, TRUE)))
 #'
-#' # force candidate segments to be non-overlapping via the 'strict' option
+#' # same communication system, but force candidate segments to be non-overlapping
+#' # via the 'strict' option
 #' sm.segmentation(c("as", "bas", "basf"),
 #'   cbind(a=c(TRUE, FALSE, TRUE), b=c(FALSE, TRUE, TRUE)), strict=TRUE)
+#'
 #'
 #' # the function also accepts meaning-dimension based matrix definitions:
 #' print(twobytwoanimals <- enumerate.meaningcombinations(c(animal=2, colour=2)))
 #'
 #' # note how there are many more candidate segments than just the full length
-#' # ones. given limited data, it is expected that shorter substrings will be
-#' # just as predictable as the full segments that contain them.
+#' # ones. the less data we have, the more likely it is that shorter substrings
+#' # will be just as predictable as the full segments that contain them.
 #' sm.segmentation(c("greendog", "bluedog", "greencat", "bluecat"), twobytwoanimals)
 #'
-#' # do the same thing but using the formula interface
+#' # perform the same analysis, but using the formula interface
 #' print(twobytwosignalingsystem <- cbind(twobytwoanimals,
 #'   signal=c("greendog", "bluedog", "greencat", "bluecat")))
 #'
 #' sm.segmentation(signal ~ colour + animal, twobytwosignalingsystem)
-#'
 #'
 #' # since there is no overlap in the constituent characters of the identified
 #' # 'morphemes', they are all tied in their mutual predictiveness with the
@@ -542,14 +544,15 @@ mp.plvls <- function(nsignals, substringmatrix, meaningfrequencies, mps)
 #' ssm.segmentation(c("as", "bas", "basf"),
 #'   cbind(a=c(TRUE, FALSE, TRUE), b=c(FALSE, TRUE, TRUE)))
 #'
-#' # signaling system where a distinction is not encoded
+#'
+#' # signaling system where one meaning distinction is not encoded in the signals
 #' print(threebytwoanimals <- enumerate.meaningcombinations(list(animal=c("dog", "cat", "tiger"),
 #'   colour=c("col1", "col2"))))
 #'
 #' ssm.segmentation(c("greendog", "bluedog", "greenfeline", "bluefeline", "greenfeline", "bluefeline"),
 #'   threebytwoanimals)
 #'
-#' # do the same thing again, but allow merging of features
+#' # the same analysis again, but allow merging of features
 #' ssm.segmentation(c("greendog", "bluedog", "greenfeline", "bluefeline", "greenfeline", "bluefeline"),
 #'   threebytwoanimals, mergefeatures=TRUE)
 #' @seealso \code{\link{sm.compositionality}}

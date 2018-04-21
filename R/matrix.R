@@ -14,15 +14,15 @@
 #' @return A matrix, which will have \code{times*each} times more rows and
 #' columns than the original matrix.
 #' @examples
-#' rep.matrix(diag(4))
-#' rep.matrix(diag(4), times=2)
-#' rep.matrix(diag(4), each=2)
-#' rep.matrix(diag(3), times=2, each=2)
-#' rep.matrix(diag(4), each.row=2)
-#' rep.matrix(diag(4), times.row=2)
+#' repmatrix(diag(4))
+#' repmatrix(diag(4), times=2)
+#' repmatrix(diag(4), each=2)
+#' repmatrix(diag(3), times=2, each=2)
+#' repmatrix(diag(4), each.row=2)
+#' repmatrix(diag(4), times.row=2)
 #' @seealso \code{\link[base]{rep}}
-#' @export rep.matrix
-rep.matrix <- function(x, times=1, each=1, times.row=times, times.col=times, each.row=each, each.col=each, ...) {
+#' @export repmatrix
+repmatrix <- function(x, times=1, each=1, times.row=times, times.col=times, each.row=each, each.col=each, ...) {
   # replicate individual elements
   x <- matrix(rep(x, each=each.row), ncol=each.row*nrow(x), byrow=TRUE)
   x <- matrix(rep(x, each=each.col), ncol=each.col*nrow(x), byrow=TRUE)

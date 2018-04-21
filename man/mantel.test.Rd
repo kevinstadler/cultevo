@@ -102,7 +102,7 @@ to the number of permutations specified by the \code{trials} parameter, a
 deterministic enumeration of all the permutations will be carried out
 instead of random sampling.
 
-\cr\code{plot()} called on a data frame of class \code{mantel} plots a
+\code{plot()} called on a data frame of class \code{mantel} plots a
 visualisation of the test results (in particular, the distribution of
 the permutated samples against the veridical correlation coefficient). If
 the veridical correlation coefficient is plotted in blue it means

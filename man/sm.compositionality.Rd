@@ -19,8 +19,8 @@ data frame that is passed as the second argument.}
 \item{y}{a matrix or data frame with as many rows as there are signals,
 indicating the presence/value of the different meaning dimensions along
 columns (see section Meaning data format). If \code{x} is a formula, the
-second argument can contain any number of columns, only the ones specified
-in the formula will be considered.}
+\code{y} data frame can contain any number of columns, but only the ones
+whose column name is specified in the formula will be considered.}
 
 \item{groups}{a list or vector with as many items as strings, used to split
 \code{strings} and \code{meanings} into data sets for which
@@ -51,10 +51,10 @@ substrings across all signals (see below).}
 \item{\code{ties}}{The number of substrings found in \code{strings}
 which have this same level of mutual predictability with the meaning
 feature.}
-\item{\code{segments}}{For \code{strict = FALSE}: a list containing the
+\item{\code{segments}}{For \code{strict=FALSE}: a list containing the
 \code{ties} substrings in descending order of their length (the
 ordering is for convenience only and not inherently meaningful). When
-\code{strict = TRUE}, the lists of segments for each meaning feature
+\code{strict=TRUE}, the lists of segments for each meaning feature
 are all of the same length, with a meaningful relationship of the
 order of segments across the different rows: every set of segments
 which are found in the same position for each of the different
@@ -203,7 +203,8 @@ belong to.
 }
 
 \examples{
-# perfect communication system
+# perfect communication system for two meaning features (which are marked
+# as either present or absent)
 sm.compositionality(c("a", "b", "ab"),
   cbind(a=c(TRUE, FALSE, TRUE), b=c(FALSE, TRUE, TRUE)))
 sm.segmentation(c("a", "b", "ab"),
@@ -215,24 +216,25 @@ sm.compositionality(c("as", "bas", "basf"),
 sm.segmentation(c("as", "bas", "basf"),
   cbind(a=c(TRUE, FALSE, TRUE), b=c(FALSE, TRUE, TRUE)))
 
-# force candidate segments to be non-overlapping via the 'strict' option
+# same communication system, but force candidate segments to be non-overlapping
+# via the 'strict' option
 sm.segmentation(c("as", "bas", "basf"),
   cbind(a=c(TRUE, FALSE, TRUE), b=c(FALSE, TRUE, TRUE)), strict=TRUE)
+
 
 # the function also accepts meaning-dimension based matrix definitions:
 print(twobytwoanimals <- enumerate.meaningcombinations(c(animal=2, colour=2)))
 
 # note how there are many more candidate segments than just the full length
-# ones. given limited data, it is expected that shorter substrings will be
-# just as predictable as the full segments that contain them.
+# ones. the less data we have, the more likely it is that shorter substrings
+# will be just as predictable as the full segments that contain them.
 sm.segmentation(c("greendog", "bluedog", "greencat", "bluecat"), twobytwoanimals)
 
-# do the same thing but using the formula interface
+# perform the same analysis, but using the formula interface
 print(twobytwosignalingsystem <- cbind(twobytwoanimals,
   signal=c("greendog", "bluedog", "greencat", "bluecat")))
 
 sm.segmentation(signal ~ colour + animal, twobytwosignalingsystem)
-
 
 # since there is no overlap in the constituent characters of the identified
 # 'morphemes', they are all tied in their mutual predictiveness with the

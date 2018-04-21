@@ -8,7 +8,7 @@ Description: This package provides tools, measures and statistical
     measuring the compositionality of signaling systems as well as computing
     string and meaning distance matrices. It also provides an accurate
     implementation of Page's test for monotonicity of ranks.
-URL: https://kevinstadler.github.io/cultevo/, https://github.com/kevinstadler/cultevo
+URL: https://kevinstadler.github.io/cultevo/
 BugReports: https://github.com/kevinstadler/cultevo/issues
 Encoding: UTF-8
 License: MIT + file LICENSE

@@ -277,7 +277,7 @@ plotmantelsample <- function(mantels, nbins=25, main="", xaxt=NULL, xlab=NULL, x
 }
 
 #' @details
-#' \cr\code{plot()} called on a data frame of class \code{mantel} plots a
+#' \code{plot()} called on a data frame of class \code{mantel} plots a
 #' visualisation of the test results (in particular, the distribution of
 #' the permutated samples against the veridical correlation coefficient). If
 #' the veridical correlation coefficient is plotted in blue it means

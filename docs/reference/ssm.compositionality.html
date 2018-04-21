@@ -92,12 +92,7 @@ signals as possible." />
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/kevinstadler/cultevo">
-    <span class="fa fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -111,7 +106,7 @@ signals as possible." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Find a segmentation that maximises the overall string coverage across all signals.</h1>
-    <small>Source: <a href='https://github.com/kevinstadler/cultevo/blob/master/R/compositionality.R'><code>R/compositionality.R</code></a></small>
+    
     <div class="hidden name"><code>ssm.compositionality.Rd</code></div>
     </div>
 
@@ -186,7 +181,8 @@ segmentation might exist).</p>
 #&gt; Segmentation is based on 3 signals totalling 9 characters.
 #&gt; Discounting overlaps, the segmentation above accounts for 6 of those characters.
 #&gt; Total character coverage rate: 0.667 </div><div class='input'>
-<span class='co'># signaling system where a distinction is not encoded</span>
+
+<span class='co'># signaling system where one meaning distinction is not encoded in the signals</span>
 <span class='fu'>print</span>(<span class='no'>threebytwoanimals</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='enumerate.meaningcombinations.html'>enumerate.meaningcombinations</a></span>(<span class='fu'>list</span>(<span class='kw'>animal</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='st'>"dog"</span>, <span class='st'>"cat"</span>, <span class='st'>"tiger"</span>),
   <span class='kw'>colour</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='st'>"col1"</span>, <span class='st'>"col2"</span>))))</div><div class='output co'>#&gt;      animal  colour
 #&gt; [1,] "dog"   "col1"
@@ -209,7 +205,7 @@ segmentation might exist).</p>
 #&gt; Segmentation is based on 6 signals totalling 57 characters.
 #&gt; Discounting overlaps, the segmentation above accounts for 57 of those characters.
 #&gt; Total character coverage rate: 1 </div><div class='input'>
-<span class='co'># do the same thing again, but allow merging of features</span>
+<span class='co'># the same analysis again, but allow merging of features</span>
 <span class='fu'>ssm.segmentation</span>(<span class='fu'>c</span>(<span class='st'>"greendog"</span>, <span class='st'>"bluedog"</span>, <span class='st'>"greenfeline"</span>, <span class='st'>"bluefeline"</span>, <span class='st'>"greenfeline"</span>, <span class='st'>"bluefeline"</span>),
   <span class='no'>threebytwoanimals</span>, <span class='kw'>mergefeatures</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='message'>Checking 1 segment combinations for overlaps...</span></div><div class='output co'>#&gt; <span class='message'>Initial segmentation covers 57 of 57 characters, mean mp 0.833</span></div><div class='output co'>#&gt; <span class='message'>Merging animal=cat|animal=tiger improved coverage to 57 out of 57, mean mp 1</span></div><div class='output co'>#&gt;                         N matches matchrate mp     p segments
 #&gt; animal=dog              2       2         1  1 0.982      dog

@@ -189,7 +189,7 @@ read.dist <- function(data, el1.column=1, el2.column=2, dist.columns=3) {
   d <- replicate(length(dist.columns), matrix(0, nrow=length(els), ncol=length(els)))
   el1s <- match(data[,el1.column], els)
   el2s <- match(data[,el2.column], els)
-  indices <- cbind(rep.matrix(cbind(el1s, el2s), each.row=length(dist.columns)), 1:length(dist.columns))
+  indices <- cbind(repmatrix(cbind(el1s, el2s), each.row=length(dist.columns)), 1:length(dist.columns))
   d[indices] <- as.vector(t(data[,dist.columns]))
   if (length(dist.columns) == 1) {
     return(d[,,1])

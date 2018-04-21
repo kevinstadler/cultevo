@@ -47,14 +47,15 @@ segmentation might exist).
 ssm.segmentation(c("as", "bas", "basf"),
   cbind(a=c(TRUE, FALSE, TRUE), b=c(FALSE, TRUE, TRUE)))
 
-# signaling system where a distinction is not encoded
+
+# signaling system where one meaning distinction is not encoded in the signals
 print(threebytwoanimals <- enumerate.meaningcombinations(list(animal=c("dog", "cat", "tiger"),
   colour=c("col1", "col2"))))
 
 ssm.segmentation(c("greendog", "bluedog", "greenfeline", "bluefeline", "greenfeline", "bluefeline"),
   threebytwoanimals)
 
-# do the same thing again, but allow merging of features
+# the same analysis again, but allow merging of features
 ssm.segmentation(c("greendog", "bluedog", "greenfeline", "bluefeline", "greenfeline", "bluefeline"),
   threebytwoanimals, mergefeatures=TRUE)
 }
