@@ -145,10 +145,10 @@ combination of distance matrices in \code{x} and \code{y} and returns a
 mantel.test(dist(1:7), dist(1:7))
 
 # smallest distance matrix using random permutations
-plot(mantel.test(dist(1:8), dist(1:8), method="kendall", trials=5000))
+plot(mantel.test(dist(1:8), dist(1:8), method="kendall", trials=2000))
 
 mantel.test(hammingdists(enumerate.meaningcombinations(c(2, 2, 2, 2))),
-  dist(1:16), trials=5000, plot=TRUE)
+  dist(1:16), trials=2000, plot=TRUE)
 # using the formula interface in combination with a data frame:
 print(data <- cbind(word=c("aa", "ab", "ba", "bb"),
   enumerate.meaningcombinations(c(2, 2))))

@@ -40,8 +40,17 @@
 #'      `"approximate"`}
 #' }
 #' @examples
+#' # exact p value computation for N=4, k=4
 #' page.test(t(replicate(4, sample(4))))
+#' 
+#' # exact p value computation for N=4, k=10
 #' page.test(t(replicate(4, sample(10))))
+#' 
+#' # approximate p value computation for N=4, k=23
+#' result <- page.test(t(replicate(4, sample(23))), verbose = FALSE)
+#' 
+#' print(result)
+#' 
 #' @references Siegel, S., and N. J. Castellan, Jr. (1988). Nonparametric
 #' Statistics for the Behavioral Sciences. McGraw-Hill.
 #' @describeIn page.test See above.
@@ -56,11 +65,11 @@ page.test <- function(data, verbose=TRUE) {
   L <- page.L(data, verbose=verbose)
 
   # if exact null distribution is known: compute exact
-  if (k <= length(pspearman:::spearman.list)) {
+  if (k <= 22) {
     p <- page.compute.exact(k, N, L)
     p.type <- "exact"
   } else {
-    warning("Exact p value is not available for given k, using Normal approximation which is unreliable for small N")
+    message("Exact p value is not available for k=", k, ", using Normal approximation.")
     p <- page.compute.normal.approx(k, N, L)
     p.type <- "approximate"
   }
@@ -94,15 +103,28 @@ page.L.mean <- function(k, N)
 
 # possible row-wise ls (equivalent to Spearman's Rho)
 rho.null.distribution <- function(k) {
-  ls <- sum((1:k)^2) : sum(1:k * k:1)
-  nd <- pspearman:::spearman.list[[k]]
+  # access pspearman:::spearman.list null distribution directly
+#  ls <- sum((1:k)^2) : sum(1:k * k:1)
+#  nd <- pspearman:::spearman.list[[k]]
   # mirror the symmetric null distribution
-  if (length(ls) %% 2 == 0)
-    c(nd, rev(nd))
-  else
-    c(nd, rev(nd)[-1])
+#  if (length(ls) %% 2 == 0)
+#    c(nd, rev(nd))
+#  else
+#    c(nd, rev(nd)[-1])
   # sanity check: sum(rho.null.distribution(k)) == factorial(k)
+
+  # reconstruct null distribution from calls to pspearman()
+  nls <- sum((1:k)^2) - sum(1:k * k:1)
+  ps <- sapply(2*0:floor(nls/2), function(x) pspearman::pspearman(x, k))
+  ps <- c(ps[1], diff(ps))
+  if (nls %% 2 == 0)
+    c(ps, rev(ps)[-1])
+  else
+    c(ps, rev(ps))
 }
+# don't recompute
+if (requireNamespace("memoise", quietly = TRUE))
+  rho.null.distribution <- memoise::memoise(rho.null.distribution)
 
 L.null.distribution <- function(k, N) {
   # possible row-wise ls

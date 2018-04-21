@@ -69,10 +69,10 @@
 #' mantel.test(dist(1:7), dist(1:7))
 #'
 #' # smallest distance matrix using random permutations
-#' plot(mantel.test(dist(1:8), dist(1:8), method="kendall", trials=5000))
+#' plot(mantel.test(dist(1:8), dist(1:8), method="kendall", trials=2000))
 #'
 #' mantel.test(hammingdists(enumerate.meaningcombinations(c(2, 2, 2, 2))),
-#'   dist(1:16), trials=5000, plot=TRUE)
+#'   dist(1:16), trials=2000, plot=TRUE)
 #' @seealso \code{\link[stats]{cor}},
 #'   \code{\link[utils]{adist}}, \code{\link{hammingdists}},
 #'   \code{\link{normalisedlevenshteindists}},
@@ -266,7 +266,7 @@ plotmantelsample <- function(mantels, nbins=25, main="", xaxt=NULL, xlab=NULL, x
     xlim <- range(mantels$rsample[[i]], mantels$statistic[i]) + c(-.05, .05)
     graphics::plot(d[[i]], freq=FALSE, yaxs="i", xlim=xlim, ylim=c(0, maxdensity), xlab=method.label[[mantels$method[i]]], ylab="Density", border="gray", main=paste(method.label[[mantels$method[i]]], "=", format(mantels$statistic[i], digits=3), ", N=", mantels$N[i], ", ", length(mantels$rsample[[i]]), " permutations", sep=""), ...)
     # add fit used for z score estimation
-    graphics::curve({stats::dnorm(x, mean=mantels$mean[i], sd=mantels$sd[i])}, lty=3, add=TRUE)
+    graphics::curve({stats::dnorm(d, mean=mantels$mean[i], sd=mantels$sd[i])}, xname="d", lty=3, add=TRUE)
     # mark veridical r
     col <- blue.if.true(mantels$is.unique.max[i])
     level <- dnorm(mantels$statistic[i], mean=mantels$mean[i], sd=mantels$sd[i])

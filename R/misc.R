@@ -7,7 +7,7 @@
 #' @examples
 #' image(as.matrix(1:7), z=as.matrix(1:7), col=temperature.colors(7))
 #' image(as.matrix(1:7), z=as.matrix(1:7), col=temperature.colors(-4, 2))
-#' @seealso [grDevices::gray()], [grDevices::palette()], [grDevices::rainbow()]
+#' @seealso \code{\link[grDevices]{gray}}, \code{\link[grDevices]{rainbow}}, \code{\link[grDevices]{palette}}
 #' @export
 temperature.colors <- function(mn, mx=NULL, intensity=1) {
   if (is.null(mx)) {
