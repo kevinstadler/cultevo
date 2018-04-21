@@ -1,8 +1,10 @@
-# Tools and tests for cultural evolution in R
+# Cultural evolution in R
 
 [![Travis-CI Build Status](https://travis-ci.org/kevinstadler/cultevo.svg?branch=master)](https://travis-ci.org/kevinstadler/cultevo) [![CRAN Status Badge](http://www.r-pkg.org/badges/version/cultevo)](https://kevinstadler.github.io/cultevo/)
 
-**cultevo** provides tools, measures and statistical tests often used in the study of cultural evolution. See the [Function reference](https://kevinstadler.github.io/cultevo/reference/index.html) for a full list of functions.
+**cultevo** provides tools, measures and statistical tests often used in the study of cultural evolution, in particular for measuring the compositionality of signalling systems as well as computing string and meaning distance matrices. It also provides an accurate implementation of Page's test for monotonicity of ranks.
+
+See the [Function reference](https://kevinstadler.github.io/cultevo/reference/index.html) for a full list of functions.
 
 ## Installation
 

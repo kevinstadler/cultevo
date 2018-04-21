@@ -215,28 +215,28 @@ Statistics for the Behavioral Sciences. McGraw-Hill.</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>page.test</span>(<span class='fu'>t</span>(<span class='fu'>replicate</span>(<span class='fl'>4</span>, <span class='fu'>sample</span>(<span class='fl'>4</span>))))</div><div class='output co'>#&gt; Ranking used:
 #&gt;     [,1] [,2] [,3] [,4]
-#&gt; N=1    2    4    3    1
-#&gt; N=2    3    4    2    1
-#&gt; N=3    1    4    3    2
+#&gt; N=1    4    2    1    3
+#&gt; N=2    4    1    2    3
+#&gt; N=3    2    1    3    4
 #&gt; N=4    4    2    1    3</div><div class='output co'>#&gt; 
 #&gt; 	Page test of monotonicity of ranks
 #&gt; 
 #&gt; data:  t(replicate(4, sample(4)))
-#&gt; L = 90, k = 4, N = 4, p-value = 0.9
+#&gt; L = 99, k = 4, N = 4, p-value = 0.5987
 #&gt; alternative hypothesis: at least one difference in ranks
 #&gt; </div><div class='input'><span class='fu'>page.test</span>(<span class='fu'>t</span>(<span class='fu'>replicate</span>(<span class='fl'>4</span>, <span class='fu'>sample</span>(<span class='fl'>10</span>))))</div><div class='output co'>#&gt; Ranking used:
 #&gt;     [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
-#&gt; N=1    6    2    1    3   10    7    5    8    4     9
-#&gt; N=2    3    7    8    4    2   10    9    6    1     5
-#&gt; N=3    2    7    1    4    5    6    3    8    9    10
-#&gt; N=4    9   10    8    2    3    1    5    6    7     4</div><div class='output co'>#&gt; 
+#&gt; N=1   10    5    2    1    7    4    6    9    8     3
+#&gt; N=2    1    7   10    6    8    4    2    3    5     9
+#&gt; N=3    1    5    3    6    4   10    2    8    9     7
+#&gt; N=4    7    5    3    6   10    4    9    1    8     2</div><div class='output co'>#&gt; 
 #&gt; 	Page test of monotonicity of ranks
 #&gt; 
 #&gt; data:  t(replicate(4, sample(10)))
-#&gt; L = 1000, k = 10, N = 4, p-value = 0.1
+#&gt; L = 1251, k = 10, N = 4, p-value = 0.2335
 #&gt; alternative hypothesis: at least one difference in ranks
 #&gt; </div><div class='input'><span class='co'># raw calculation of the significance levels</span>
-<span class='fu'>page.compute.exact</span>(<span class='fl'>6</span>, <span class='fl'>4</span>, <span class='fl'>322</span>)</div><div class='output co'>#&gt; [1] 0.0393</div></pre>
+<span class='fu'>page.compute.exact</span>(<span class='fl'>6</span>, <span class='fl'>4</span>, <span class='fl'>322</span>)</div><div class='output co'>#&gt; [1] 0.03932265</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

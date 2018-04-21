@@ -68,11 +68,11 @@
 #' # small distance matrix, Mantel test run deterministically
 #' mantel.test(dist(1:7), dist(1:7))
 #'
-#' # smallest distance matrix using random permutations (based on default trials=9999)
-#' plot(mantel.test(dist(1:8), dist(1:8), method="kendall"))
+#' # smallest distance matrix using random permutations
+#' plot(mantel.test(dist(1:8), dist(1:8), method="kendall", trials=5000))
 #'
 #' mantel.test(hammingdists(enumerate.meaningcombinations(c(2, 2, 2, 2))),
-#'   dist(1:16), plot=TRUE)
+#'   dist(1:16), trials=5000, plot=TRUE)
 #' @seealso \code{\link[stats]{cor}},
 #'   \code{\link[utils]{adist}}, \code{\link{hammingdists}},
 #'   \code{\link{normalisedlevenshteindists}},

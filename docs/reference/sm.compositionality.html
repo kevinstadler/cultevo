@@ -330,8 +330,8 @@ evolution of language. PhD thesis, The University of Edinburgh.</p>
 #&gt; Mean feature-wise mutual predictability, weighted by feature frequency: 1 </div><div class='input'>
 <span class='co'># not quite perfect communication system</span>
 <span class='fu'>sm.compositionality</span>(<span class='fu'>c</span>(<span class='st'>"as"</span>, <span class='st'>"bas"</span>, <span class='st'>"basf"</span>),
-  <span class='fu'>cbind</span>(<span class='kw'>a</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>TRUE</span>, <span class='fl'>FALSE</span>, <span class='fl'>TRUE</span>), <span class='kw'>b</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>FALSE</span>, <span class='fl'>TRUE</span>, <span class='fl'>TRUE</span>)))</div><div class='output co'>#&gt;   N M meanmp
-#&gt; 1 3 2  0.833</div><div class='input'><span class='fu'>sm.segmentation</span>(<span class='fu'>c</span>(<span class='st'>"as"</span>, <span class='st'>"bas"</span>, <span class='st'>"basf"</span>),
+  <span class='fu'>cbind</span>(<span class='kw'>a</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>TRUE</span>, <span class='fl'>FALSE</span>, <span class='fl'>TRUE</span>), <span class='kw'>b</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>FALSE</span>, <span class='fl'>TRUE</span>, <span class='fl'>TRUE</span>)))</div><div class='output co'>#&gt;   N M    meanmp
+#&gt; 1 3 2 0.8333333</div><div class='input'><span class='fu'>sm.segmentation</span>(<span class='fu'>c</span>(<span class='st'>"as"</span>, <span class='st'>"bas"</span>, <span class='st'>"basf"</span>),
   <span class='fu'>cbind</span>(<span class='kw'>a</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>TRUE</span>, <span class='fl'>FALSE</span>, <span class='fl'>TRUE</span>), <span class='kw'>b</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>FALSE</span>, <span class='fl'>TRUE</span>, <span class='fl'>TRUE</span>)))</div><div class='output co'>#&gt;   N    mp     p ties   segments
 #&gt; b 2 1.000 0.651    3 bas, ba, b
 #&gt; a 2 0.667 0.994    3   as, a, s

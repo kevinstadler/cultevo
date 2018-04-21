@@ -1,13 +1,9 @@
 Package: cultevo
 Title: Tools, Measures and Statistical Tests for Cultural Evolution
 Version: 1.0.1
-Date: 2018-04-19
+Date: 2018-04-21
 Authors@R: person("Kevin Stadler", role=c("aut", "cre"), email="a00425926@unet.univie.ac.at")
-Description: This package provides tools, measures and statistical
-    tests often used in the study of cultural evolution, in particular for
-    measuring the compositionality of signaling systems as well as computing
-    string and meaning distance matrices. It also provides an accurate
-    implementation of Page's test for monotonicity of ranks.
+Description: Tools, measures and statistical tests often used in the study of cultural evolution.
 URL: https://kevinstadler.github.io/cultevo/
 BugReports: https://github.com/kevinstadler/cultevo/issues
 Encoding: UTF-8
