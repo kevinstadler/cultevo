@@ -2,24 +2,29 @@
 % Please edit documentation in R/misc.R
 \name{temperature.colors}
 \alias{temperature.colors}
-\title{Create a vector of 'temperature' (from blue over white to red) colors.}
+\title{Create a vector of 'temperature' colors (from blue over white to red).}
 \usage{
 temperature.colors(mn, mx = NULL, intensity = 1)
 }
 \arguments{
-\item{mn}{when \code{mx} is not specified: number of colors (>1) in palette}
+\item{mn}{integer: when \code{mx} is not specified, total number of colors
+(>1) in the palette. when \code{mx} is specified: 'coldest' temperature (see examples)}
 
-\item{mx}{maximum}
+\item{mx}{integer: 'warmest' temperature (see examples)}
 
-\item{intensity}{saturation of the most extreme color(s)}
+\item{intensity}{saturation of the most extreme color(s), in the range \code{[0,1]}.}
 }
 \description{
-Create a vector of 'temperature' (from blue over white to red) colors.
+Create a vector of 'temperature' colors (from blue over white to red).
 }
 \examples{
+# full intensity
 image(as.matrix(1:7), z=as.matrix(1:7), col=temperature.colors(7))
+# half intensity
+image(as.matrix(1:7), z=as.matrix(1:7), col=temperature.colors(7, intensity=0.5))
+# skewed palette with more negative than positive temperature colors
 image(as.matrix(1:7), z=as.matrix(1:7), col=temperature.colors(-4, 2))
 }
 \seealso{
-\code{\link[grDevices]{gray}}, \code{\link[grDevices]{rainbow}}, \code{\link[grDevices]{palette}}
+\code{\link[grDevices]{gray}}, \code{\link[grDevices]{hsv}}, \code{\link[grDevices]{rainbow}}
 }

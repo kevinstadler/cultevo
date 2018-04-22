@@ -68,11 +68,17 @@
 #' # small distance matrix, Mantel test run deterministically
 #' mantel.test(dist(1:7), dist(1:7))
 #'
-#' # smallest distance matrix using random permutations
-#' plot(mantel.test(dist(1:8), dist(1:8), method="kendall", trials=2000))
+#' # (don't run computationally exhaustive examples on CRAN)
+#' if (identical(Sys.getenv("NOT_CRAN"), "true")) {
 #'
-#' mantel.test(hammingdists(enumerate.meaningcombinations(c(2, 2, 2, 2))),
-#'   dist(1:16), trials=2000, plot=TRUE)
+#'   # smallest distance matrix requiring a random permutation test
+#'   plot(mantel.test(dist(1:8), dist(1:8), method="kendall"))
+#'
+#'   # 2x2x2x2 design
+#'   mantel.test(hammingdists(enumerate.meaningcombinations(c(2, 2, 2, 2))),
+#'     dist(1:16), plot=TRUE)
+#'
+#' }
 #' @seealso \code{\link[stats]{cor}},
 #'   \code{\link[utils]{adist}}, \code{\link{hammingdists}},
 #'   \code{\link{normalisedlevenshteindists}},
@@ -205,13 +211,18 @@ mantel.test.formula <- function(x, y, groups=NULL, stringdistfun=utils::adist,
 #' \code{mantel} object with as many rows.
 #' @examples
 #'
-#' # passing a list of distance matrices as the first argument runs separate
-#' # tests on pairwise combinations of the first and second argument(s)
-#' result <- mantel.test(list(dist(1:8), dist(sample(8:1)), dist(runif(8))),
-#'   hammingdists(enumerate.meaningcombinations(c(2, 2, 2))))
+#' # (don't run computationally exhaustive examples on CRAN)
+#' if (identical(Sys.getenv("NOT_CRAN"), "true")) {
 #'
-#' print(result)
-#' plot(result, xlab="group")
+#'   # passing a list of distance matrices as the first argument runs separate
+#'   # tests on pairwise combinations of the first and second argument(s)
+#'
+#'   result <- mantel.test(list(dist(1:8), dist(sample(8:1)), dist(runif(8))),
+#'     hammingdists(enumerate.meaningcombinations(c(2, 2, 2))))
+#'
+#'   print(result)
+#'   plot(result, xlab="group")
+#' }
 #' @export
 mantel.test.list <- function(x, y, plot=FALSE, ...) {
   # catch plot argument so that individual tests don't all produce a plot

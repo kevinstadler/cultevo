@@ -1,15 +1,20 @@
-#' Create a vector of 'temperature' (from blue over white to red) colors.
+#' Create a vector of 'temperature' colors (from blue over white to red).
 #'
-#' @param mn when \code{mx} is not specified: number of colors (>1) in palette
-#' @param mx maximum
-#' @param intensity saturation of the most extreme color(s) 
+#' @param mn integer: when \code{mx} is not specified, total number of colors
+#'   (>1) in the palette. when \code{mx} is specified: 'coldest' temperature (see examples)
+#' @param mx integer: 'warmest' temperature (see examples)
+#' @param intensity saturation of the most extreme color(s), in the range `[0,1]`.
 #'
 #' @examples
+#' # full intensity
 #' image(as.matrix(1:7), z=as.matrix(1:7), col=temperature.colors(7))
+#' # half intensity
+#' image(as.matrix(1:7), z=as.matrix(1:7), col=temperature.colors(7, intensity=0.5))
+#' # skewed palette with more negative than positive temperature colors
 #' image(as.matrix(1:7), z=as.matrix(1:7), col=temperature.colors(-4, 2))
-#' @seealso \code{\link[grDevices]{gray}}, \code{\link[grDevices]{rainbow}}, \code{\link[grDevices]{palette}}
+#' @seealso \code{\link[grDevices]{gray}}, \code{\link[grDevices]{hsv}}, \code{\link[grDevices]{rainbow}}
 #' @export
-temperature.colors <- function(mn, mx=NULL, intensity=1) {
+temperature.colors <- function(mn, mx=NULL, intensity=1.0) {
   if (is.null(mx)) {
     mx <- floor(mn/2)
     mn <- ceiling(-mn/2)

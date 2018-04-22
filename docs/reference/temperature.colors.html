@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a vector of 'temperature' (from blue over white to red) colors. — temperature.colors • cultevo</title>
+<title>Create a vector of 'temperature' colors (from blue over white to red). — temperature.colors • cultevo</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -25,9 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-<meta property="og:title" content="Create a vector of 'temperature' (from blue over white to red) colors. — temperature.colors" />
+<meta property="og:title" content="Create a vector of 'temperature' colors (from blue over white to red). — temperature.colors" />
 
-<meta property="og:description" content="Create a vector of 'temperature' (from blue over white to red) colors." />
+<meta property="og:description" content="Create a vector of 'temperature' colors (from blue over white to red)." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -98,13 +98,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a vector of 'temperature' (from blue over white to red) colors.</h1>
+    <h1>Create a vector of 'temperature' colors (from blue over white to red).</h1>
     
     <div class="hidden name"><code>temperature.colors.Rd</code></div>
     </div>
 
     
-    <p>Create a vector of 'temperature' (from blue over white to red) colors.</p>
+    <p>Create a vector of 'temperature' colors (from blue over white to red).</p>
     
 
     <pre class="usage"><span class='fu'>temperature.colors</span>(<span class='no'>mn</span>, <span class='kw'>mx</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>intensity</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
@@ -114,25 +114,29 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>mn</th>
-      <td><p>when <code>mx</code> is not specified: number of colors (&gt;1) in palette</p></td>
+      <td><p>integer: when <code>mx</code> is not specified, total number of colors
+(&gt;1) in the palette. when <code>mx</code> is specified: 'coldest' temperature (see examples)</p></td>
     </tr>
     <tr>
       <th>mx</th>
-      <td><p>maximum</p></td>
+      <td><p>integer: 'warmest' temperature (see examples)</p></td>
     </tr>
     <tr>
       <th>intensity</th>
-      <td><p>saturation of the most extreme color(s)</p></td>
+      <td><p>saturation of the most extreme color(s), in the range <code>[0,1]</code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='http://www.rdocumentation.org/packages/grDevices/topics/gray'>gray</a></code>, <code><a href='http://www.rdocumentation.org/packages/grDevices/topics/palettes'>rainbow</a></code>, <code><a href='http://www.rdocumentation.org/packages/grDevices/topics/palette'>palette</a></code></p></div>
+    <div class='dont-index'><p><code><a href='http://www.rdocumentation.org/packages/grDevices/topics/gray'>gray</a></code>, <code><a href='http://www.rdocumentation.org/packages/grDevices/topics/hsv'>hsv</a></code>, <code><a href='http://www.rdocumentation.org/packages/grDevices/topics/palettes'>rainbow</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>image</span>(<span class='fu'>as.matrix</span>(<span class='fl'>1</span>:<span class='fl'>7</span>), <span class='kw'>z</span><span class='kw'>=</span><span class='fu'>as.matrix</span>(<span class='fl'>1</span>:<span class='fl'>7</span>), <span class='kw'>col</span><span class='kw'>=</span><span class='fu'>temperature.colors</span>(<span class='fl'>7</span>))</div><div class='img'><img src='temperature.colors-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>image</span>(<span class='fu'>as.matrix</span>(<span class='fl'>1</span>:<span class='fl'>7</span>), <span class='kw'>z</span><span class='kw'>=</span><span class='fu'>as.matrix</span>(<span class='fl'>1</span>:<span class='fl'>7</span>), <span class='kw'>col</span><span class='kw'>=</span><span class='fu'>temperature.colors</span>(-<span class='fl'>4</span>, <span class='fl'>2</span>))</div><div class='img'><img src='temperature.colors-2.png' alt='' width='700' height='433' /></div></pre>
+    <pre class="examples"><div class='input'><span class='co'># full intensity</span>
+<span class='fu'>image</span>(<span class='fu'>as.matrix</span>(<span class='fl'>1</span>:<span class='fl'>7</span>), <span class='kw'>z</span><span class='kw'>=</span><span class='fu'>as.matrix</span>(<span class='fl'>1</span>:<span class='fl'>7</span>), <span class='kw'>col</span><span class='kw'>=</span><span class='fu'>temperature.colors</span>(<span class='fl'>7</span>))</div><div class='img'><img src='temperature.colors-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># half intensity</span>
+<span class='fu'>image</span>(<span class='fu'>as.matrix</span>(<span class='fl'>1</span>:<span class='fl'>7</span>), <span class='kw'>z</span><span class='kw'>=</span><span class='fu'>as.matrix</span>(<span class='fl'>1</span>:<span class='fl'>7</span>), <span class='kw'>col</span><span class='kw'>=</span><span class='fu'>temperature.colors</span>(<span class='fl'>7</span>, <span class='kw'>intensity</span><span class='kw'>=</span><span class='fl'>0.5</span>))</div><div class='img'><img src='temperature.colors-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># skewed palette with more negative than positive temperature colors</span>
+<span class='fu'>image</span>(<span class='fu'>as.matrix</span>(<span class='fl'>1</span>:<span class='fl'>7</span>), <span class='kw'>z</span><span class='kw'>=</span><span class='fu'>as.matrix</span>(<span class='fl'>1</span>:<span class='fl'>7</span>), <span class='kw'>col</span><span class='kw'>=</span><span class='fu'>temperature.colors</span>(-<span class='fl'>4</span>, <span class='fl'>2</span>))</div><div class='img'><img src='temperature.colors-3.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
