@@ -69,15 +69,16 @@ page.test <- function(data, verbose=TRUE) {
     p <- page.compute.exact(k, N, L)
     p.type <- "exact"
   } else {
-    message("Exact p value is not available for k=", k, ", using Normal approximation.")
+    message("Exact p-value is not available for k=", k,
+      ", using Normal distribution approximation.")
     p <- page.compute.normal.approx(k, N, L)
-    p.type <- "approximate"
+    p.type <- "based on the Normal distribution approximation"
   }
   structure(list(statistic=c(L=L), parameter=c(k=k, N=N), p.value=p,
       p.type=p.type, data.name=paste(deparse(substitute(data))),
       method="Page test of monotonicity of ranks",
       alternative="at least one difference in ranks"),
-    class=c("htest", "pagetest"))
+    class=c("pagetest", "htest"))
 }
 
 #' @describeIn page.test
@@ -98,8 +99,11 @@ page.L <- function(data, verbose=TRUE, ties.method="average") {
 }
 
 # mean L for which p(x<=L) == 0.5 (as is the case when all ranks are tied)
-page.L.mean <- function(k, N)
+page.L.mean <- function(k, N=1)
   N*k*((k+1)/2)^2
+
+page.L.min <- function(k, N=1)
+  N*sum(1:k * k:1)
 
 # possible row-wise ls (equivalent to Spearman's Rho)
 rho.null.distribution <- function(k) {
@@ -114,10 +118,10 @@ rho.null.distribution <- function(k) {
   # sanity check: sum(rho.null.distribution(k)) == factorial(k)
 
   # reconstruct null distribution from calls to pspearman()
-  nls <- sum((1:k)^2) - sum(1:k * k:1)
-  ps <- sapply(2*0:floor(nls/2), function(x) pspearman::pspearman(x, k))
+  halfnls <- page.L.mean(k) - page.L.min(k)
+  ps <- sapply(2 * 0:floor(halfnls), function(x) pspearman::pspearman(x, k))
   ps <- c(ps[1], diff(ps))
-  if (nls %% 2 == 0)
+  if (halfnls %% 1 == 0)
     c(ps, rev(ps)[-1])
   else
     c(ps, rev(ps))
@@ -168,11 +172,11 @@ if (requireNamespace("memoise", quietly = TRUE))
 #' # raw calculation of the significance levels
 #' page.compute.exact(6, 4, 322)
 #' @export
-page.compute.exact <- function(k, N, L) {
+page.compute.exact <- function(k, N, L = NULL) {
   if (k < 2)
     stop("Need at least 2 conditions/rank levels")
   range <- c(sum(seq(k) * N*k:1), sum(seq(k) * N*1:k))
-  if (L < range[1] || L > range[2])
+  if (is.null(L) || L < range[1] || L > range[2])
     stop("Valid range of L for k=", k, ", N=", N, ": [",
       paste(range, collapse=", "), "]")
   nd <- L.null.distribution(k, N)
@@ -196,7 +200,8 @@ page.compute.normal.approx <- function(k, N, L) {
 #hist(ps[1,], col="blue", add=TRUE)
 
 #' @export
-print.pagetest <- function(x, ...)
-  invisible(cat("Page test of monotonicity: L=", x$statistic, ", k=", x$k,
-    ", N=", x$N, "\np = ",
-    format(x$p.value, digits=4), " (", x$p.type, ")\n", sep=""))
+print.pagetest <- function(x, ...) {
+  print(structure(x, class="htest"), ...)
+  cat("\n(p-value is ", x$p.type, ")\n\n", sep="")
+  invisible(x)
+}
