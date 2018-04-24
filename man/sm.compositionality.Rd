@@ -247,8 +247,9 @@ sm.segmentation(signal ~ colour + animal, twobytwosignalingsystem, strict=TRUE)
 
 }
 \references{
-Spike, M. (2016). Minimal requirements for the cultural
-evolution of language. PhD thesis, The University of Edinburgh.
+Spike, M. 2016 \emph{Minimal requirements for the cultural
+evolution of language}. PhD thesis, The University of Edinburgh.
+\url{http://hdl.handle.net/1842/25930}.
 }
 \seealso{
 \code{\link[=binaryfeaturematrix]{binaryfeaturematrix()}}, \code{\link[=ssm.compositionality]{ssm.compositionality()}}

@@ -20,9 +20,7 @@ then install the latest code from the github repository via
 
 This package can be cited as:
 
-```
-Stadler, Kevin (2017) cultevo: Tools, Measures and Statistical Tests for Cultural Evolution. R package. https://kevinstadler.github.io/cultevo/
-```
+> Stadler, Kevin (2018) cultevo: Tools, Measures and Statistical Tests for Cultural Evolution. R package version 1.0.2. https://kevinstadler.github.io/cultevo/
 
 A BibTeX entry for LaTeX users is
 
@@ -31,7 +29,7 @@ A BibTeX entry for LaTeX users is
     title = {cultevo: Tools, Measures and Statistical Tests for Cultural Evolution},
     author = {Kevin Stadler},
     year = {2018},
-    note = {R package version 1.0.1},
+    note = {R package version 1.0.2},
     url = {https://kevinstadler.github.io/cultevo/}
   }
 ```

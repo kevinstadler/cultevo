@@ -10,8 +10,8 @@
 \usage{
 mantel.test(x, y, ...)
 
-\method{mantel.test}{default}(x, y, plot = FALSE, method = "pearson",
-  trials = 9999, omitzerodistances = FALSE, ...)
+\method{mantel.test}{default}(x, y, plot = FALSE, method = c("spearman",
+  "kendall", "pearson"), trials = 9999, omitzerodistances = FALSE, ...)
 
 \method{mantel.test}{formula}(x, y, groups = NULL,
   stringdistfun = utils::adist, meaningdistfun = hammingdists, ...)
@@ -23,18 +23,23 @@ mantel.test(x, y, ...)
 \arguments{
 \item{x}{a formula, distance matrix, or list of distance matrices (see below)}
 
-\item{y}{a data frame, distance matrix, or list of matrices of the same length as \code{x}}
+\item{y}{a data frame, distance matrix, or list of distance matrices of the
+same length as \code{x}}
 
 \item{...}{further arguments which are passed on to the default method (in
 particular \code{plot}, \code{method}, \code{trials} and \code{omitzerodistances})}
 
-\item{plot}{logical: immediately produce a plot of the test results (using
-\code{plot()})}
+\item{plot}{logical: immediately produce a plot of the test results (default:
+\code{FALSE})}
 
-\item{method}{correlation coefficient to be computed (passed on to
-\code{\link[stats]{cor}}, default: \code{"pearson"})}
+\item{method}{correlation coefficient to be computed. Passed on to
+\code{\link[stats]{cor}}, so one of \code{"spearman"}, \code{"kendall"}, or, inadvisable
+in the case of ties: \code{"pearson"}. Following Dietz (1983), \code{"spearman"} is
+used as a default that is both powerful and robust across different
+distance measures.}
 
-\item{trials}{maximum number of permutations to be tested}
+\item{trials}{integer: maximum number of random permutations to be computed
+(see Details).}
 
 \item{omitzerodistances}{logical: if \code{TRUE}, the calculation of the
 correlation coefficient omits pairs of off-diagonal cells which contain a
@@ -64,9 +69,7 @@ tests next to each other}
 A dataframe of class \code{mantel}, with one row per Mantel test carried
 out, containing the following columns:
 \describe{
-\item{\code{method}}{Character string specifying the type of correlation
-coefficient used ("spearman", "kendall", or, inadvisable in the
-likely case of ties: "pearson")}
+\item{\code{method}}{Character string: type of correlation coefficient used}
 \item{\code{statistic}}{The veridical correlation coefficient between
 the entries in the two distance matrices}
 \item{\code{rsample}}{A list of correlation coefficients calculated
@@ -88,7 +91,7 @@ Multiple \code{mantel} objects can easily be combined by calling
 \code{rbind(test1, test2, ...)}.
 }
 \description{
-Performs a correlation test between pairs of distance matrices. The Mantel
+Perform correlation tests between pairs of distance matrices. The Mantel
 test is different from classical correlation tests (such as those
 implemented by \code{\link[stats]{cor.test}}) in that the null distribution
 (and significance level) are obtained through randomisation. The null
@@ -100,7 +103,8 @@ for the given data set.
 If the number of possible permutations of the matrices is reasonably close
 to the number of permutations specified by the \code{trials} parameter, a
 deterministic enumeration of all the permutations will be carried out
-instead of random sampling.
+instead of random sampling: such a deterministic test will return an exact
+p-value.
 
 \code{plot()} called on a data frame of class \code{mantel} plots a
 visualisation of the test results (in particular, the distribution of
@@ -124,11 +128,11 @@ a 0 in the \emph{second} matrix are omitted from the calculation of the
 correlation coefficient. For consistency it is therefore recommended to
 always pass the string distance matrix first, meaning distance matrix second.
 
-\item \code{formula}: This function can be called with experimental result
-data frames, distance matrix calculation is taken care of internally.
+\item \code{formula}: This function can be called with raw experimental
+result data frames, distance matrix calculation is taken care of internally.
 \code{x} is a formula of the type \code{s ~ m1 + m2 + ...} where \code{s}
-specifies a column of character strings in data frame or matrix \code{y},
-while \code{m1} etc. are columns specifying the different meaning
+is the column name of the character strings in data frame or matrix \code{y},
+while \code{m1} etc. are the column names specifying the different meaning
 dimensions. To calculate the respective distances, the function
 \code{stringdistfun} is applied to the strings, \code{meaningdistfun} to the
 meaning columns.
@@ -144,35 +148,47 @@ combination of distance matrices in \code{x} and \code{y} and returns a
 # small distance matrix, Mantel test run deterministically
 mantel.test(dist(1:7), dist(1:7))
 
-# (don't run computationally exhaustive examples on CRAN)
-if (identical(Sys.getenv("NOT_CRAN"), "true")) {
 
-  # smallest distance matrix requiring a random permutation test
-  plot(mantel.test(dist(1:8), dist(1:8), method="kendall"))
-
-  # 2x2x2x2 design
-  mantel.test(hammingdists(enumerate.meaningcombinations(c(2, 2, 2, 2))),
-    dist(1:16), plot=TRUE)
-
+\dontrun{
+# run test on smallest distance matrix which requires a random
+# permutation test, and plot it
+plot(mantel.test(dist(1:8), dist(1:8), method="kendall"))
 }
+
+\dontrun{
+# 2x2x2x2 design
+mantel.test(hammingdists(enumerate.meaningcombinations(c(2, 2, 2, 2))),
+  dist(1:16), plot=TRUE)
+}
+
 # using the formula interface in combination with a data frame:
 print(data <- cbind(word=c("aa", "ab", "ba", "bb"),
   enumerate.meaningcombinations(c(2, 2))))
 
 mantel.test(word ~ Var1 + Var2, data)
 
-# (don't run computationally exhaustive examples on CRAN)
-if (identical(Sys.getenv("NOT_CRAN"), "true")) {
+\dontrun{
+# pass a list of distance matrices as the first argument, but just one
+# distance matrix as the second argument: this runs separate tests on
+# the pairwise combinations of the first and second argument
+result <- mantel.test(list(dist(1:8), dist(sample(8:1)), dist(runif(8))),
+  hammingdists(enumerate.meaningcombinations(c(2, 2, 2))))
 
-  # passing a list of distance matrices as the first argument runs separate
-  # tests on pairwise combinations of the first and second argument(s)
+# print the result of the three independently run permutation tests
+print(result)
 
-  result <- mantel.test(list(dist(1:8), dist(sample(8:1)), dist(runif(8))),
-    hammingdists(enumerate.meaningcombinations(c(2, 2, 2))))
-
-  print(result)
-  plot(result, xlab="group")
+# show the three test results in one plot
+plot(result, xlab="group")
 }
+}
+\references{
+Dietz, E. J. 1983 “Permutation Tests for Association
+Between Two Distance Matrices.” \emph{Systematic Biology} 32 (1): 21-–26.
+\url{https://doi.org/10.1093/sysbio/32.1.21}.
+
+North, B. V., D. Curtis and P. C. Sham. 2002 “A Note on the Calculation of
+Empirical P Values from Monte Carlo Procedures.” \emph{The American Journal of
+Human Genetics} 71 (2): 439-–41. \url{https://doi.org/10.1086/341527}.
 }
 \seealso{
 \code{\link[stats]{cor}},

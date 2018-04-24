@@ -6,7 +6,7 @@ reference:
   - title: Page test for monotonicity of ranks
     contents:
     - page.test
-  - title: Segmentation and measurement of compositional signalling systems
+  - title: Analysing compositional signalling systems
     contents:
     - sm.segmentation
     - ssm.segmentation

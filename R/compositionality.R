@@ -169,8 +169,9 @@ weighted.mean.mp <- function(segmentation)
 #' discarding any explicit knowledge of which 'meaning dimension' they might
 #' belong to.
 #'
-#' @references Spike, M. (2016). Minimal requirements for the cultural
-#'   evolution of language. PhD thesis, The University of Edinburgh.
+#' @references Spike, M. 2016 \emph{Minimal requirements for the cultural
+#'   evolution of language}. PhD thesis, The University of Edinburgh.
+#'   <http://hdl.handle.net/1842/25930>.
 #' @param x a list or vector of character sequences specifying the signals to
 #'   be analysed. Alternatively, \code{x} can also be a formula of the format
 #'   \code{s ~ m1 + m2 + ...}, where \code{s} and \code{m1}, \code{m2}, etc.
