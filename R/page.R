@@ -102,6 +102,9 @@ page.L <- function(data, verbose=TRUE, ties.method="average") {
 page.L.mean <- function(k, N=1)
   N*k*((k+1)/2)^2
 
+page.L.max <- function(k, N=1)
+  N*sum(1:k * 1:k)
+
 page.L.min <- function(k, N=1)
   N*sum(1:k * k:1)
 
@@ -175,7 +178,7 @@ if (requireNamespace("memoise", quietly = TRUE))
 page.compute.exact <- function(k, N, L = NULL) {
   if (k < 2)
     stop("Need at least 2 conditions/rank levels")
-  range <- c(sum(seq(k) * N*k:1), sum(seq(k) * N*1:k))
+  range <- c(page.L.min(k, N), page.L.max(k, N))
   if (is.null(L) || L < range[1] || L > range[2])
     stop("Valid range of L for k=", k, ", N=", N, ": [",
       paste(range, collapse=", "), "]")
