@@ -10,7 +10,7 @@ page.test(data, verbose = TRUE)
 
 page.L(data, verbose = TRUE, ties.method = "average")
 
-page.compute.exact(k, N, L)
+page.compute.exact(k, N, L = NULL)
 }
 \arguments{
 \item{data}{a matrix with the different conditions along its \code{k}

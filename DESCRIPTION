@@ -20,7 +20,8 @@ Imports:
 Suggests:
     memoise,
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr

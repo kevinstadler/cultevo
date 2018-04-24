@@ -79,7 +79,8 @@ from the permutations of the input matrices}
 \item{\code{p.value}}{Empirical p-value computed from the Mantel
 test: let \code{ngreater} be the number of correlation coefficients
 in \code{rsample} greater than or equal to \code{statistic}, then
-\code{p.value} is \code{(ngreater+1)/(length(rsample)+1}}
+\code{p.value} is \code{(ngreater+1)/(length(rsample)+1}} (North,
+Curtis and Sham 2002).
 \item{\code{p.approx}}{The theoretical p-value that would correspond
 to the standard \code{z} score as calculated above.}
 \item{\code{is.unique.max}}{Logical, \code{TRUE} iff the veridical
