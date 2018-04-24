@@ -1,6 +1,6 @@
 # Cultural evolution in R
 
-[![Travis-CI Build Status](https://travis-ci.org/kevinstadler/cultevo.svg?branch=master)](https://travis-ci.org/kevinstadler/cultevo) [![Code Coverage](https://codecov.io/gh/kevinstadler/cultevo/branch/master/graphs/badge.svg)](https://codecov.io/gh/kevinstadler/cultevo/) [![CRAN Status Badge](http://www.r-pkg.org/badges/version/cultevo)](https://kevinstadler.github.io/cultevo/)
+[![CRAN version](http://www.r-pkg.org/badges/version/cultevo)](https://CRAN.R-project.org/package=cultevo) [![Travis-CI Build Status](https://travis-ci.org/kevinstadler/cultevo.svg?branch=master)](https://travis-ci.org/kevinstadler/cultevo) [![Code Coverage](https://codecov.io/gh/kevinstadler/cultevo/branch/master/graphs/badge.svg)](https://codecov.io/gh/kevinstadler/cultevo/)
 
 The **cultevo** R package provides tools, measures and statistical tests often used in the study of cultural evolution, in particular for measuring the compositionality of signalling systems as well as computing string and meaning distance matrices. It also provides an accurate implementation of Page's test for monotonicity of ranks.
 
@@ -8,11 +8,11 @@ See the [Function reference](https://kevinstadler.github.io/cultevo/reference/in
 
 ## Installation
 
-In order to install the latest development version you first need the [devtools](https://CRAN.R-project.org/package=devtools) package
+In order to install the latest release from CRAN (recommended) simply call:
 
-    install.packages("devtools")
+    install.packages("cultevo")
 
-then install the latest code from the github repository via
+The latest development version from Github can be installed using the [devtools](https://CRAN.R-project.org/package=devtools) package:
 
     devtools::install_github("kevinstadler/cultevo")
 
