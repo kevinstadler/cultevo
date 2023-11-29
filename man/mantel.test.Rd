@@ -10,11 +10,24 @@
 \usage{
 mantel.test(x, y, ...)
 
-\method{mantel.test}{default}(x, y, plot = FALSE, method = c("spearman",
-  "kendall", "pearson"), trials = 9999, omitzerodistances = FALSE, ...)
+\method{mantel.test}{default}(
+  x,
+  y,
+  plot = FALSE,
+  method = c("spearman", "kendall", "pearson"),
+  trials = 9999,
+  omitzerodistances = FALSE,
+  ...
+)
 
-\method{mantel.test}{formula}(x, y, groups = NULL,
-  stringdistfun = utils::adist, meaningdistfun = hammingdists, ...)
+\method{mantel.test}{formula}(
+  x,
+  y,
+  groups = NULL,
+  stringdistfun = utils::adist,
+  meaningdistfun = hammingdists,
+  ...
+)
 
 \method{mantel.test}{list}(x, y, plot = FALSE, ...)
 
@@ -33,7 +46,7 @@ particular \code{plot}, \code{method}, \code{trials} and \code{omitzerodistances
 \code{FALSE})}
 
 \item{method}{correlation coefficient to be computed. Passed on to
-\code{\link[stats]{cor}}, so one of \code{"spearman"}, \code{"kendall"}, or, inadvisable
+\verb{\link[stats]\{cor\}}, so one of \code{"spearman"}, \code{"kendall"}, or, inadvisable
 in the case of ties: \code{"pearson"}. Following Dietz (1983), \code{"spearman"} is
 used as a default that is both powerful and robust across different
 distance measures.}
@@ -120,7 +133,7 @@ parameters \code{...} to \code{plot()} are passed on to
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Perform Mantel correlation test on two distance
+\item \code{mantel.test(default)}: Perform Mantel correlation test on two distance
 matrices. The distance matrices can either be of type
 \code{\link[stats]{dist}}, plain R matrices or any object that can be
 interpreted by \code{\link{check.dist}}. The order of the two matrices does
@@ -129,7 +142,7 @@ a 0 in the \emph{second} matrix are omitted from the calculation of the
 correlation coefficient. For consistency it is therefore recommended to
 always pass the string distance matrix first, meaning distance matrix second.
 
-\item \code{formula}: This function can be called with raw experimental
+\item \code{mantel.test(formula)}: This function can be called with raw experimental
 result data frames, distance matrix calculation is taken care of internally.
 \code{x} is a formula of the type \code{s ~ m1 + m2 + ...} where \code{s}
 is the column name of the character strings in data frame or matrix \code{y},
@@ -138,13 +151,13 @@ dimensions. To calculate the respective distances, the function
 \code{stringdistfun} is applied to the strings, \code{meaningdistfun} to the
 meaning columns.
 
-\item \code{list}: When \code{x} is a list of distance matrices, and
+\item \code{mantel.test(list)}: When \code{x} is a list of distance matrices, and
 \code{y} is either a single distance matrix or a list of distance matrices
 the same length as \code{x}: runs a Mantel test for every pairwise
 combination of distance matrices in \code{x} and \code{y} and returns a
 \code{mantel} object with as many rows.
-}}
 
+}}
 \examples{
 # small distance matrix, Mantel test run deterministically
 mantel.test(dist(1:7), dist(1:7))

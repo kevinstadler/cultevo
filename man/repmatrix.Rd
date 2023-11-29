@@ -4,8 +4,16 @@
 \alias{repmatrix}
 \title{Extend a matrix by repetition of elements.}
 \usage{
-repmatrix(x, times = 1, each = 1, times.row = times, times.col = times,
-  each.row = each, each.col = each, ...)
+repmatrix(
+  x,
+  times = 1,
+  each = 1,
+  times.row = times,
+  times.col = times,
+  each.row = each,
+  each.col = each,
+  ...
+)
 }
 \arguments{
 \item{x}{a matrix}

@@ -4,8 +4,11 @@
 \alias{orderinsensitivedists}
 \title{Calculate the bag-of-characters similarity between strings.}
 \usage{
-orderinsensitivedists(strings = NULL, split = NULL,
-  segmentcounts = segment.counts(strings, split))
+orderinsensitivedists(
+  strings = NULL,
+  split = NULL,
+  segmentcounts = segment.counts(strings, split)
+)
 }
 \arguments{
 \item{strings}{a vector or list of strings}

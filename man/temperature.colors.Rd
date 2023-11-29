@@ -12,7 +12,7 @@ temperature.colors(mn, mx = NULL, intensity = 1)
 
 \item{mx}{integer: 'warmest' temperature (see examples)}
 
-\item{intensity}{saturation of the most extreme color(s), in the range \code{[0,1]}.}
+\item{intensity}{saturation of the most extreme color(s), in the range \verb{[0,1]}.}
 }
 \description{
 Create a vector of 'temperature' colors (from blue over white to red).

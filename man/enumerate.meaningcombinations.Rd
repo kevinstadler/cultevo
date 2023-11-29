@@ -4,8 +4,7 @@
 \alias{enumerate.meaningcombinations}
 \title{Enumerate meaning combinations.}
 \usage{
-enumerate.meaningcombinations(dimensionality, uniquelabels = TRUE,
-  offset = 0)
+enumerate.meaningcombinations(dimensionality, uniquelabels = TRUE, offset = 0)
 }
 \arguments{
 \item{dimensionality}{either a) a vector of integers specifying the number

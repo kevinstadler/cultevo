@@ -63,22 +63,22 @@ the entire dataset.
 
 Exact p-values are computed for \code{k} up to 22, using the pre-computed null
 distributions from the
-\href{https://CRAN.R-project.org/package=pspearman}{pspearman} package. For
+\href{https://CRAN.R-project.org/package=pspearman}{\code{pspearman}} package. For
 larger \code{k}, p-values are computed based on a Normal distribution
 approximation (Siegel and Castellan, 1988).
 }
 \section{Functions}{
 \itemize{
-\item \code{page.test}: See above.
+\item \code{page.test()}: See above.
 
-\item \code{page.L}: Calculate Page's L statistic for the given dataset.
+\item \code{page.L()}: Calculate Page's L statistic for the given dataset.
 
-\item \code{page.compute.exact}: Calculate exact significance levels of the Page L
+\item \code{page.compute.exact()}: Calculate exact significance levels of the Page L
 statistic. Returns a single numeric indicating the null probability of
 the Page statistic with the given \code{k}, \code{N} being greater or equal than the
 given \code{L}.
-}}
 
+}}
 \examples{
 # exact p value computation for N=4, k=4
 page.test(t(replicate(4, sample(4))))

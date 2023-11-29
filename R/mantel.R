@@ -169,15 +169,14 @@ mantel.test.default <- function(x, y, plot=FALSE,
 
   greater <- sum(rsample >= veridical)
   # empirical p value http://www.ncbi.nlm.nih.gov/pmc/articles/PMC379178/
-  p.empirical <- (greater + 1) / (length(rsample) + 1)
+  p.empirical <- ifelse(exact, greater/length(rsample), (greater + 1) / (length(rsample) + 1))
 
   mn <- mean(rsample)
   s <- stats::sd(rsample)
 
   result <- data.frame(method=method, statistic=c(r=veridical),
     N=length(indices), mean=mn, sd=s, p.value=p.empirical,
-    p.approx=ifelse(exact, NA,
-      stats::pnorm((veridical - mn) / s, lower.tail=FALSE)),
+    p.approx=ifelse(exact, NA, stats::pnorm((veridical - mn) / s, lower.tail=FALSE)),
     is.unique.max=(greater==0), alternative="greater",
     rsample=I(list(rsample)), stringsAsFactors=FALSE)
   if (plot)

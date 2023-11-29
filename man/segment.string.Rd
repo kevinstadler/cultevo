@@ -20,13 +20,13 @@ Split strings into their constituent segments (and count them).
 }
 \section{Functions}{
 \itemize{
-\item \code{segment.string}: Returns a list (of the same length as \code{x}), each item a vector of
+\item \code{segment.string()}: Returns a list (of the same length as \code{x}), each item a vector of
 character vectors.
 
-\item \code{segment.counts}: Calculate the frequency of individual characters in one or more strings.
+\item \code{segment.counts()}: Calculate the frequency of individual characters in one or more strings.
 Returns a matrix with one row for every string in \code{x}.
-}}
 
+}}
 \examples{
 segment.string(c("asd", "fghj"))
 
